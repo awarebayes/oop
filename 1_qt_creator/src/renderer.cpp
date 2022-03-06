@@ -2,7 +2,7 @@
 // Created by dev on 2/26/22.
 //
 
-#include "renderer.h"
+#include "inc/renderer.h"
 
 Renderer::Renderer(int width, int height, QObject &parent) : width(width), height(height)
 {

@@ -2,7 +2,7 @@
 // Created by dev on 2/25/22.
 //
 
-#include "linalg.h"
+#include "inc/linalg.h"
 #include <cmath>
 
 Mat4x4 x_rot_matrix(double deg)

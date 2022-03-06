@@ -15,11 +15,11 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        state.cpp state.h mesh3d.cpp mesh3d.h linalg.cpp linalg.h renderer.cpp renderer.h transformations.h config.h obj_reader.cpp obj_reader.h)
+        src/main.cpp
+        src/mainwindow.cpp
+        inc/mainwindow.h
+        src/mainwindow.ui
+        src/model.cpp inc/model.h src/mesh3d.cpp inc/mesh3d.h src/linalg.cpp inc/linalg.h src/renderer.cpp inc/renderer.h inc/transformations.h inc/config.h inc/observable.h src/observable.cpp src/transformations.cpp inc/controller.h src/controller.cpp)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(1_qt_creator

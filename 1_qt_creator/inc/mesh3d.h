@@ -20,9 +20,10 @@ typedef struct Mesh3D
 	std::vector<Vec4> vertices;
 	std::vector<Indexes> indexes;
 
-	static Mesh3D from_file(std::string obj_path);
+	static Mesh3D from_file(const std::string& obj_path);
 	static Mesh3D default_cube();
-	Transformations get_appropriate_transformations();
+	bool is_empty();
+	Transformations get_appropriate_transformations() const;
 } Mesh3D;
 
 #endif //INC_1_QT_CREATOR_MESH3D_H

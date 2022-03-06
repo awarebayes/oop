@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include "renderer.h"
-#include "state.h"
+#include "model.h"
+#include "controller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,10 +17,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent);
     ~MainWindow() override;
-
+	void connect_controller(Controller &controller);
 	void rerender();
-	void updateState();
-	void updateSliders();
+	void transform_changed(Transformations transforms);
+	void object_changed(const Mesh3D &object);
 
 private slots:
     void on_TransX_valueChanged(double arg1);
@@ -48,8 +49,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-	State state;
 	Renderer renderer;
+	struct Controller *controller_ = nullptr;
 	;
 };
 #endif // MAINWINDOW_H

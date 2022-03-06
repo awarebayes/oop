@@ -13,7 +13,7 @@ typedef struct Vec4
 	{
 	};
 
-	double at(int index) const;
+	[[nodiscard]] double at(int index) const;
 
 	double &operator[](int index);
 } Vec4;

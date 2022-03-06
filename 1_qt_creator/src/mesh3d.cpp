@@ -4,14 +4,12 @@
 
 #include <array>
 #include <ranges>
-#include "mesh3d.h"
-#include "state.h"
-#include "config.h"
+#include <sstream>
+#include <fstream>
+#include "inc/mesh3d.h"
+#include "inc/model.h"
+#include "inc/config.h"
 
-Mesh3D Mesh3D::from_file(std::string obj_path)
-{
-	return Mesh3D{};
-}
 
 Mesh3D Mesh3D::default_cube()
 {
@@ -49,7 +47,7 @@ struct MinMax {
 	double max;
 };
 
-Transformations Mesh3D::get_appropriate_transformations()
+Transformations Mesh3D::get_appropriate_transformations() const
 {
 	Vec4 first = vertices[0];
 	std::array<struct MinMax, 3> min_max_coords = {{
@@ -94,4 +92,64 @@ Transformations Mesh3D::get_appropriate_transformations()
 			},
 	};
 	return transformations;
+}
+
+Mesh3D Mesh3D::from_file(const std::string &obj_path)
+{
+
+	Mesh3D mesh = {
+			.vertices = std::vector<Vec4>(),
+			.indexes = std::vector<Indexes>(),
+	};
+	std::stringstream ss;
+	std::ifstream in_file(obj_path.c_str());
+	if (in_file.fail())
+		return mesh;
+
+	std::string line;
+	std::string prefix;
+
+	int temp_int = 0;
+
+	while (std::getline(in_file, line))
+	{
+		ss.clear();
+		ss.str(line);
+		ss >> prefix;
+		if (prefix == "v")
+		{
+			Vec4 temp = {0, 0, 0, 1};
+			ss >> temp.x >> temp.y >> temp.z;
+			mesh.vertices.push_back(temp);
+		}
+
+		else if (prefix == "f")
+		{
+			int counter = 0;
+			int indexes_read = 0;
+			Indexes indices = {0, 0, 0};
+			while (ss >> temp_int)
+			{
+				if (counter == 0 and indexes_read < 3)
+					indices.index[indexes_read++] = temp_int - 1;
+				while (ss.peek() == '/')
+				{
+					counter += 1;
+					ss.ignore(1, '/');
+				}
+				if (ss.peek() == ' ')
+				{
+					counter = 0;
+					ss.ignore(1, ' ');
+				}
+			}
+			mesh.indexes.push_back(indices);
+		}
+	}
+	return mesh;
+}
+
+bool Mesh3D::is_empty()
+{
+	return indexes.empty() || vertices.empty();
 }
