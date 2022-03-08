@@ -14,8 +14,11 @@
 typedef struct Renderer
 {
 	std::shared_ptr<QGraphicsScene> scene;
+
 	Renderer(int width, int height, QObject &parent);
+
 	~Renderer();
+
 	auto draw_object(Mesh3D const &mesh, Transformations const &transformations) const -> cpp::result<void, errc>;
 } Renderer;
 

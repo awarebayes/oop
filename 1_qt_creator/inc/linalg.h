@@ -20,6 +20,7 @@ typedef struct Vec4
 	[[nodiscard]] double at(int index) const;
 
 	static auto vertex_from_obj_string(const std::string &in) -> cpp::result<Vec4, errc>;
+
 	auto to_obj_string() const -> cpp::result<std::string, errc>;
 
 	double &operator[](int index);

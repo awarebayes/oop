@@ -15,8 +15,11 @@
 typedef struct Indexes
 {
 	int index[3];
+
 	static auto from_obj_string(const std::string &in) -> cpp::result<Indexes, errc>;
+
 	auto to_obj_string() const -> cpp::result<std::string, errc>;
+
 	int max;
 } Indexes;
 
@@ -26,6 +29,7 @@ typedef struct Mesh3D
 	std::vector<Indexes> indexes;
 
 	static Mesh3D default_cube();
+
 	bool can_draw() const;
 } Mesh3D;
 

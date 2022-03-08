@@ -58,7 +58,7 @@ private slots:
 
 	void on_actionDefault_Scale_triggered();
 
-    void on_actionSave_triggered();
+	void on_actionSave_triggered();
 
 private:
 	Ui::MainWindow *ui;

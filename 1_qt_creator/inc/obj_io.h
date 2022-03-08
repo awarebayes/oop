@@ -17,11 +17,12 @@ struct ReadResult
 };
 
 auto read_obj_file(const std::string &file_path) -> cpp::result<ReadResult, errc>;
+
 auto write_obj_file(
 		const std::string &file_path,
 		const Mesh3D &mesh,
 		const Transformations &transformations)
-		-> cpp::result<void, errc>;
+-> cpp::result<void, errc>;
 
 Transformations get_appropriate_transformations(const Mesh3D &object);
 

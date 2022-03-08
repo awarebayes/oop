@@ -15,8 +15,7 @@ static std::vector<Vec4> apply_transform(const std::vector<Vec4> &vertices, cons
 	std::vector<Vec4> transformed;
 
 	std::transform(vertices.begin(), vertices.end(), std::back_inserter(transformed),
-				   [&matrix](Vec4 vertex)
-				   { return vertex * matrix; });
+	               [&matrix](Vec4 vertex) { return vertex * matrix; });
 
 	return transformed;
 }
@@ -29,7 +28,7 @@ auto Renderer::draw_object(Mesh3D const &mesh, Transformations const &transforma
 	scene->clear();
 	std::vector<Vec4> transformed_vertices = apply_transform(mesh.vertices, transformations.getMatrix());
 
-	for (const auto &triangle : mesh.indexes)
+	for (const auto &triangle: mesh.indexes)
 	{
 		int index1 = triangle.index[0];
 		int index2 = triangle.index[1];

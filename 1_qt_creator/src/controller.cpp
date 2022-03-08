@@ -61,7 +61,7 @@ void Controller::load_default_cube()
 
 void Controller::show_error_dialog(errc code)
 {
-	const std::string& message = error_map.at(code);
+	const std::string &message = error_map.at(code);
 	QMessageBox::critical(nullptr, "Critical", QString::fromStdString(message));
 }
 

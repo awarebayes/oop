@@ -9,15 +9,15 @@ void TransformXYZ::mutate(Axis axis, double value)
 {
 	switch (axis)
 	{
-	case Axis::X:
-		x = value;
-		break;
-	case Axis::Y:
-		y = value;
-		break;
-	case Axis::Z:
-		z = value;
-		break;
+		case Axis::X:
+			x = value;
+			break;
+		case Axis::Y:
+			y = value;
+			break;
+		case Axis::Z:
+			z = value;
+			break;
 	}
 }
 
@@ -26,7 +26,7 @@ auto TransformXYZ::from_string(const std::string &in) -> cpp::result<TransformXY
 
 	errc error = errc::ok;
 
-	TransformXYZ self = {0, 0, 0};
+	TransformXYZ self = { 0, 0, 0 };
 	std::stringstream ss(in);
 
 	std::string comment;
@@ -52,7 +52,7 @@ auto TransformXYZ::to_obj_string() const -> cpp::result<std::string, errc>
 {
 	auto maybe_type_string = transform_type_to_string(type);
 	if (maybe_type_string.has_error())
-		return cpp::fail(errc::io_error);
+		return cpp::fail(errc::bad_to_string);
 
 	std::stringstream ss;
 	ss << "## " << maybe_type_string.value() << " " << x << " " << y << " " << z << "\n";
@@ -65,18 +65,18 @@ auto transform_type_to_string(TransformType type) -> cpp::result<std::string, er
 	bool error = false;
 	switch (type)
 	{
-	case (TransformType::Translate):
-		result = "Translate";
-		break;
-	case (TransformType::Scale):
-		result = "Scale";
-		break;
-	case (TransformType::Rotate):
-		result = "Rotate";
-		break;
-	default:
-		error = true;
-		break;
+		case (TransformType::Translate):
+			result = "Translate";
+			break;
+		case (TransformType::Scale):
+			result = "Scale";
+			break;
+		case (TransformType::Rotate):
+			result = "Rotate";
+			break;
+		default:
+			error = true;
+			break;
 	}
 
 	if (error)
@@ -120,15 +120,15 @@ void Transformations::mutate(TransformType type, Axis axis, double value)
 {
 	switch (type)
 	{
-	case TransformType::Translate:
-		translate.mutate(axis, value);
-		break;
-	case TransformType::Rotate:
-		rotate.mutate(axis, value);
-		break;
-	case TransformType::Scale:
-		scale.mutate(axis, value);
-		break;
+		case TransformType::Translate:
+			translate.mutate(axis, value);
+			break;
+		case TransformType::Rotate:
+			rotate.mutate(axis, value);
+			break;
+		case TransformType::Scale:
+			scale.mutate(axis, value);
+			break;
 	}
 }
 

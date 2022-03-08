@@ -17,10 +17,10 @@ struct MinMax
 Transformations get_appropriate_transformations(const Mesh3D &object)
 {
 	Vec4 first = object.vertices[0];
-	std::array<struct MinMax, 3> min_max_coords = {{{first.x, first.x},
-													{first.y, first.y},
-													{first.z, first.z}}};
-	for (const auto &point : object.vertices)
+	std::array<struct MinMax, 3> min_max_coords = {{{ first.x, first.x },
+	                                                { first.y, first.y },
+	                                                { first.z, first.z }}};
+	for (const auto &point: object.vertices)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -44,13 +44,13 @@ Transformations get_appropriate_transformations(const Mesh3D &object)
 	required_scale *= 0.6; // чтобы не на весь экран было
 
 	Transformations transformations = {
-		.translate = {
-			.x = (double)SCREEN_WIDTH / 2,
-			.y = (double)SCREEN_HEIGHT / 2,
-			.z = 0,
-			.type = TransformType::Translate},
-		.rotate{.x = 0, .y = 0, .z = 180, .type = TransformType::Rotate},
-		.scale = {.x = required_scale, .y = required_scale, .z = required_scale, .type = TransformType::Scale},
+			.translate = {
+					.x = (double) SCREEN_WIDTH / 2,
+					.y = (double) SCREEN_HEIGHT / 2,
+					.z = 0,
+					.type = TransformType::Translate },
+			.rotate{ .x = 0, .y = 0, .z = 180, .type = TransformType::Rotate },
+			.scale = { .x = required_scale, .y = required_scale, .z = required_scale, .type = TransformType::Scale },
 	};
 	return transformations;
 }
@@ -63,10 +63,12 @@ auto read_obj_file(const std::string &file_path) -> cpp::result<ReadResult, errc
 		return cpp::fail(errc::no_such_file_or_directory);
 
 	Mesh3D mesh = {
-		.vertices = std::vector<Vec4>(),
-		.indexes = std::vector<Indexes>(),
+			.vertices = std::vector<Vec4>(),
+			.indexes = std::vector<Indexes>(),
 	};
-	Transformations transformations = {{0}, {0}, {0}};
+	Transformations transformations = {{ 0 },
+	                                   { 0 },
+	                                   { 0 }};
 
 	errc error = errc::ok;
 	bool found_transformations = false;
@@ -113,11 +115,11 @@ auto read_obj_file(const std::string &file_path) -> cpp::result<ReadResult, errc
 
 	if (error != errc::ok)
 		return cpp::fail(error);
-	return ReadResult{.transformations = transformations, .mesh = mesh};
+	return ReadResult{ .transformations = transformations, .mesh = mesh };
 }
 
 auto write_obj_file(const std::string &file_path, const Mesh3D &mesh,
-					const Transformations &transformations) -> cpp::result<void, errc>
+                    const Transformations &transformations) -> cpp::result<void, errc>
 {
 	std::ofstream file;
 	file.open(file_path.c_str(), std::ios::out);
@@ -126,10 +128,10 @@ auto write_obj_file(const std::string &file_path, const Mesh3D &mesh,
 
 	file << transformations.to_obj_string().value();
 
-	for (const auto &vertex : mesh.vertices)
+	for (const auto &vertex: mesh.vertices)
 		file << vertex.to_obj_string().value() << "\n";
 
-	for (const auto &index : mesh.indexes)
+	for (const auto &index: mesh.indexes)
 		file << index.to_obj_string().value() << "\n";
 
 	file.close();

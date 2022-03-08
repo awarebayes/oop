@@ -111,7 +111,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::connect_controller(Controller &controller)
 {
-	this->controller_ = std::optional<std::reference_wrapper<Controller>>{controller};
+	this->controller_ = std::optional<std::reference_wrapper<Controller>>{ controller };
 }
 
 void MainWindow::transform_changed(Transformations transforms)

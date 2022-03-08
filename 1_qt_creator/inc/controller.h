@@ -29,7 +29,7 @@ public:
 
 	void save_object();
 
-	static void show_error_dialog(errc code) ;
+	static void show_error_dialog(errc code);
 };
 
 #endif //INC_1_QT_CREATOR_CONTROLLER_H
