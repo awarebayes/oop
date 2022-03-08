@@ -4,6 +4,7 @@
 
 #include "inc/linalg.h"
 #include <cmath>
+#include <sstream>
 
 Mat4x4 x_rot_matrix(double deg)
 {
@@ -46,7 +47,7 @@ Mat4x4 z_rot_matrix(double deg)
 
 Mat4x4 rotation_matrix(double x_rot, double y_rot, double z_rot)
 {
-	Mat4x4 result = Mat4x4::eye();
+	Mat4x4 result = Mat4x4::identity();
 
 	result = result * x_rot_matrix(x_rot);
 	result = result * y_rot_matrix(y_rot);
@@ -71,9 +72,9 @@ Mat4x4 translation_matrix(double x_translation, double y_translation, double z_t
 {
 	return {
 			.mat = {
-					{ 1, 0, 0, 0 },
-					{ 0, 1, 0, 0 },
-					{ 0, 0, 1, 0 },
+					{ 1,             0,             0,             0 },
+					{ 0,             1,             0,             0 },
+					{ 0,             0,             1,             0 },
 					{ x_translation, y_translation, z_translation, 1 }
 			}
 	};
@@ -121,6 +122,26 @@ double Vec4::at(int index) const
 	}
 }
 
+auto Vec4::vertex_from_obj_string(const std::string &in) -> cpp::result<Vec4, errc>
+{
+	std::stringstream ss(in);
+	std::string is_vertex;
+	Vec4 self = { 0, 0, 0, 1 };
+
+	ss >> is_vertex >> self.x >> self.y >> self.z;
+
+	if (ss.fail() or is_vertex != "v")
+		return cpp::fail(errc::invalid_vertex_string_in_file);
+	return self;
+}
+
+auto Vec4::to_obj_string() const -> cpp::result<std::string, errc>
+{
+	std::stringstream ss;
+	ss << "v " << x << " " << y << " " << z << " ";
+	return ss.str();
+}
+
 Mat4x4 operator*(Mat4x4 const &lhs, const Mat4x4 &rhs)
 {
 	Mat4x4 result = { 0 };
@@ -131,7 +152,7 @@ Mat4x4 operator*(Mat4x4 const &lhs, const Mat4x4 &rhs)
 	return result;
 }
 
-Vec4 operator*(Vec4 const&lhs, const Mat4x4 &rhs)
+Vec4 operator*(Vec4 const &lhs, const Mat4x4 &rhs)
 {
 	Vec4 result = { 0, 0, 0, 0 };
 	for (int col = 0; col < 4; col++)
@@ -149,14 +170,14 @@ Vec4 operator*(Mat4x4 &lhs, Vec4 const &rhs)
 	return result;
 }
 
-Mat4x4 Mat4x4::eye()
+Mat4x4 Mat4x4::identity()
 {
 	return {
 			{
-					{1, 0, 0, 0},
-					{0, 1, 0, 0},
-					{0, 0, 1, 0},
-					{0, 0, 0, 1},
+					{ 1, 0, 0, 0 },
+					{ 0, 1, 0, 0 },
+					{ 0, 0, 1, 0 },
+					{ 0, 0, 0, 1 },
 			}
 	};
 }

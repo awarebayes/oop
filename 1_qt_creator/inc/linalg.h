@@ -5,6 +5,10 @@
 #ifndef INC_1_QT_CREATOR_LINALG_H
 #define INC_1_QT_CREATOR_LINALG_H
 
+#include <ostream>
+#include "error.h"
+#include "result.h"
+
 typedef struct Vec4
 {
 	double x, y, z, w;
@@ -15,13 +19,17 @@ typedef struct Vec4
 
 	[[nodiscard]] double at(int index) const;
 
+	static auto vertex_from_obj_string(const std::string &in) -> cpp::result<Vec4, errc>;
+	auto to_obj_string() const -> cpp::result<std::string, errc>;
+
 	double &operator[](int index);
 } Vec4;
 
 typedef struct Mat4x4
 {
 	double mat[4][4];
-	static Mat4x4 eye();
+
+	static Mat4x4 identity();
 } Mat4x4;
 
 Mat4x4 x_rot_matrix(double deg);

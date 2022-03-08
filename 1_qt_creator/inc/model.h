@@ -8,24 +8,19 @@
 #include "mesh3d.h"
 #include "transformations.h"
 #include "observable.h"
-#include "mainwindow.h"
 
 struct Model
 {
-private:
 	Observable<Mesh3D> current_object;
 	Observable<Transformations> transform;
 
-public:
-	Mat4x4 get_transformation_matrix() const;
-	void connect_view(MainWindow &view);
+	[[nodiscard]] const Mesh3D &get_current_object() const;
 
-	const Mesh3D &get_current_object() const;
-	void mutate_current_object(Mesh3D object);
+	void mutate_current_object(const Mesh3D &object);
 
-	Transformations get_transformations();
-	void mutate_transformations(Transformations transformations);
+	[[nodiscard]] const Transformations &get_transformations() const;
 
+	void mutate_transformations(const Transformations &transformations);
 };
 
 #endif //INC_1_QT_CREATOR_MODEL_H

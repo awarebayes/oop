@@ -1,258 +1,258 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>879</width>
-    <height>632</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,5">
-    <item>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="1">
-       <widget class="QDoubleSpinBox" name="RotY">
-        <property name="minimum">
-         <double>-180.000000000000000</double>
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>879</width>
+                <height>632</height>
+            </rect>
         </property>
-        <property name="maximum">
-         <double>180.000000000000000</double>
+        <property name="windowTitle">
+            <string>MainWindow</string>
         </property>
-        <property name="singleStep">
-         <double>10.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1">
-       <widget class="QDoubleSpinBox" name="ScaleY">
-        <property name="minimum">
-         <double>0.100000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10000.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>40.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="TransX">
-        <property name="minimum">
-         <double>-10000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10000.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>300.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QDoubleSpinBox" name="RotX">
-        <property name="minimum">
-         <double>-180.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>180.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>10.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="QDoubleSpinBox" name="ScaleZ">
-        <property name="minimum">
-         <double>0.100000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>1000.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>40.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>RotZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QDoubleSpinBox" name="TransZ">
-        <property name="minimum">
-         <double>-1000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>1000.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>ScaleY</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QDoubleSpinBox" name="RotZ">
-        <property name="minimum">
-         <double>-180.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>180.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>10.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>ScaleX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>RotX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="TransY">
-        <property name="minimum">
-         <double>-10000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10000.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>300.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>TransY</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="QDoubleSpinBox" name="ScaleX">
-        <property name="maximum">
-         <double>10000.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>40.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>ScaleZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>TransX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>TransZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>RotY</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>879</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>Menu</string>
-    </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionDefault_Scale"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <addaction name="menuFile"/>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionDefault_Scale">
-   <property name="text">
-    <string>Default View</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save </string>
-   </property>
-  </action>
- </widget>
- <resources/>
- <connections/>
+        <widget class="QWidget" name="centralwidget">
+            <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,5">
+                <item>
+                    <layout class="QGridLayout" name="gridLayout">
+                        <item row="4" column="1">
+                            <widget class="QDoubleSpinBox" name="RotY">
+                                <property name="minimum">
+                                    <double>-180.000000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>180.000000000000000</double>
+                                </property>
+                                <property name="singleStep">
+                                    <double>10.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="8" column="1">
+                            <widget class="QDoubleSpinBox" name="ScaleY">
+                                <property name="minimum">
+                                    <double>0.100000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>10000.000000000000000</double>
+                                </property>
+                                <property name="value">
+                                    <double>40.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="0" column="1">
+                            <widget class="QDoubleSpinBox" name="TransX">
+                                <property name="minimum">
+                                    <double>-10000.000000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>10000.000000000000000</double>
+                                </property>
+                                <property name="value">
+                                    <double>300.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="3" column="1">
+                            <widget class="QDoubleSpinBox" name="RotX">
+                                <property name="minimum">
+                                    <double>-180.000000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>180.000000000000000</double>
+                                </property>
+                                <property name="singleStep">
+                                    <double>10.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="9" column="1">
+                            <widget class="QDoubleSpinBox" name="ScaleZ">
+                                <property name="minimum">
+                                    <double>0.100000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>1000.000000000000000</double>
+                                </property>
+                                <property name="value">
+                                    <double>40.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="5" column="0">
+                            <widget class="QLabel" name="label_5">
+                                <property name="text">
+                                    <string>RotZ</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="1">
+                            <widget class="QDoubleSpinBox" name="TransZ">
+                                <property name="minimum">
+                                    <double>-1000.000000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>1000.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="8" column="0">
+                            <widget class="QLabel" name="label_8">
+                                <property name="text">
+                                    <string>ScaleY</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="5" column="1">
+                            <widget class="QDoubleSpinBox" name="RotZ">
+                                <property name="minimum">
+                                    <double>-180.000000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>180.000000000000000</double>
+                                </property>
+                                <property name="singleStep">
+                                    <double>10.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="7" column="0">
+                            <widget class="QLabel" name="label_6">
+                                <property name="text">
+                                    <string>ScaleX</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="3" column="0">
+                            <widget class="QLabel" name="label_4">
+                                <property name="text">
+                                    <string>RotX</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="1" column="1">
+                            <widget class="QDoubleSpinBox" name="TransY">
+                                <property name="minimum">
+                                    <double>-10000.000000000000000</double>
+                                </property>
+                                <property name="maximum">
+                                    <double>10000.000000000000000</double>
+                                </property>
+                                <property name="value">
+                                    <double>300.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="1" column="0">
+                            <widget class="QLabel" name="label_2">
+                                <property name="text">
+                                    <string>TransY</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="7" column="1">
+                            <widget class="QDoubleSpinBox" name="ScaleX">
+                                <property name="maximum">
+                                    <double>10000.000000000000000</double>
+                                </property>
+                                <property name="value">
+                                    <double>40.000000000000000</double>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="9" column="0">
+                            <widget class="QLabel" name="label_9">
+                                <property name="text">
+                                    <string>ScaleZ</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="0" column="0">
+                            <widget class="QLabel" name="label">
+                                <property name="text">
+                                    <string>TransX</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="0">
+                            <widget class="QLabel" name="label_3">
+                                <property name="text">
+                                    <string>TransZ</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="4" column="0">
+                            <widget class="QLabel" name="label_7">
+                                <property name="text">
+                                    <string>RotY</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="10" column="0">
+                            <spacer name="verticalSpacer">
+                                <property name="orientation">
+                                    <enum>Qt::Vertical</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                    <size>
+                                        <width>20</width>
+                                        <height>40</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </item>
+                    </layout>
+                </item>
+                <item>
+                    <widget class="QGraphicsView" name="graphicsView"/>
+                </item>
+            </layout>
+        </widget>
+        <widget class="QMenuBar" name="menubar">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>879</width>
+                    <height>22</height>
+                </rect>
+            </property>
+            <widget class="QMenu" name="menuFile">
+                <property name="title">
+                    <string>Menu</string>
+                </property>
+                <addaction name="actionOpen"/>
+                <addaction name="actionSave"/>
+                <addaction name="actionDefault_Scale"/>
+                <addaction name="actionExit"/>
+            </widget>
+            <addaction name="menuFile"/>
+        </widget>
+        <widget class="QStatusBar" name="statusbar"/>
+        <action name="actionOpen">
+            <property name="text">
+                <string>Open</string>
+            </property>
+        </action>
+        <action name="actionExit">
+            <property name="text">
+                <string>Exit</string>
+            </property>
+        </action>
+        <action name="actionDefault_Scale">
+            <property name="text">
+                <string>Default View</string>
+            </property>
+        </action>
+        <action name="actionSave">
+            <property name="text">
+                <string>Save</string>
+            </property>
+        </action>
+    </widget>
+    <resources/>
+    <connections/>
 </ui>

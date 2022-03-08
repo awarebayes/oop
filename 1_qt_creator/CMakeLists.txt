@@ -16,10 +16,10 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         src/main.cpp
-        src/mainwindow.cpp
-        inc/mainwindow.h
+        src/view.cpp
+        inc/view.h
         src/mainwindow.ui
-        src/model.cpp inc/model.h src/mesh3d.cpp inc/mesh3d.h src/linalg.cpp inc/linalg.h src/renderer.cpp inc/renderer.h inc/transformations.h inc/config.h inc/observable.h src/observable.cpp src/transformations.cpp inc/controller.h src/controller.cpp)
+        src/model.cpp inc/model.h src/mesh3d.cpp inc/mesh3d.h src/linalg.cpp inc/linalg.h src/renderer.cpp inc/renderer.h inc/transformations.h inc/config.h inc/observable.h src/transformations.cpp inc/controller.h src/controller.cpp inc/result.h inc/obj_io.h src/obj_io.cpp inc/error.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(1_qt_creator
