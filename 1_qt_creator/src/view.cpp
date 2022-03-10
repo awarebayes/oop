@@ -26,87 +26,152 @@ MainWindow::~MainWindow()
 void MainWindow::on_TransX_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Translate, Axis::X, arg1);
+	TransformMutation mut = {TransformType::Translate, Axis::X, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 void MainWindow::on_TransY_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Translate, Axis::Y, arg1);
+
+	TransformMutation mut = {TransformType::Translate, Axis::Y, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_TransZ_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Translate, Axis::Z, arg1);
+
+	TransformMutation mut = {TransformType::Translate, Axis::Z, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_RotX_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Rotate, Axis::X, arg1);
+
+	TransformMutation mut = {TransformType::Rotate, Axis::X, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_RotY_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Rotate, Axis::Y, arg1);
+	TransformMutation mut = {TransformType::Rotate, Axis::Y, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_RotZ_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Rotate, Axis::Z, arg1);
+	TransformMutation mut = {TransformType::Rotate, Axis::Z, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_ScaleX_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Scale, Axis::X, arg1);
+
+	TransformMutation mut = {TransformType::Scale, Axis::X, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_ScaleY_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Scale, Axis::Y, arg1);
+
+	TransformMutation mut = {TransformType::Scale, Axis::Y, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_ScaleZ_valueChanged(double arg1)
 {
 	auto controller = controller_.value().get();
-	controller.mutate_transformations(TransformType::Scale, Axis::Z, arg1);
+
+	TransformMutation mut = {TransformType::Scale, Axis::Z, arg1};
+	ControllerCommand command = {
+			.args = {.transform_mutation=mut},
+			.type = ControllerCommandType::mutate_transformations,
+	};
+	entry_point(controller, command);
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
 	auto controller = controller_.value().get();
-	controller.load_object();
+
+	ControllerCommand command = {
+			.type = ControllerCommandType::load_object,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_actionExit_triggered()
 {
-	exit(0);
+	auto controller = controller_.value().get();
+	ControllerCommand command = {
+			.type = ControllerCommandType::exit,
+	};
+	entry_point(controller, command);
 }
 
 
 void MainWindow::on_actionDefault_Scale_triggered()
 {
 	auto controller = controller_.value().get();
-	controller.set_appropriate_transformations();
+	ControllerCommand command = {
+			.type = ControllerCommandType::default_view,
+	};
+	entry_point(controller, command);
 }
 
 void MainWindow::on_actionSave_triggered()
 {
 	auto controller = controller_.value().get();
-	controller.save_object();
+	ControllerCommand command = {
+			.type = ControllerCommandType::save_object,
+	};
+	entry_point(controller, command);
 }
 
 void MainWindow::connect_controller(Controller &controller)

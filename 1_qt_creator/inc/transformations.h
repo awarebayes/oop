@@ -20,6 +20,13 @@ enum struct TransformType
 	Translate, Scale, Rotate
 };
 
+struct TransformMutation
+{
+	TransformType type;
+	Axis axis;
+	double argument;
+};
+
 auto transform_type_to_string(TransformType type) -> cpp::result<std::string, errc>;
 
 auto string_to_transform_type(const std::string &name) -> cpp::result<TransformType, errc>;
@@ -46,7 +53,7 @@ typedef struct Transformations
 
 	[[nodiscard]] Mat4x4 getMatrix() const;
 
-	void mutate(TransformType type, Axis axis, double value);
+	void mutate(const TransformMutation &mut);
 
 	[[nodiscard]] auto to_obj_string() const -> cpp::result<std::string, errc>;
 

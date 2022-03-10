@@ -116,18 +116,18 @@ Mat4x4 Transformations::getMatrix() const
 	return result;
 }
 
-void Transformations::mutate(TransformType type, Axis axis, double value)
+void Transformations::mutate(const TransformMutation &mut)
 {
-	switch (type)
+	switch (mut.type)
 	{
 		case TransformType::Translate:
-			translate.mutate(axis, value);
+			translate.mutate(mut.axis, mut.argument);
 			break;
 		case TransformType::Rotate:
-			rotate.mutate(axis, value);
+			rotate.mutate(mut.axis, mut.argument);
 			break;
 		case TransformType::Scale:
-			scale.mutate(axis, value);
+			scale.mutate(mut.axis, mut.argument);
 			break;
 	}
 }
@@ -162,3 +162,4 @@ auto Transformations::read_partial(const std::string &in) -> cpp::result<void, e
 		scale = transformation;
 	return {};
 }
+

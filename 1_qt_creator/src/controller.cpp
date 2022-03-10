@@ -7,15 +7,12 @@
 #include <QMessageBox>
 #include <inc/obj_io.h>
 
+Controller::Controller(Model &model) : model_(model) {}
 
-Controller::Controller(Model &model) : model_(model)
-{
-}
-
-void Controller::mutate_transformations(TransformType type, Axis axis, double value) const
+void Controller::mutate_transformations(const TransformMutation &mut) const
 {
 	Transformations current_transform = model_.get_transformations();
-	current_transform.mutate(type, axis, value);
+	current_transform.mutate(mut);
 	model_.mutate_transformations(current_transform);
 }
 
@@ -31,7 +28,7 @@ const Transformations &Controller::get_transformations() const
 
 void Controller::set_appropriate_transformations()
 {
-	const Mesh3D &object = get_current_object();
+	const Mesh3D &object = model_.get_current_object();
 	Transformations new_transform = get_appropriate_transformations(object);
 	model_.mutate_transformations(new_transform);
 }
@@ -80,3 +77,21 @@ void Controller::save_object()
 		show_error_dialog(maybe_error.error());
 }
 
+void entry_point(Controller &controller, const struct ControllerCommand &command)
+{
+	if (command.type == ControllerCommandType::load_object)
+		controller.load_object();
+	else if (command.type == ControllerCommandType::save_object)
+		controller.save_object();
+	else if (command.type == ControllerCommandType::load_default_cube)
+		controller.load_default_cube();
+	else if (command.type == ControllerCommandType::mutate_transformations)
+	{
+		TransformMutation mut = command.args.transform_mutation;
+		controller.mutate_transformations(mut);
+	}
+	else if (command.type == ControllerCommandType::default_view)
+			controller.set_appropriate_transformations();
+	else if (command.type == ControllerCommandType::exit)
+			exit(0);
+}
