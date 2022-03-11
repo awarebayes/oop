@@ -1,3 +1,4 @@
+#include <QFileDialog>
 #include "inc/mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "inc/config.h"
@@ -61,6 +62,7 @@ void MainWindow::rerender()
 	entry_point(command_type::draw_object, s);
 
 	object = s.object;
+	just_initialized = s.just_initialized;
 	set_transforms(s.transforms);
 }
 
@@ -142,4 +144,42 @@ void MainWindow::set_transforms(const transformations &transforms)
 }
 
 
+
+
+void MainWindow::on_actionOpen_triggered()
+{
+	QString filename = QFileDialog::getOpenFileName(nullptr, "Open .obj file", "./", "Obj file (*.obj)");
+	if (filename.isEmpty())
+		return;
+
+	state s = {};
+	s.obj_path = filename.toStdString();
+	s.transforms = get_transformations();
+	s.object = object;
+	s.scene = scene;
+	entry_point(command_type::load_object, s);
+
+	object = s.object;
+	set_transforms(s.transforms);
+
+	rerender();
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+
+}
+
+
+void MainWindow::on_actionDefault_Scale_triggered()
+{
+
+}
+
+
+void MainWindow::on_actionSave_triggered()
+{
+
+}
 

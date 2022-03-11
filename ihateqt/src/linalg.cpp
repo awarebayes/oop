@@ -126,21 +126,21 @@ errc vec4::vertex_from_obj_string(const std::string &in, vec4 &result)
 {
 	std::stringstream ss(in);
 	std::string is_vertex;
-	vec4 self = { 0, 0, 0, 1 };
 	errc ec = errc::ok;
 
-	ss >> is_vertex >> self.x >> self.y >> self.z;
+	ss >> is_vertex >> result.x >> result.y >> result.z;
+	result.w = 1;
 
 	if (ss.fail() or is_vertex != "v")
 		ec = errc::bad_from_string_read;
 	return ec;
 }
 
-errc vec4::to_obj_string(std::string &result) const
+errc vec4_to_obj_string(const vec4 &self, std::string &result)
 {
 	std::stringstream ss;
 	errc ec = errc::ok;
-	ss << "v " << x << " " << y << " " << z << " ";
+	ss << "v " << self.x << " " << self.y << " " << self.z << " ";
 	if (not ss.fail())
 		result = ss.str();
 	else

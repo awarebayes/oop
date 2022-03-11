@@ -13,7 +13,7 @@ errc entry_point(command_type command, state &current_state)
 	if (current_state.just_initialized)
 	{
 		object = obj3d::default_cube();
-		// appropriate_scale_obj3d(current_state.object);
+		appropriate_transformations(object, transforms);
 		current_state.just_initialized = false;
 	}
 
@@ -22,7 +22,9 @@ errc entry_point(command_type command, state &current_state)
 	switch (command)
 	{
 		case command_type::load_object:
-			// ec = read_obj3d(object, current_state.obj_path);
+			ec = read_obj3d(object, current_state.obj_path);
+			if (ec == errc::ok)
+				ec = appropriate_transformations(object, transforms);
 			break;
 		case command_type::save_object:
 			// ec = save_transformed_obj3d(object, transforms, current_state.obj_path);
@@ -41,11 +43,15 @@ errc entry_point(command_type command, state &current_state)
 static std::vector<vec4> apply_transform(const std::vector<vec4> &vertices, const mat4x4 &matrix)
 {
 	std::vector<vec4> transformed;
+	transformed.reserve(vertices.size());
 
-	std::transform(vertices.begin(), vertices.end(), std::back_inserter(transformed),
-	               [&matrix](vec4 vertex) { return vertex * matrix; });
+	for (const auto &vertex: vertices)
+	{
+		vec4 result = vertex * matrix;
+		transformed.push_back(result);
+	}
 
-	return transformed;
+	return std::move(transformed);
 }
 
 errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformations &transforms)

@@ -41,6 +41,14 @@ private slots:
 
     void on_ScaleZ_valueChanged(double arg1);
 
+    void on_actionOpen_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_actionDefault_Scale_triggered();
+
+    void on_actionSave_triggered();
+
 private:
 	Ui::MainWindow *ui;
 	QGraphicsScene *scene;

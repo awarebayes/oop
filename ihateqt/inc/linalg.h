@@ -16,10 +16,11 @@ typedef struct vec4
 
 	static errc vertex_from_obj_string(const std::string &in, vec4 &result);
 
-	errc to_obj_string(std::string &result) const;
 
 	double &operator[](int index);
 } vec4;
+
+errc vec4_to_obj_string(const vec4 &self, std::string &result);
 
 typedef struct mat4x4
 {

@@ -25,7 +25,7 @@ typedef struct obj3d
 
 errc read_obj3d(obj3d &self, const std::string &path);
 
-errc from_obj_string(line &self, const std::string &line);
+errc line_from_obj_string(const std::string &line, std::pair<int, int> &self);
 
 errc save_transformed_obj3d(const obj3d &object, const transformations &transforms, const std::string &path);
 
