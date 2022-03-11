@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 	scene = new QGraphicsScene(0, 0, SCREEN_WIDTH-2, SCREEN_HEIGHT-2, parent);
 	scene->addRect(scene->sceneRect());
 	ui->graphicsView->setScene(scene);
+
+	rerender();
 }
 
 MainWindow::~MainWindow()
@@ -31,17 +33,20 @@ transformations MainWindow::get_transformations()
 				.x = ui->TransX->value(),
 				.y = ui->TransY->value(),
 				.z = ui->TransZ->value(),
+				.type = transform_type::Translate,
 		};
 	res.scale = {
 				.x = ui->ScaleX->value(),
 				.y = ui->ScaleY->value(),
 				.z = ui->ScaleZ->value(),
-		};
+				.type = transform_type::Scale,
+	};
 	res.rotate = {
 				.x = ui->RotX->value(),
 				.y = ui->RotY->value(),
 				.z = ui->RotZ->value(),
-		};
+				.type = transform_type::Rotate,
+	};
 	return res;
 }
 
@@ -54,8 +59,10 @@ void MainWindow::rerender()
 	s.scene = scene;
 	s.just_initialized = just_initialized;
 	entry_point(command_type::draw_object, s);
-}
 
+	object = s.object;
+	set_transforms(s.transforms);
+}
 
 
 void MainWindow::on_TransX_valueChanged(double arg1)
@@ -118,4 +125,21 @@ void MainWindow::on_ScaleZ_valueChanged(double arg1)
 
 	rerender();
 }
+
+void MainWindow::set_transforms(const transformations &transforms)
+{
+	ui->RotX->setValue(transforms.rotate.x);
+	ui->RotY->setValue(transforms.rotate.y);
+	ui->RotZ->setValue(transforms.rotate.z);
+
+	ui->TransX->setValue(transforms.translate.x);
+	ui->TransY->setValue(transforms.translate.y);
+	ui->TransZ->setValue(transforms.translate.z);
+
+	ui->ScaleX->setValue(transforms.scale.x);
+	ui->ScaleY->setValue(transforms.scale.y);
+	ui->ScaleZ->setValue(transforms.scale.z);
+}
+
+
 

@@ -46,7 +46,8 @@ private:
 	QGraphicsScene *scene;
 	transformations get_transformations();
 	void rerender();
-	bool just_initialized = false;
+	void set_transforms(const transformations &transforms);
+	bool just_initialized = true;
 	obj3d object;
 };
 

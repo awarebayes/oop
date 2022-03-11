@@ -25,8 +25,10 @@ typedef struct obj3d
 
 errc read_obj3d(obj3d &self, const std::string &path);
 
+errc from_obj_string(line &self, const std::string &line);
+
 errc save_transformed_obj3d(const obj3d &object, const transformations &transforms, const std::string &path);
 
-errc appropriate_scale_obj3d(obj3d &object);
+errc appropriate_transformations(const obj3d &object, transformations &transforms);
 
 #endif //IHATEQT_OBJ3D_H

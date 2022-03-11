@@ -122,24 +122,30 @@ double vec4::at(int index) const
 	}
 }
 
-auto vec4::vertex_from_obj_string(const std::string &in) -> cpp::result<Vec4, errc>
+errc vec4::vertex_from_obj_string(const std::string &in, vec4 &result)
 {
 	std::stringstream ss(in);
 	std::string is_vertex;
 	vec4 self = { 0, 0, 0, 1 };
+	errc ec = errc::ok;
 
 	ss >> is_vertex >> self.x >> self.y >> self.z;
 
 	if (ss.fail() or is_vertex != "v")
-		return cpp::fail(errc::invalid_vertex_string_in_file);
-	return self;
+		ec = errc::bad_from_string_read;
+	return ec;
 }
 
-auto vec4::to_obj_string() const -> cpp::result<std::string, errc>
+errc vec4::to_obj_string(std::string &result) const
 {
 	std::stringstream ss;
+	errc ec = errc::ok;
 	ss << "v " << x << " " << y << " " << z << " ";
-	return ss.str();
+	if (not ss.fail())
+		result = ss.str();
+	else
+		ec = errc::bad_to_string;
+	return ec;
 }
 
 mat4x4 operator*(mat4x4 const &lhs, const mat4x4 &rhs)

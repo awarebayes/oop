@@ -12,7 +12,7 @@ bool transform_xyz_is_valid(const transform_xyz &self)
 		return false;
 	if (std::isinf(self.x) || std::isinf(self.y) || std::isinf(self.z))
 		return false;
-	if (self.type == transform_type::Translate || self.type == transform_type::Rotate || self.type == transform_type::Scale)
+	if (self.type != transform_type::Translate && self.type != transform_type::Rotate && self.type != transform_type::Scale)
 		return false;
 	return true;
 }
@@ -45,6 +45,7 @@ errc transform_xyz_to_matrix(const transform_xyz &self, mat4x4 &result)
 			break;
 		default:
 			ec = errc::invalid_transformations;
+			break;
 	}
 	return ec;
 }
@@ -66,4 +67,5 @@ errc transformations_to_matrix(const transformations &self, mat4x4 &result)
 	result = result * scale_mat;
 	result = result * rotation_mat;
 	result = result * translation_mat;
+	return errc::ok;
 }

@@ -2,6 +2,7 @@
 // Created by dev on 3/10/22.
 //
 
+#include <iostream>
 #include "inc/domain.h"
 
 errc entry_point(command_type command, state &current_state)
@@ -62,9 +63,11 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 
 	for (const auto &line: object.lines)
 	{
-		vec4 point1 = object.vertices[line.first];
-		vec4 point2 = object.vertices[line.second];
+		vec4 point1 = transformed_vertices[line.first];
+		vec4 point2 = transformed_vertices[line.second];
 		scene->addLine(point1.x, point1.y, point2.x, point2.y);
 	}
 	return ec;
 }
+
+

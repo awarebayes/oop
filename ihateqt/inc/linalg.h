@@ -14,9 +14,9 @@ typedef struct vec4
 
 	[[nodiscard]] double at(int index) const;
 
-	static errc vertex_from_obj_string(const std::string &in);
+	static errc vertex_from_obj_string(const std::string &in, vec4 &result);
 
-	errc to_obj_string() const;
+	errc to_obj_string(std::string &result) const;
 
 	double &operator[](int index);
 } vec4;
@@ -38,10 +38,6 @@ mat4x4 rotation_matrix(double x_rot, double y_rot, double z_rot);
 mat4x4 scale_matrix(double x_scale, double y_scale, double z_scale);
 
 mat4x4 translation_matrix(double x_translation, double y_translation, double z_translation);
-
-vec4 operator+(vec4 const &lhs, vec4 const &rhs);
-
-vec4 operator-(vec4 const &lhs, vec4 const &rhs);
 
 mat4x4 operator*(mat4x4 const &lhs, const mat4x4 &rhs);
 
