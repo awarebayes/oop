@@ -16,6 +16,7 @@ enum class command_type
 	load_object,
 	save_object,
 	draw_object,
+	default_view,
 };
 
 typedef struct state
@@ -32,5 +33,8 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 
 errc entry_point(command_type command, state &current_state);
 
+errc load_object_and_transforms(obj3d &object, transformations &transforms, const std::string &path);
+
+errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const std::string &path);
 
 #endif //IHATEQT_DOMAIN_H

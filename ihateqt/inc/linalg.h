@@ -10,17 +10,13 @@
 
 typedef struct vec4
 {
-	double x, y, z, w;
-
-	[[nodiscard]] double at(int index) const;
-
-	static errc vertex_from_obj_string(const std::string &in, vec4 &result);
-
-
+	double components[4];
 	double &operator[](int index);
+
+	static errc from_obj_string(const std::string &in, vec4 &result);
+	static errc to_obj_string(const vec4 &self, std::string &result);
 } vec4;
 
-errc vec4_to_obj_string(const vec4 &self, std::string &result);
 
 typedef struct mat4x4
 {

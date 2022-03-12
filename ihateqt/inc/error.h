@@ -16,6 +16,7 @@ enum class errc
 	bad_to_string,
 	bad_command,
 	invalid_transformations,
+	transforms_not_found,
 };
 
 const std::map<errc, std::string> error_map = {
@@ -32,6 +33,7 @@ const std::map<errc, std::string> error_map = {
 		{ errc::bad_to_string,                 "bad_to_string" },
 		{ errc::bad_command,                   "bad_domain_command" },
 		{ errc::invalid_transformations,       "invalid_transformations" },
+		{ errc::transforms_not_found,          "transforms_not_found" },
 };
 
 #endif

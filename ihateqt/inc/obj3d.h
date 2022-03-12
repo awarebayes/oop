@@ -21,13 +21,13 @@ typedef struct obj3d
 	vec4 center{};
 
 	static obj3d default_cube();
+	static errc from_file(obj3d &self, const std::string &path);
+	static errc to_file(const obj3d &objects, const std::string &path);
 } obj3d;
 
-errc read_obj3d(obj3d &self, const std::string &path);
 
 errc line_from_obj_string(const std::string &line, std::pair<int, int> &self);
 
-errc save_transformed_obj3d(const obj3d &object, const transformations &transforms, const std::string &path);
 
 errc appropriate_transformations(const obj3d &object, transformations &transforms);
 

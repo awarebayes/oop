@@ -127,10 +127,12 @@ obj3d obj3d::default_cube()
 
 errc line_from_obj_string(const std::string &line, std::pair<int, int> &self)
 {
-	std::stringstream ss;
+	std::stringstream ss(line);
+	std::string line_prefix;
 	errc ec = errc::ok;
-	ss >> self.first >> self.second;
-	if (ss.fail())
+
+	ss >> line_prefix >> self.first >> self.second;
+	if (ss.fail() or line_prefix != "l")
 		ec = errc::bad_from_string_read;
 	if (self.first > self.second)
 		std::swap(self.first, self.second);
@@ -150,16 +152,16 @@ errc appropriate_transformations(const obj3d &object, transformations &transform
 		return errc::invalid_argument;
 
 	vec4 first = object.vertices[0];
-	std::array<struct MinMax, 3> min_max_coords = {{{ first.x, first.x },
-	                                                { first.y, first.y },
-	                                                { first.z, first.z }}};
+	std::array<struct MinMax, 3> min_max_coords = {{{ first[0], first[1] },
+	                                                { first[1], first[2] },
+	                                                { first[2], first[2] }}};
 	for (const auto &point: object.vertices)
 	{
 		for (int i = 0; i < 3; i++)
 		{
 			struct MinMax &mm = min_max_coords[i];
-			mm.min = std::min(point.at(i), mm.min);
-			mm.max = std::max(point.at(i), mm.max);
+			mm.min = std::min(point.components[i], mm.min);
+			mm.max = std::max(point.components[i], mm.max);
 		}
 	}
 
@@ -191,20 +193,20 @@ errc appropriate_transformations(const obj3d &object, transformations &transform
 errc find_object_center(obj3d &object)
 {
 	vec4 &center = object.center;
-	for (const auto &vertex: object.vertices)
+	for (auto &vertex: object.vertices)
 	{
-		center.x += vertex.x;
-		center.y += vertex.z;
-		center.z += vertex.z;
+		center[0] += vertex[0];
+		center[0] += vertex[0];
+		center[0] += vertex[0];
 	}
 
-	center.x /= (double)object.vertices.size();
-	center.y /= (double)object.vertices.size();
-	center.z /= (double)object.vertices.size();
+	center[0] /= (double)object.vertices.size();
+	center[1] /= (double)object.vertices.size();
+	center[2] /= (double)object.vertices.size();
 	return errc::ok;
 }
 
-errc read_obj3d(obj3d &self, const std::string &path)
+errc obj3d::from_file(obj3d &self, const std::string &path)
 {
 	std::stringstream ss;
 	std::ifstream in_file(path.c_str());
@@ -233,7 +235,7 @@ errc read_obj3d(obj3d &self, const std::string &path)
 		if (prefix == "v")
 		{
 			vec4 read_result{};
-			error = vec4::vertex_from_obj_string(line, read_result);
+			error = vec4::from_obj_string(line, read_result);
 			object.vertices.push_back(read_result);
 
 		}
@@ -253,7 +255,7 @@ errc read_obj3d(obj3d &self, const std::string &path)
 		{
 			std::pair<int, int> read_result;
 			error = line_from_obj_string(line, read_result);
-			self.lines.insert(read_result);
+			object.lines.insert(read_result);
 		}
 	}
 
@@ -265,7 +267,7 @@ errc read_obj3d(obj3d &self, const std::string &path)
 }
 
 
-errc save_transformed_obj3d(const obj3d &object, const transformations &transforms, const std::string &path)
+errc obj3d::to_file(const obj3d &objects, const std::string &path)
 {
 	errc ec = errc::ok;
 	std::ofstream file;
@@ -274,13 +276,13 @@ errc save_transformed_obj3d(const obj3d &object, const transformations &transfor
 	if (not file.is_open())
 		return errc::bad_file_descriptor;
 
-	for (const auto &vertex: object.vertices)
+	for (const auto &vertex: objects.vertices)
 	{
-		ec = vec4_to_obj_string(vertex, buffer);
+		ec = vec4::to_obj_string(vertex, buffer);
 		file << buffer << "\n";
 	}
 
-	for (const auto &line: object.lines)
+	for (const auto &line: objects.lines)
 		file << "l " << line.first << " " << line.second << "\n";
 
 	file.close();

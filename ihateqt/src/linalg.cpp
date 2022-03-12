@@ -80,67 +80,30 @@ mat4x4 translation_matrix(double x_translation, double y_translation, double z_t
 	};
 }
 
-vec4 operator+(vec4 const &lhs, vec4 const &rhs)
-{
-	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w };
-}
-
-vec4 operator-(vec4 const &lhs, vec4 const &rhs)
-{
-	return { lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w };
-}
-
 double &vec4::operator[](int index)
 {
-	switch (index)
-	{
-		case 0:
-			return x;
-		case 1:
-			return y;
-		case 2:
-			return z;
-		case 3:
-			return w;
-	}
+	return components[index];
 }
 
-double vec4::at(int index) const
-{
-	switch (index)
-	{
-		case 0:
-			return x;
-		case 1:
-			return y;
-		case 2:
-			return z;
-		case 3:
-			return w;
-		default:
-			return 0;
-	}
-}
-
-errc vec4::vertex_from_obj_string(const std::string &in, vec4 &result)
+errc vec4::from_obj_string(const std::string &in, vec4 &result)
 {
 	std::stringstream ss(in);
 	std::string is_vertex;
 	errc ec = errc::ok;
 
-	ss >> is_vertex >> result.x >> result.y >> result.z;
-	result.w = 1;
+	ss >> is_vertex >> result[0] >> result[1] >> result[2];
+	result[3] = 1;
 
 	if (ss.fail() or is_vertex != "v")
 		ec = errc::bad_from_string_read;
 	return ec;
 }
 
-errc vec4_to_obj_string(const vec4 &self, std::string &result)
+errc vec4::to_obj_string(const vec4 &self, std::string &result)
 {
 	std::stringstream ss;
 	errc ec = errc::ok;
-	ss << "v " << self.x << " " << self.y << " " << self.z << " ";
+	ss << "v " << self.components[0] << " " << self.components[1] << " " << self.components[2] << " ";
 	if (not ss.fail())
 		result = ss.str();
 	else
@@ -163,7 +126,7 @@ vec4 operator*(vec4 const &lhs, const mat4x4 &rhs)
 	vec4 result = { 0, 0, 0, 0 };
 	for (int col = 0; col < 4; col++)
 		for (int inner = 0; inner < 4; inner++)
-			result[col] += lhs.at(inner) * rhs.mat[inner][col];
+			result[col] += lhs.components[inner] * rhs.mat[inner][col];
 	return result;
 }
 
@@ -172,7 +135,7 @@ vec4 operator*(const mat4x4 &lhs, vec4 const &rhs)
 	vec4 result = { 0, 0, 0, 0 };
 	for (int col = 0; col < 4; col++)
 		for (int inner = 0; inner < 4; inner++)
-			result[col] += lhs.mat[col][inner] * rhs.at(inner);
+			result[col] += lhs.mat[col][inner] * rhs.components[inner];
 	return result;
 }
 

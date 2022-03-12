@@ -174,12 +174,33 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionDefault_Scale_triggered()
 {
+	state s = {};
+	s.obj_path = "";
+	s.transforms = get_transformations();
+	s.object = object;
+	s.scene = scene;
+	entry_point(command_type::default_view, s);
 
+	object = s.object;
+	set_transforms(s.transforms);
+
+	rerender();
 }
 
 
 void MainWindow::on_actionSave_triggered()
 {
+	QString filename = QFileDialog::getSaveFileName(nullptr, "Open .obj file", "./", "Obj file (*.obj)");
+	if (filename.isEmpty())
+		return;
 
+	state s = {};
+	s.obj_path = filename.toStdString();
+	s.transforms = get_transformations();
+	s.object = object;
+	s.scene = scene;
+	entry_point(command_type::save_object, s);
+
+	rerender();
 }
 
