@@ -1,141 +1,48 @@
 //
 // Created by dev on 3/10/22.
 //
-#include <array>
-#include <sstream>
-#include <fstream>
+#include <cstdio>
+#include <cstring>
 #include "inc/obj3d.h"
 #include "inc/config.h"
 
-struct triplet
+
+errc init_obj3d(obj3d &self, int n_vertices, int n_lines)
 {
-	int p1, p2, p3;
-	triplet(int p1_, int p2_, int p3_);
+	self.n_vertices = n_vertices;
+	self.n_lines = n_lines;
 
-	static errc triplet_from_obj_string(const std::string &in, struct triplet &self);
-	errc set(int index, int value);
-};
-
-errc triplet::triplet_from_obj_string(const std::string &in, triplet &self)
-{
-	int temp_int = 0;
-	errc ec = errc::ok;
-	std::stringstream ss(in);
-	std::string is_face;
-
-	ss >> is_face;
-	if (is_face != "f")
-		ec = errc::invalid_index_string_in_file;
-
-	int counter = 0;
-	int indexes_read = 0;
-
-
-	while (ss >> temp_int and ec == errc::ok)
-	{
-		if (temp_int - 1 < 0)
-			ec = errc::index_mismatch;
-
-		if (counter == 0 and indexes_read < 3)
-			ec = self.set(indexes_read++, temp_int - 1);
-		while (ss.peek() == '/')
-		{
-			counter += 1;
-			ss.ignore(1, '/');
-		}
-		if (ss.peek() == ' ')
-		{
-			counter = 0;
-			ss.ignore(1, ' ');
-		}
-		if (ss.fail() and indexes_read < 3)
-			ec = errc::invalid_index_string_in_file;
-	}
-
-	return ec;
+	self.vertices = (vec4 *)malloc(sizeof(vec4) * self.n_vertices);
+	self.lines = (line *)malloc(sizeof(line) * self.n_lines);
 }
 
-triplet::triplet(int p1_, int p2_, int p3_)
+errc free_obj3d(obj3d &self)
 {
-	p1 = std::min(p1_, std::min(p2_, p3_));
-	p3 = std::max(p1_, std::max(p2_, p3_));
-	p2 = p1_ + p2_ + p3_ - p1 - p3;
+	free(self.vertices);
+	free(self.lines);
+	self.n_lines = 0;
+	self.n_vertices = 0;
 }
 
-errc triplet::set(int index, int value)
+obj3d obj3d_default_cube()
+{
+	// todo
+}
+
+errc line_from_obj_string(const string512 &in, line &self)
 {
 	errc ec = errc::ok;
-	switch (index)
-	{
-		case 0:
-			p1 = value;
-			break;
-		case 1:
-			p2 = value;
-			break;
-		case 2:
-			p3 = value;
-			break;
-		default:
-			ec = errc::invalid_argument;
-			break;
-	}
-	return ec;
-}
-
-obj3d obj3d::default_cube()
-{
-	obj3d result = {};
-	result.vertices = {
-			{ 1.000000,  -1.000000, -1.000000, 1 },
-			{ 1.000000,  -1.000000, 1.000000,  1 },
-			{ -1.000000, -1.000000, 1.000000,  1 },
-			{ -1.000000, -1.000000, -1.000000, 1 },
-			{ 1.000000,  1.000000,  -0.999999, 1 },
-			{ 0.999999,  1.000000,  1.000001,  1 },
-			{ -1.000000, 1.000000,  1.000000,  1 },
-			{ -1.000000, 1.000000,  -1.000000, 1 },
-	};
-
-
-	std::vector<struct triplet> indices = {
-			{ 0, 1, 2 },
-			{ 6, 5, 4 },
-			{ 3, 4, 0 },
-			{ 4, 5, 1 },
-			{ 2, 6, 7 },
-			{ 0, 3, 7 },
-			{ 0, 1, 3 },
-			{ 4, 7, 5 },
-			{ 0, 4, 1 },
-			{ 1, 5, 2 },
-			{ 3, 2, 7 },
-			{ 4, 0, 7 }};
-
-	for (const auto &tri: indices)
-	{
-		line l1 = std::make_pair(tri.p1, tri.p2);
-		line l2 = std::make_pair(tri.p1, tri.p3);
-		line l3 = std::make_pair(tri.p2, tri.p3);
-		result.lines.insert(l1);
-		result.lines.insert(l2);
-		result.lines.insert(l3);
-	}
-	result.center = {0, 0, 0};
-	return result;
-}
-
-errc line_from_obj_string(const std::string &line, std::pair<int, int> &self)
-{
-	std::stringstream ss(line);
-	std::string line_prefix;
-	errc ec = errc::ok;
-
-	ss >> line_prefix >> self.first >> self.second;
-	if (ss.fail() or line_prefix != "l")
+	string16 line_type = "";
+	if (sscanf(
+			in.buf,
+			"%s %d %d",
+			line_type,
+			&self.first,
+			&self.second
+			) != 3)
 		ec = errc::bad_from_string_read;
-	if (self.first > self.second)
-		std::swap(self.first, self.second);
+	if (strcmp(line_type, "l") != 0)
+		ec = errc::bad_from_string_read;
 	return ec;
 }
 
@@ -148,27 +55,27 @@ struct MinMax
 
 errc appropriate_transformations(const obj3d &object, transformations &transforms)
 {
-	if (object.vertices.empty())
+	if (object.n_vertices == 0)
 		return errc::invalid_argument;
 
 	vec4 first = object.vertices[0];
-	std::array<struct MinMax, 3> min_max_coords = {{{ first[0], first[1] },
-	                                                { first[1], first[2] },
-	                                                { first[2], first[2] }}};
-	for (const auto &point: object.vertices)
+	MinMax min_max_coords[3] = {{ first[0], first[1] },
+								{ first[1], first[2] },
+								{ first[2], first[2] }};
+	for (int i = 0; i < object.n_vertices; i++)
 	{
-		for (int i = 0; i < 3; i++)
+		vec4 point = object.vertices[i];
+		for (int j = 0; j < 3; j++)
 		{
-			struct MinMax &mm = min_max_coords[i];
-			mm.min = std::min(point.components[i], mm.min);
-			mm.max = std::max(point.components[i], mm.max);
+			struct MinMax &mm = min_max_coords[j];
+			mm.min = std::min(point.components[j], mm.min);
+			mm.max = std::max(point.components[j], mm.max);
 		}
 	}
 
 	double max_coordinate_difference = 0;
-	for (int i = 0; i < 3; i++)
+	for (auto & mm : min_max_coords)
 	{
-		const struct MinMax &mm = min_max_coords[i];
 		double coordinate_difference = mm.max - mm.min;
 		max_coordinate_difference = std::max(max_coordinate_difference, coordinate_difference);
 	}
@@ -192,70 +99,74 @@ errc appropriate_transformations(const obj3d &object, transformations &transform
 
 errc find_object_center(obj3d &object)
 {
+	if (object.n_vertices == 0)
+		return errc::invalid_argument;
+
 	vec4 &center = object.center;
-	for (auto &vertex: object.vertices)
+	for (int i = 0; i < object.n_vertices; i++)
 	{
+		vec4 vertex = object.vertices[i];
 		center[0] += vertex[0];
-		center[0] += vertex[0];
-		center[0] += vertex[0];
+		center[1] += vertex[1];
+		center[2] += vertex[2];
 	}
 
-	center[0] /= (double)object.vertices.size();
-	center[1] /= (double)object.vertices.size();
-	center[2] /= (double)object.vertices.size();
+	center[0] /= (double)object.n_vertices;
+	center[1] /= (double)object.n_vertices;
+	center[2] /= (double)object.n_vertices;
 	return errc::ok;
 }
 
-errc obj3d::from_file(obj3d &self, const std::string &path)
+errc init_obj3d_from_string(obj3d &self, string512& in)
 {
-	std::stringstream ss;
-	std::ifstream in_file(path.c_str());
-	if (in_file.fail())
+	errc ec = errc::ok;
+	int n_vertices = 0, n_lines = 0;
+	string16 line_type;
+	if (sscanf(in.buf, "%s %d %d", line_type, &n_vertices, &n_lines) != 3)
+		ec = errc::bad_from_string_read;
+	if (strcmp(line_type, "i") != 0)
+		ec = errc::bad_from_string_read;
+	if (ec == errc::ok)
+		init_obj3d(self, n_vertices, n_lines);
+	return ec;
+}
+
+errc obj3d_from_file(obj3d &self, const string512 &path)
+{
+
+	FILE *file = fopen(path.buf, "r");
+	if (file == nullptr)
 		return errc::no_such_file_or_directory;
 
-	obj3d object = {
-			.vertices = std::vector<vec4>(),
-			.lines = std::set<line>(),
-	};
+	obj3d object{};
 
 	errc error = errc::ok;
 	bool found_transformations = false;
+	string512 buffer;
+	string16 line_type;
 
-	std::string line;
-	std::string prefix;
 
-	while (std::getline(in_file, line) and error == errc::ok)
+	while (not feof(file) and error == errc::ok)
 	{
-		ss.clear();
-		ss.str(line);
-		prefix.clear();
+		fgets(buffer.buf, buffer.length, file);
+		sscanf(buffer.buf, "%s", line_type);
 
-		ss >> prefix;
+		if (strcmp(line_type, "i") == 0)
+		{
+			error = init_obj3d_from_string(object, buffer);
+		}
 
-		if (prefix == "v")
+		else if (strcmp(line_type, "v") == 0)
 		{
 			vec4 read_result{};
-			error = vec4::from_obj_string(line, read_result);
-			object.vertices.push_back(read_result);
+			error = vec4::from_obj_string(buffer.buf, read_result);
 
 		}
-		else if (prefix == "f")
+		else if (strcmp(line_type, "l") == 0)
 		{
-			auto read_result = triplet(0,0,0);
-			error = triplet::triplet_from_obj_string(line, read_result);
-			auto l1 = std::make_pair(read_result.p1, read_result.p2);
-			auto l2 = std::make_pair(read_result.p1, read_result.p3);
-			auto l3 = std::make_pair(read_result.p2, read_result.p3);
-			object.lines.insert(l1);
-			object.lines.insert(l2);
-			object.lines.insert(l3);
-		}
-
-		else if (prefix == "l")
-		{
-			std::pair<int, int> read_result;
-			error = line_from_obj_string(line, read_result);
-			object.lines.insert(read_result);
+			line read_result;
+			error = line_from_obj_string(buffer, read_result);
+			object.lines[object.n_lines++] = read_result;
 		}
 	}
 
@@ -263,29 +174,32 @@ errc obj3d::from_file(obj3d &self, const std::string &path)
 
 	if (error == errc::ok)
 			self = object;
+	fclose(file);
 	return error;
 }
 
 
-errc obj3d::to_file(const obj3d &objects, const std::string &path)
+errc obj3d_to_file(const obj3d &self, const string512 &path)
 {
 	errc ec = errc::ok;
-	std::ofstream file;
-	std::string buffer;
-	file.open(path.c_str(), std::ios::out);
-	if (not file.is_open())
+	FILE *file = fopen(path.buf, "r");
+	if (file == nullptr)
 		return errc::bad_file_descriptor;
 
-	for (const auto &vertex: objects.vertices)
+	string512 buffer;
+	for (int i = 0; i < self.n_vertices; i++)
 	{
-		ec = vec4::to_obj_string(vertex, buffer);
-		file << buffer << "\n";
+		vec4 v = self.vertices[i];
+		ec = vec4::to_obj_string(v, buffer);
+		fprintf(file, "%s\n", buffer.buf);
 	}
 
-	for (const auto &line: objects.lines)
-		file << "l " << line.first << " " << line.second << "\n";
-
-	file.close();
+	for (int i = 0; i < self.n_lines; i++)
+	{
+		line l = self.lines[i];
+		fprintf(file, "l %d %d\n", l.first, l.second);
+	}
+	fclose(file);
 	return ec;
 }
 

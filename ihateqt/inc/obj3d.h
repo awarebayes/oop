@@ -11,23 +11,34 @@
 #include "linalg.h"
 #include "error.h"
 #include "transformations.h"
+#include "mishalib.h"
 
-typedef std::pair<int, int> line;
+typedef struct line
+{
+	int first, second;
+} line;
 
 typedef struct obj3d
 {
-	std::vector<vec4> vertices;
-	std::set<line> lines;
 	vec4 center{};
+	vec4 *vertices = nullptr;
+	line *lines = nullptr;
+	int n_vertices = 0;
+	int n_lines = 0;
 
-	static obj3d default_cube();
-	static errc from_file(obj3d &self, const std::string &path);
-	static errc to_file(const obj3d &objects, const std::string &path);
 } obj3d;
 
+errc new_obj3d(int n_vertices, int n_lines);
 
-errc line_from_obj_string(const std::string &line, std::pair<int, int> &self);
+errc free_obj3d(obj3d &self);
 
+errc line_from_obj_string(const string512 &line, line &self);
+
+obj3d default_cube();
+
+errc obj3d_from_file(obj3d &self, const string512 &path);
+
+errc obj3d_to_file(const obj3d &self, const string512 &path);
 
 errc appropriate_transformations(const obj3d &object, transformations &transforms);
 

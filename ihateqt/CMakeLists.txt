@@ -19,10 +19,10 @@ set(PROJECT_SOURCES
         src/mainwindow.cpp
         inc/mainwindow.h
         src/mainwindow.ui
-        inc/obj3d.h inc/transformations.h inc/domain.h src/transformations.cpp src/domain.cpp inc/state.h src/obj3d.cpp inc/config.h
+        inc/obj3d.h inc/transformations.h inc/domain.h src/transformations.cpp src/domain.cpp src/obj3d.cpp inc/config.h
         inc/linalg.h
         src/linalg.cpp
-        )
+        inc/mishalib.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ihateqt

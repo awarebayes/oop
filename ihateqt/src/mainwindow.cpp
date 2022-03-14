@@ -3,7 +3,6 @@
 #include "./ui_mainwindow.h"
 #include "inc/config.h"
 #include "inc/domain.h"
-#include "inc/state.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
