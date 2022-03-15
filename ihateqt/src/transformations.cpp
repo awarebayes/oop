@@ -64,27 +64,27 @@ errc transformations_to_matrix(const transformations &self, mat4x4 &result)
 	transform_xyz_to_matrix(self.rotate, rotation_mat);
 	transform_xyz_to_matrix(self.scale, scale_mat);
 
-	result = mat4x4::identity();
-	result = result * scale_mat;
-	result = result * rotation_mat;
-	result = result * translation_mat;
+	result = mat_identity();
+	result = mul_mat(result, scale_mat);
+	result = mul_mat(result, rotation_mat);
+	result = mul_mat(result, translation_mat);
 	return errc::ok;
 }
 
 errc apply_transform(const vec4 *vertices, vec4 *transformed, const mat4x4 &matrix, int n_points)
 {
 	for (int i = 0; i < n_points; i++)
-		transformed[i] = vertices[i] * matrix;
+		transformed[i] = mul_vec(vertices[i], matrix);
 	return errc::ok;
 }
 
-errc transform_xyz_from_string(transform_xyz &self, const string512 &in)
+errc transform_xyz_from_string(transform_xyz &self, const big_string &in)
 {
 	errc error = errc::ok;
 
 	transform_xyz temp_transform = { 0, 0, 0 };
-	string16 comment = "";
-	string16 type_str = "";
+	small_string comment = "";
+	small_string type_str = "";
 	if (sscanf(
 			in.buf,
 			"%s %s %lf %lf %lf",
@@ -106,33 +106,30 @@ errc transform_xyz_from_string(transform_xyz &self, const string512 &in)
 	return error;
 }
 
-errc transform_xyz_to_obj_string(const transform_xyz &self, string512 &out)
+errc transform_xyz_to_obj_string(const transform_xyz &self, big_string &out)
 {
 	errc ec = errc::ok;
-	string16 type_str = "";
+	small_string type_str = "";
 	ec = get_string_for_transform_type(self.type, type_str);
 	if (ec != errc::ok)
 		return errc::bad_to_string;
-
-	ss << "## " << type_str << " " << self.x << " " << self.y << " " << self.z << "\n";
-	printf("## %s %lf %lf %lf", );
-	out = ss.str();
+	sprintf(out.buf, "## %s %lf %lf %lf", type_str, self.x, self.y, self.z);
 	return ec;
 }
 
-errc get_string_for_transform_type(const transform_type type, string512 &out)
+errc get_string_for_transform_type(const transform_type type, small_string out)
 {
 	errc ec = errc::ok;
 	switch (type)
 	{
 		case (transform_type::Translate):
-			strcpy(out.buf, "Translate");
+			strcpy(out, "Translate");
 			break;
 		case (transform_type::Scale):
-			strcpy(out.buf, "Scale");
+			strcpy(out, "Scale");
 			break;
 		case (transform_type::Rotate):
-			strcpy(out.buf, "Rotate");
+			strcpy(out, "Rotate");
 			break;
 		default:
 			ec = errc::invalid_argument;
@@ -141,48 +138,46 @@ errc get_string_for_transform_type(const transform_type type, string512 &out)
 	return ec;
 }
 
-errc get_transform_type_for_string(const std::string &name, transform_type &out)
+errc get_transform_type_for_string(const small_string name, transform_type &out)
 {
 	errc ec = errc::ok;
-	if (name == "Translate")
+	if (strcmp(name, "Translate") == 0)
 		out = transform_type::Translate;
-	else if (name == "Rotate")
+	else if (strcmp(name, "Rotate") == 0)
 		out = transform_type::Rotate;
-	else if (name == "Scale")
+	else if (strcmp(name, "Scale") == 0)
 		out = transform_type::Scale;
 	else
 		ec = errc::invalid_argument;
 	return ec;
 }
 
-errc transforms_to_obj_string(const transformations &self, std::string &out)
+errc transforms_to_obj_string(const transformations &self, big_string &out)
 {
 	errc ec = errc::ok;
-	std::string translate_str;
-	std::string rotate_str;
-	std::string scale_str;
+	big_string translate_str;
+	big_string rotate_str;
+	big_string scale_str;
 
-	ec = transform_xyz::to_obj_string(self.translate, translate_str);
+	ec = transform_xyz_to_obj_string(self.translate, translate_str);
 	if (ec == errc::ok)
-		ec = transform_xyz::to_obj_string(self.rotate, rotate_str);
+		ec = transform_xyz_to_obj_string(self.rotate, rotate_str);
 	if (ec == errc::ok)
-		ec = transform_xyz::to_obj_string(self.scale, scale_str);
+		ec = transform_xyz_to_obj_string(self.scale, scale_str);
 
 	if (ec == errc::ok)
 	{
-		std::stringstream ss;
-		ss << translate_str << rotate_str << scale_str;
-		out = ss.str();
+		sprintf(out.buf, "%s\n%s\n%s\n", translate_str.buf, rotate_str.buf, scale_str.buf);
 	}
 
 	return ec;
 }
 
-errc transforms_read_partial(transformations &self, const std::string &in)
+errc transforms_read_partial(transformations &self, const big_string &in)
 {
 	errc ec = errc::ok;
 	transform_xyz loaded_transform;
-	ec = transform_xyz::from_string(loaded_transform, in);
+	ec = transform_xyz_from_string(loaded_transform, in);
 
 	if (ec == errc::ok)
 	{
@@ -196,54 +191,55 @@ errc transforms_read_partial(transformations &self, const std::string &in)
 	return ec;
 }
 
-errc transforms_from_file(transformations &self, const std::string &path)
+errc transforms_from_file(transformations &self, const big_string &path)
 {
 	bool transforms_found = false;
 	errc ec = errc::ok;
-	std::stringstream ss;
-	std::ifstream in_file(path.c_str());
 	transformations transforms;
+	FILE *in_file = fopen(path.buf, "r");
 
-	if (in_file.fail())
+	if (in_file == nullptr)
 		return errc::no_such_file_or_directory;
 
-	std::string line;
-	std::string prefix;
-	while (std::getline(in_file, line) and ec == errc::ok)
-	{
-		ss.clear();
-		ss.str(line);
-		prefix.clear();
+	big_string buffer;
+	small_string line_type;
 
-		ss >> prefix;
-		if (prefix == "##")
+
+	while (not feof(in_file) and ec == errc::ok)
+	{
+		fgets(buffer.buf, buffer.length, in_file);
+		sscanf(buffer.buf, "%s", line_type);
+
+		if (strcmp(line_type, "##") == 0)
 		{
-			ec = transformations::read_partial(transforms, line);
+			ec = transforms_read_partial(transforms, buffer);
 			transforms_found = true;
 		}
 	}
+
 
 	if (not transforms_found)
 		ec = errc::transforms_not_found;
 	if (ec == errc::ok)
 		self = transforms;
+
+	fclose(in_file);
 	return ec;
 }
 
-errc transforms_to_file(const transformations &self, const std::string &path)
+errc transforms_to_file(const transformations &self, const big_string &path)
 {
 	errc ec = errc::ok;
-	std::ofstream file;
-	std::string buffer;
-	file.open(path.c_str(), std::ios::app);
-	if (not file.is_open())
+
+	FILE *file = fopen(path.buf, "a");
+	big_string buffer;
+	if (file == nullptr)
 		return errc::bad_file_descriptor;
 
 	ec = transforms_to_obj_string(self, buffer);
 
 	if (ec == errc::ok)
-		file << buffer;
-
-	file.close();
+		fprintf(file, "%s", buffer.buf);
+	fclose(file);
 	return ec;
 }

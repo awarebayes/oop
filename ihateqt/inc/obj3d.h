@@ -32,14 +32,16 @@ errc new_obj3d(int n_vertices, int n_lines);
 
 errc free_obj3d(obj3d &self);
 
-errc line_from_obj_string(const string512 &line, line &self);
+errc line_from_obj_string(const big_string &in, line &self);
 
-obj3d default_cube();
+obj3d obj3d_default_cube();
 
-errc obj3d_from_file(obj3d &self, const string512 &path);
+errc obj3d_from_file(obj3d &self, const big_string &path);
 
-errc obj3d_to_file(const obj3d &self, const string512 &path);
+errc obj3d_to_file(const obj3d &self, const big_string &path);
 
 errc appropriate_transformations(const obj3d &object, transformations &transforms);
+
+static errc find_object_center(obj3d &object);
 
 #endif //IHATEQT_OBJ3D_H

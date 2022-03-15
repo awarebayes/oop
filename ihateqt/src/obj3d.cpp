@@ -9,30 +9,68 @@
 
 errc init_obj3d(obj3d &self, int n_vertices, int n_lines)
 {
+	errc ec = errc::ok;
 	self.n_vertices = n_vertices;
 	self.n_lines = n_lines;
 
 	self.vertices = (vec4 *)malloc(sizeof(vec4) * self.n_vertices);
 	self.lines = (line *)malloc(sizeof(line) * self.n_lines);
+	if (self.vertices == nullptr or self.lines == nullptr)
+		ec = errc::bad_malloc;
+	return ec;
 }
 
 errc free_obj3d(obj3d &self)
 {
 	free(self.vertices);
 	free(self.lines);
-	self.n_lines = 0;
-	self.n_vertices = 0;
+	return errc::ok;
 }
 
 obj3d obj3d_default_cube()
 {
-	// todo
+	obj3d self{};
+	init_obj3d(self, 8, 18);
+
+	self.vertices[0] = {-1.0, -1.0, -1.0, 1.0};
+	self.vertices[1] = {-1.0, -1.0, 1.0, 1.0};
+	self.vertices[2] = {-1.0, 1.0, -1.0, 1.0};
+	self.vertices[3] = {-1.0, 1.0, 1.0, 1.0};
+	self.vertices[4] = {1.0, -1.0, -1.0, 1.0};
+	self.vertices[5] = {1.0, -1.0, 1.0, 1.0};
+	self.vertices[6] = {1.0, 1.0, -1.0, 1.0};
+	self.vertices[7] = {1.0, 1.0, 1.0, 1.0};
+
+
+	self.lines[0] = {5, 1};
+	self.lines[1] = {6, 0};
+	self.lines[2] = {1, 0};
+	self.lines[3] = {7, 3};
+	self.lines[4] = {3, 2};
+	self.lines[5] = {2, 0};
+	self.lines[6] = {7, 6};
+	self.lines[7] = {5, 4};
+	self.lines[8] = {5, 0};
+	self.lines[9] = {4, 0};
+	self.lines[10] = {3, 1};
+	self.lines[11] = {6, 2};
+	self.lines[12] = {7, 2};
+	self.lines[13] = {7, 5};
+	self.lines[14] = {7, 1};
+	self.lines[15] = {6, 4};
+	self.lines[16] = {3, 0};
+	self.lines[17] = {7, 4};
+
+
+	find_object_center(self);
+
+	return self;
 }
 
-errc line_from_obj_string(const string512 &in, line &self)
+errc line_from_obj_string(const big_string &in, line &self)
 {
 	errc ec = errc::ok;
-	string16 line_type = "";
+	small_string line_type = "";
 	if (sscanf(
 			in.buf,
 			"%s %d %d",
@@ -55,13 +93,13 @@ struct MinMax
 
 errc appropriate_transformations(const obj3d &object, transformations &transforms)
 {
-	if (object.n_vertices == 0)
+	if (object.n_vertices == 0 || object.n_vertices == 1)
 		return errc::invalid_argument;
 
 	vec4 first = object.vertices[0];
-	MinMax min_max_coords[3] = {{ first[0], first[1] },
-								{ first[1], first[2] },
-								{ first[2], first[2] }};
+	MinMax min_max_coords[3] = {{ first.components[0], first.components[1] },
+								{ first.components[1], first.components[2] },
+								{ first.components[2], first.components[2] }};
 	for (int i = 0; i < object.n_vertices; i++)
 	{
 		vec4 point = object.vertices[i];
@@ -106,22 +144,22 @@ errc find_object_center(obj3d &object)
 	for (int i = 0; i < object.n_vertices; i++)
 	{
 		vec4 vertex = object.vertices[i];
-		center[0] += vertex[0];
-		center[1] += vertex[1];
-		center[2] += vertex[2];
+		center.components[0] += vertex.components[0];
+		center.components[1] += vertex.components[1];
+		center.components[2] += vertex.components[2];
 	}
 
-	center[0] /= (double)object.n_vertices;
-	center[1] /= (double)object.n_vertices;
-	center[2] /= (double)object.n_vertices;
+	center.components[0] /= (double)object.n_vertices;
+	center.components[1] /= (double)object.n_vertices;
+	center.components[2] /= (double)object.n_vertices;
 	return errc::ok;
 }
 
-errc init_obj3d_from_string(obj3d &self, string512& in)
+errc init_obj3d_from_string(obj3d &self, big_string& in)
 {
 	errc ec = errc::ok;
 	int n_vertices = 0, n_lines = 0;
-	string16 line_type;
+	small_string line_type;
 	if (sscanf(in.buf, "%s %d %d", line_type, &n_vertices, &n_lines) != 3)
 		ec = errc::bad_from_string_read;
 	if (strcmp(line_type, "i") != 0)
@@ -131,7 +169,7 @@ errc init_obj3d_from_string(obj3d &self, string512& in)
 	return ec;
 }
 
-errc obj3d_from_file(obj3d &self, const string512 &path)
+errc obj3d_from_file(obj3d &self, const big_string &path)
 {
 
 	FILE *file = fopen(path.buf, "r");
@@ -141,10 +179,11 @@ errc obj3d_from_file(obj3d &self, const string512 &path)
 	obj3d object{};
 
 	errc error = errc::ok;
-	bool found_transformations = false;
-	string512 buffer;
-	string16 line_type;
+	big_string buffer;
+	small_string line_type;
 
+	int n_vertices = 0;
+	int n_lines = 0;
 
 	while (not feof(file) and error == errc::ok)
 	{
@@ -159,14 +198,15 @@ errc obj3d_from_file(obj3d &self, const string512 &path)
 		else if (strcmp(line_type, "v") == 0)
 		{
 			vec4 read_result{};
-			error = vec4::from_obj_string(buffer.buf, read_result);
-
+			error = vec4_from_obj_string(buffer, read_result);
+			if (error == errc::ok)
+				object.vertices[n_vertices++] = read_result;
 		}
 		else if (strcmp(line_type, "l") == 0)
 		{
 			line read_result;
 			error = line_from_obj_string(buffer, read_result);
-			object.lines[object.n_lines++] = read_result;
+			object.lines[n_lines++] = read_result;
 		}
 	}
 
@@ -179,18 +219,20 @@ errc obj3d_from_file(obj3d &self, const string512 &path)
 }
 
 
-errc obj3d_to_file(const obj3d &self, const string512 &path)
+errc obj3d_to_file(const obj3d &self, const big_string &path)
 {
 	errc ec = errc::ok;
-	FILE *file = fopen(path.buf, "r");
+	FILE *file = fopen(path.buf, "w");
 	if (file == nullptr)
 		return errc::bad_file_descriptor;
 
-	string512 buffer;
-	for (int i = 0; i < self.n_vertices; i++)
+	fprintf(file, "i %d %d \n", self.n_vertices, self.n_lines);
+
+	big_string buffer;
+	for (int i = 0; i < self.n_vertices and ec == errc::ok; i++)
 	{
 		vec4 v = self.vertices[i];
-		ec = vec4::to_obj_string(v, buffer);
+		ec = vec4_to_obj_string(v, buffer);
 		fprintf(file, "%s\n", buffer.buf);
 	}
 

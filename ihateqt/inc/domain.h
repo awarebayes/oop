@@ -5,11 +5,11 @@
 #ifndef IHATEQT_DOMAIN_H
 #define IHATEQT_DOMAIN_H
 
-#include <string>
 #include <QGraphicsScene>
 #include "transformations.h"
 #include "error.h"
 #include "obj3d.h"
+#include "mishalib.h"
 
 enum class command_type
 {
@@ -21,7 +21,7 @@ enum class command_type
 
 typedef struct state
 {
-	std::string obj_path{};
+	big_string obj_path{};
     transformations transforms{};
 	obj3d object{};
 	QGraphicsScene *scene;
@@ -33,8 +33,8 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 
 errc entry_point(command_type command, state &current_state);
 
-errc load_object_and_transforms(obj3d &object, transformations &transforms, const std::string &path);
+errc load_object_and_transforms(obj3d &object, transformations &transforms, const big_string &path);
 
-errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const std::string &path);
+errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const big_string &path);
 
 #endif //IHATEQT_DOMAIN_H

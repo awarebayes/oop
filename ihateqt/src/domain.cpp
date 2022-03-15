@@ -5,12 +5,9 @@
 #include <iostream>
 #include "inc/domain.h"
 
-
-
-
 errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformations &transforms)
 {
-	if (object.vertices.empty() or object.lines.empty())
+	if (object.n_vertices == 0 or object.n_lines == 0)
 		return errc::bad_render_call;
 
 	scene->clear();
@@ -18,36 +15,58 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 	mat4x4 transform_mat;
 	errc ec = errc::ok;
 	ec = transformations_to_matrix(transforms, transform_mat);
+	vec4 *transformed = new vec4[object.n_vertices];
+	if (ec == errc::ok)
+		ec = apply_transform(object.vertices, transformed, transform_mat, object.n_vertices);
 
-	std::vector<vec4> transformed_vertices = apply_transform(object.vertices, transform_mat);
-
-	for (const auto &line: object.lines)
+	for (int i = 0; i < object.n_lines and ec == errc::ok; i++)
 	{
-		vec4 point1 = transformed_vertices[line.first];
-		vec4 point2 = transformed_vertices[line.second];
-		scene->addLine(point1[0], point1[1], point2[0], point2[1]);
+		line l = object.lines[i];
+		vec4 point1 = transformed[l.first];
+		vec4 point2 = transformed[l.second];
+		scene->addLine(point1.components[0], point1.components[1],
+					   point2.components[0], point2.components[1]);
 	}
 	return ec;
 }
 
-errc load_object_and_transforms(obj3d &object, transformations &transforms, const std::string &path)
+errc load_object_and_transforms(obj3d &object, transformations &transforms, const big_string &path)
 {
+
+	obj3d temp_object;
+	transformations temp_transforms;
+
 	errc ec = errc::ok;
-	ec = obj3d::from_file(object, path);
-	ec = transformations::from_file(transforms, path);
-	if (ec == errc::transforms_not_found)
+	bool object_loaded = false;
+	ec = obj3d_from_file(temp_object, path);
+	if (ec == errc::ok)
 	{
-		ec = appropriate_transformations(object, transforms);
+		object_loaded = true;
+		ec = transforms_from_file(temp_transforms, path);
+	}
+	if (object_loaded and ec == errc::transforms_not_found)
+	{
+		ec = appropriate_transformations(temp_object, temp_transforms);
 		if (ec == errc::transforms_not_found)
 			ec = errc::ok;
 	}
+
+	if (ec == errc::ok)
+	{
+		free_obj3d(object);
+		object = temp_object;
+		transforms = temp_transforms;
+	}
 	return ec;
 }
 
-errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const std::string &path)
+errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const big_string &path)
 {
-	obj3d::to_file(object, path);
-	transformations::to_file(transforms, path);
+	errc ec = errc::ok;
+	ec = obj3d_to_file(object, path);
+	if (ec == errc::ok)
+		ec = transforms_to_file(transforms, path);
+	return ec;
 }
 
 errc entry_point(command_type command, state &current_state)
@@ -57,7 +76,7 @@ errc entry_point(command_type command, state &current_state)
 
 	if (current_state.just_initialized)
 	{
-		object = obj3d::default_cube();
+		object = obj3d_default_cube();
 		appropriate_transformations(object, transforms);
 		current_state.just_initialized = false;
 	}

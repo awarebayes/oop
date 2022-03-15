@@ -53,7 +53,7 @@ transformations MainWindow::get_transformations()
 void MainWindow::rerender()
 {
 	state s = {};
-	s.obj_path = "none";
+	strcpy(s.obj_path.buf, "NONE");
     s.transforms = get_transformations();
 	s.object = object;
 	s.scene = scene;
@@ -152,7 +152,7 @@ void MainWindow::on_actionOpen_triggered()
 		return;
 
 	state s = {};
-	s.obj_path = filename.toStdString();
+	strcpy(s.obj_path.buf, filename.toStdString().c_str());
 	s.transforms = get_transformations();
 	s.object = object;
 	s.scene = scene;
@@ -174,7 +174,6 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionDefault_Scale_triggered()
 {
 	state s = {};
-	s.obj_path = "";
 	s.transforms = get_transformations();
 	s.object = object;
 	s.scene = scene;
@@ -194,7 +193,7 @@ void MainWindow::on_actionSave_triggered()
 		return;
 
 	state s = {};
-	s.obj_path = filename.toStdString();
+	strcpy(s.obj_path.buf, filename.toStdString().c_str());
 	s.transforms = get_transformations();
 	s.object = object;
 	s.scene = scene;
