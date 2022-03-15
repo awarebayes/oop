@@ -127,14 +127,16 @@ vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs)
 	return result;
 }
 
-vec4 operator*(const mat4x4 &lhs, vec4 const &rhs)
+
+vec4 vec_sub(vec4 const &lhs, const vec4 &rhs)
 {
 	vec4 result = { 0, 0, 0, 0 };
 	for (int col = 0; col < 4; col++)
-		for (int inner = 0; inner < 4; inner++)
-			result.components[col] += lhs.mat[col][inner] * rhs.components[inner];
+		result.components[col] = lhs.components[col] - rhs.components[col];
 	return result;
 }
+
+
 
 mat4x4 mat_identity()
 {

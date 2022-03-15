@@ -40,6 +40,8 @@ errc vec4_to_obj_string(const vec4 &self, big_string &result);
 
 mat4x4 mul_mat(mat4x4 const &lhs, const mat4x4 &rhs);
 
+vec4 vec_sub(vec4 const &lhs, const vec4 &rhs);
+
 vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs);
 
 #endif //INC_1_QT_CREATOR_LINALG_H

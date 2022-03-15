@@ -20,7 +20,6 @@ typedef struct line
 
 typedef struct obj3d
 {
-	vec4 center{};
 	vec4 *vertices = nullptr;
 	line *lines = nullptr;
 	int n_vertices = 0;
@@ -40,6 +39,8 @@ errc obj3d_to_file(const obj3d &self, const big_string &path);
 
 errc appropriate_transformations(const obj3d &object, transformations &transforms);
 
-static errc find_object_center(obj3d &object);
+static errc find_object_center(obj3d &object, vec4 &center);
+
+static errc center_object_at_zero(obj3d &self);
 
 #endif //IHATEQT_OBJ3D_H

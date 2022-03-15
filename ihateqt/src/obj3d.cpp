@@ -62,7 +62,7 @@ obj3d obj3d_default_cube()
 	self.lines[17] = {7, 4};
 
 
-	find_object_center(self);
+	center_object_at_zero(self);
 
 	return self;
 }
@@ -135,12 +135,13 @@ errc appropriate_transformations(const obj3d &object, transformations &transform
 	return errc::ok;
 }
 
-errc find_object_center(obj3d &object)
+errc find_object_center(obj3d &object, vec4 &center)
 {
 	if (object.n_vertices == 0)
 		return errc::invalid_argument;
 
-	vec4 &center = object.center;
+	center = {0, 0, 0, 0};
+
 	for (int i = 0; i < object.n_vertices; i++)
 	{
 		vec4 vertex = object.vertices[i];
@@ -169,6 +170,17 @@ errc init_obj3d_from_string(obj3d &self, big_string& in)
 	return ec;
 }
 
+errc center_object_at_zero(obj3d &self)
+{
+	vec4 center{};
+	errc error = errc::ok;
+	error = find_object_center(self, center);
+	if (error == errc::ok)
+		for (int i = 0; i < self.n_vertices; i++)
+			self.vertices[i] = vec_sub(self.vertices[i], center);
+	return error;
+}
+
 errc obj3d_from_file(obj3d &self, const big_string &path)
 {
 
@@ -191,16 +203,12 @@ errc obj3d_from_file(obj3d &self, const big_string &path)
 		sscanf(buffer.buf, "%s", line_type);
 
 		if (strcmp(line_type, "i") == 0)
-		{
 			error = init_obj3d_from_string(object, buffer);
-		}
-
 		else if (strcmp(line_type, "v") == 0)
 		{
 			vec4 read_result{};
 			error = vec4_from_obj_string(buffer, read_result);
-			if (error == errc::ok)
-				object.vertices[n_vertices++] = read_result;
+			object.vertices[n_vertices++] = read_result;
 		}
 		else if (strcmp(line_type, "l") == 0)
 		{
@@ -210,10 +218,13 @@ errc obj3d_from_file(obj3d &self, const big_string &path)
 		}
 	}
 
-	find_object_center(object);
+	if (error == errc::ok)
+		error = center_object_at_zero(object);
 
 	if (error == errc::ok)
 			self = object;
+	else
+		free_obj3d(object);
 	fclose(file);
 	return error;
 }
