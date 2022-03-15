@@ -15,7 +15,11 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 	mat4x4 transform_mat;
 	errc ec = errc::ok;
 	ec = transformations_to_matrix(transforms, transform_mat);
-	vec4 *transformed = new vec4[object.n_vertices];
+
+	vec4 *transformed = (vec4 *)malloc(object.n_vertices * sizeof(vec4));
+	if (transformed == nullptr)
+		ec = errc::bad_malloc;
+
 	if (ec == errc::ok)
 		ec = apply_transform(object.vertices, transformed, transform_mat, object.n_vertices);
 
@@ -27,6 +31,9 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 		scene->addLine(point1.components[0], point1.components[1],
 					   point2.components[0], point2.components[1]);
 	}
+
+	free(transformed);
+
 	return ec;
 }
 

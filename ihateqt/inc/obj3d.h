@@ -28,8 +28,6 @@ typedef struct obj3d
 
 } obj3d;
 
-errc new_obj3d(int n_vertices, int n_lines);
-
 errc free_obj3d(obj3d &self);
 
 errc line_from_obj_string(const big_string &in, line &self);
