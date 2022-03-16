@@ -33,14 +33,16 @@ errc line_from_obj_string(const big_string &in, line &self);
 
 obj3d obj3d_default_cube();
 
-errc obj3d_from_file(obj3d &self, const big_string &path);
+errc obj3d_from_file(obj3d &out_obj, const big_string path);
 
 errc obj3d_to_file(const obj3d &self, const big_string &path);
 
-errc appropriate_transformations(const obj3d &object, transformations &transforms);
-
-static errc find_object_center(obj3d &object, vec4 &center);
+static errc find_object_center(vec4 &center, const obj3d &object);
 
 static errc center_object_at_zero(obj3d &self);
+
+errc copy_transformed_vertices(vec4 *dest, const transformations &transforms, const obj3d &object);
+
+errc scale_to_fit_screen(obj3d &object);
 
 #endif //IHATEQT_OBJ3D_H

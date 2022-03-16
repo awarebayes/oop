@@ -7,7 +7,7 @@
 #include "inc/config.h"
 
 
-errc init_obj3d(obj3d &self, int n_vertices, int n_lines)
+errc init_obj3d(obj3d &self, const int n_vertices, const int n_lines)
 {
 	errc ec = errc::ok;
 	self.n_vertices = n_vertices;
@@ -17,6 +17,7 @@ errc init_obj3d(obj3d &self, int n_vertices, int n_lines)
 	self.lines = (line *)malloc(sizeof(line) * self.n_lines);
 	if (self.vertices == nullptr or self.lines == nullptr)
 		ec = errc::bad_malloc;
+
 	return ec;
 }
 
@@ -24,6 +25,7 @@ errc free_obj3d(obj3d &self)
 {
 	free(self.vertices);
 	free(self.lines);
+
 	return errc::ok;
 }
 
@@ -63,11 +65,12 @@ obj3d obj3d_default_cube()
 
 
 	center_object_at_zero(self);
+	scale_to_fit_screen(self);
 
 	return self;
 }
 
-errc line_from_obj_string(const big_string &in, line &self)
+errc line_from_obj_string(line &self, const big_string &in)
 {
 	errc ec = errc::ok;
 	small_string line_type = "";
@@ -81,6 +84,7 @@ errc line_from_obj_string(const big_string &in, line &self)
 		ec = errc::bad_from_string_read;
 	if (strcmp(line_type, "l") != 0)
 		ec = errc::bad_from_string_read;
+
 	return ec;
 }
 
@@ -90,16 +94,15 @@ struct MinMax
 	double max;
 };
 
-
-errc appropriate_transformations(const obj3d &object, transformations &transforms)
+errc find_scale_to_fit_screen(double &out_scale, const obj3d &object)
 {
-	if (object.n_vertices == 0 || object.n_vertices == 1)
+	if (object.n_vertices < 2)
 		return errc::invalid_argument;
 
 	vec4 first = object.vertices[0];
 	MinMax min_max_coords[3] = {{ first.components[0], first.components[1] },
-								{ first.components[1], first.components[2] },
-								{ first.components[2], first.components[2] }};
+	                            { first.components[1], first.components[2] },
+	                            { first.components[2], first.components[2] }};
 	for (int i = 0; i < object.n_vertices; i++)
 	{
 		vec4 point = object.vertices[i];
@@ -123,19 +126,32 @@ errc appropriate_transformations(const obj3d &object, transformations &transform
 
 	required_scale *= 0.6; // чтобы не на весь экран было
 
-	transforms = {
-			.translate = {
-					.x = (double) SCREEN_WIDTH / 2,
-					.y = (double) SCREEN_HEIGHT / 2,
-					.z = 0,
-					.type = transform_type::Translate },
-			.rotate{ .x = 0, .y = 0, .z = 180, .type = transform_type::Rotate },
-			.scale = { .x = required_scale, .y = required_scale, .z = required_scale, .type = transform_type::Scale },
-	};
+	out_scale = required_scale;
+
 	return errc::ok;
 }
 
-errc find_object_center(obj3d &object, vec4 &center)
+errc apply_scale_to_object(obj3d &object, const double scale)
+{
+	if (scale == 0)
+		return errc::invalid_argument;
+
+	for (int i = 0; i < object.n_vertices; i++)
+		object.vertices[i] = scale_vec(object.vertices[i], scale);
+
+	return errc::ok;
+}
+
+
+errc scale_to_fit_screen(obj3d &object)
+{
+	double scale = 1.0;
+	find_scale_to_fit_screen(scale, object);
+	errc ec = apply_scale_to_object(object, scale);
+	return ec;
+}
+
+static errc find_object_center(vec4 &center, const obj3d &object)
 {
 	if (object.n_vertices == 0)
 		return errc::invalid_argument;
@@ -153,10 +169,11 @@ errc find_object_center(obj3d &object, vec4 &center)
 	center.components[0] /= (double)object.n_vertices;
 	center.components[1] /= (double)object.n_vertices;
 	center.components[2] /= (double)object.n_vertices;
+
 	return errc::ok;
 }
 
-errc init_obj3d_from_string(obj3d &self, big_string& in)
+errc init_obj3d_from_string(obj3d &self, const big_string& in)
 {
 	errc ec = errc::ok;
 	int n_vertices = 0, n_lines = 0;
@@ -167,6 +184,7 @@ errc init_obj3d_from_string(obj3d &self, big_string& in)
 		ec = errc::bad_from_string_read;
 	if (ec == errc::ok)
 		init_obj3d(self, n_vertices, n_lines);
+
 	return ec;
 }
 
@@ -174,21 +192,22 @@ errc center_object_at_zero(obj3d &self)
 {
 	vec4 center{};
 	errc error = errc::ok;
-	error = find_object_center(self, center);
+	error = find_object_center(center, self);
 	if (error == errc::ok)
 		for (int i = 0; i < self.n_vertices; i++)
 			self.vertices[i] = vec_sub(self.vertices[i], center);
+
 	return error;
 }
 
-errc obj3d_from_file(obj3d &self, const big_string &path)
+static errc read_obj3d_from_file(obj3d &out_object, const big_string &path)
 {
 
 	FILE *file = fopen(path.buf, "r");
 	if (file == nullptr)
 		return errc::no_such_file_or_directory;
 
-	obj3d object{};
+	obj3d temp_object{};
 
 	errc error = errc::ok;
 	big_string buffer;
@@ -197,36 +216,50 @@ errc obj3d_from_file(obj3d &self, const big_string &path)
 	int n_vertices = 0;
 	int n_lines = 0;
 
-	while (not feof(file) and error == errc::ok)
+	while (error == errc::ok and not feof(file))
 	{
 		fgets(buffer.buf, buffer.length, file);
 		sscanf(buffer.buf, "%s", line_type);
 
 		if (strcmp(line_type, "i") == 0)
-			error = init_obj3d_from_string(object, buffer);
+			error = init_obj3d_from_string(temp_object, buffer);
 		else if (strcmp(line_type, "v") == 0)
 		{
 			vec4 read_result{};
-			error = vec4_from_obj_string(buffer, read_result);
-			object.vertices[n_vertices++] = read_result;
+			error = vec4_from_obj_string(read_result, buffer);
+			temp_object.vertices[n_vertices++] = read_result;
 		}
 		else if (strcmp(line_type, "l") == 0)
 		{
 			line read_result;
-			error = line_from_obj_string(buffer, read_result);
-			object.lines[n_lines++] = read_result;
+			error = line_from_obj_string(read_result, buffer);
+			temp_object.lines[n_lines++] = read_result;
 		}
 	}
 
 	if (error == errc::ok)
-		error = center_object_at_zero(object);
-
-	if (error == errc::ok)
-			self = object;
+		out_object = temp_object;
 	else
-		free_obj3d(object);
+		free_obj3d(temp_object);
 	fclose(file);
+
 	return error;
+}
+
+errc obj3d_from_file(obj3d &out_obj, const big_string path)
+{
+	errc ec = errc::ok;
+	obj3d temp_obj{};
+
+	ec = read_obj3d_from_file(temp_obj, path);
+	if (ec == errc::ok)
+		ec = scale_to_fit_screen(temp_obj);
+
+	if (ec == errc::ok)
+		out_obj = temp_obj;
+	else
+		free_obj3d(temp_obj);
+	return ec;
 }
 
 
@@ -240,10 +273,10 @@ errc obj3d_to_file(const obj3d &self, const big_string &path)
 	fprintf(file, "i %d %d \n", self.n_vertices, self.n_lines);
 
 	big_string buffer;
-	for (int i = 0; i < self.n_vertices and ec == errc::ok; i++)
+	for (int i = 0; ec == errc::ok and i < self.n_vertices; i++)
 	{
 		vec4 v = self.vertices[i];
-		ec = vec4_to_obj_string(v, buffer);
+		ec = vec4_to_obj_string(buffer, v);
 		fprintf(file, "%s\n", buffer.buf);
 	}
 
@@ -252,7 +285,19 @@ errc obj3d_to_file(const obj3d &self, const big_string &path)
 		line l = self.lines[i];
 		fprintf(file, "l %d %d\n", l.first, l.second);
 	}
+
 	fclose(file);
+
 	return ec;
 }
 
+
+errc copy_transformed_vertices(vec4 *dest, const transformations &transforms, const obj3d &object)
+{
+	errc ec = errc::ok;
+	mat4x4 transform_mat;
+	ec = transformations_to_matrix(transform_mat, transforms);
+	if (ec == errc::ok)
+		ec = apply_transform(object.vertices, dest, transform_mat, object.n_vertices);
+	return ec;
+}

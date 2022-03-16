@@ -34,14 +34,18 @@ mat4x4 scale_matrix(double x_scale, double y_scale, double z_scale);
 
 mat4x4 translation_matrix(double x_translation, double y_translation, double z_translation);
 
-errc vec4_from_obj_string(const big_string &in, vec4 &result);
+errc vec4_from_obj_string(vec4 &result, const big_string &in);
 
-errc vec4_to_obj_string(const vec4 &self, big_string &result);
+errc vec4_to_obj_string(big_string &result, const vec4 &self);
 
 mat4x4 mul_mat(mat4x4 const &lhs, const mat4x4 &rhs);
 
 vec4 vec_sub(vec4 const &lhs, const vec4 &rhs);
 
 vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs);
+
+vec4 scale_vec(vec4 const &vec, const double scale);
+
+errc apply_transform(const vec4 *vertices, vec4 *transformed, const mat4x4 &matrix, int n_points);
 
 #endif //INC_1_QT_CREATOR_LINALG_H

@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 	scene->addRect(scene->sceneRect());
 	ui->graphicsView->setScene(scene);
 
+	reset_view();
 	rerender();
 }
 
@@ -52,17 +53,12 @@ transformations MainWindow::get_transformations()
 
 void MainWindow::rerender()
 {
-	state s = {};
-	strcpy(s.obj_path.buf, "NONE");
-    s.transforms = get_transformations();
-	s.object = object;
-	s.scene = scene;
-	s.just_initialized = just_initialized;
-	entry_point(command_type::draw_object, s);
-
-	object = s.object;
-	just_initialized = s.just_initialized;
-	set_transforms(s.transforms);
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::draw_object;
+	com.transforms = get_transformations();
+	entry_point(com);
 }
 
 
@@ -142,49 +138,25 @@ void MainWindow::set_transforms(const transformations &transforms)
 	ui->ScaleZ->setValue(transforms.scale.z);
 }
 
-
-
-
 void MainWindow::on_actionOpen_triggered()
 {
 	QString filename = QFileDialog::getOpenFileName(nullptr, "Open .obj file", "./", "Obj file (*.obj)");
 	if (filename.isEmpty())
 		return;
-
-	state s = {};
-	strcpy(s.obj_path.buf, filename.toStdString().c_str());
-	s.transforms = get_transformations();
-	s.object = object;
-	s.scene = scene;
-	entry_point(command_type::load_object, s);
-
-	object = s.object;
-	set_transforms(s.transforms);
-
+	load_object(filename.toStdString());
+	reset_view();
 	rerender();
 }
 
 
-void MainWindow::on_actionExit_triggered()
-{
-
-}
+void MainWindow::on_actionExit_triggered() {}
 
 
 void MainWindow::on_actionDefault_Scale_triggered()
 {
-	state s = {};
-	s.transforms = get_transformations();
-	s.object = object;
-	s.scene = scene;
-	entry_point(command_type::default_view, s);
-
-	object = s.object;
-	set_transforms(s.transforms);
-
+	reset_view();
 	rerender();
 }
-
 
 void MainWindow::on_actionSave_triggered()
 {
@@ -192,13 +164,31 @@ void MainWindow::on_actionSave_triggered()
 	if (filename.isEmpty())
 		return;
 
-	state s = {};
-	strcpy(s.obj_path.buf, filename.toStdString().c_str());
-	s.transforms = get_transformations();
-	s.object = object;
-	s.scene = scene;
-	entry_point(command_type::save_object, s);
-
+	load_object(filename.toStdString());
 	rerender();
 }
 
+void MainWindow::reset_view()
+{
+	command com = {.type = command_type::default_view};
+	entry_point(com);
+	transformations transforms;
+	reset_transforms(transforms);
+	this->set_transforms(transforms);
+}
+
+void MainWindow::load_object(const std::string &path)
+{
+	command com = {};
+	strcpy(com.obj_path.buf, path.c_str());
+	com.scene = scene;
+	com.type = command_type::load_object;
+	entry_point(com);
+}
+
+void MainWindow::save_object(const std::string& filename)
+{
+	command com = {.scene=scene, .type = command_type::save_object};
+	strcpy(com.obj_path.buf, filename.c_str());
+	entry_point(com);
+}

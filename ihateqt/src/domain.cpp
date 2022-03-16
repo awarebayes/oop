@@ -12,18 +12,15 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 
 	scene->clear();
 
-	mat4x4 transform_mat;
 	errc ec = errc::ok;
-	ec = transformations_to_matrix(transforms, transform_mat);
 
 	vec4 *transformed = (vec4 *)malloc(object.n_vertices * sizeof(vec4));
 	if (transformed == nullptr)
 		ec = errc::bad_malloc;
 
-	if (ec == errc::ok)
-		ec = apply_transform(object.vertices, transformed, transform_mat, object.n_vertices);
+	ec = copy_transformed_vertices(transformed, transforms, object);
 
-	for (int i = 0; i < object.n_lines and ec == errc::ok; i++)
+	for (int i = 0; ec == errc::ok and i < object.n_lines; i++)
 	{
 		line l = object.lines[i];
 		vec4 point1 = transformed[l.first];
@@ -37,72 +34,51 @@ errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformatio
 	return ec;
 }
 
-errc load_object_and_transforms(obj3d &object, transformations &transforms, const big_string &path)
+errc load_object(obj3d &object, const big_string &path)
 {
-
-	obj3d temp_object;
-	transformations temp_transforms;
+	obj3d temp_object{};
 
 	errc ec = errc::ok;
-	bool object_loaded = false;
 	ec = obj3d_from_file(temp_object, path);
-	if (ec == errc::ok)
-	{
-		object_loaded = true;
-		ec = transforms_from_file(temp_transforms, path);
-	}
-	if (object_loaded and ec == errc::transforms_not_found)
-	{
-		ec = appropriate_transformations(temp_object, temp_transforms);
-		if (ec == errc::transforms_not_found)
-			ec = errc::ok;
-	}
 
 	if (ec == errc::ok)
 	{
-		free_obj3d(object);
-		object = temp_object;
-		transforms = temp_transforms;
+		free_obj3d(object); // ПРЕДЫДУЩИЙ ОСВОБОЖДАЕМ, НОВЫЙ ЗАГРУЖАЕМ
+		object = temp_object; // тут происходит move
 	}
+
+	// не надо освобождать temp_transforms
+
 	return ec;
 }
 
-errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const big_string &path)
+errc save_object(const obj3d &object, const big_string &path)
 {
 	errc ec = errc::ok;
 	ec = obj3d_to_file(object, path);
-	if (ec == errc::ok)
-		ec = transforms_to_file(transforms, path);
 	return ec;
 }
 
-errc entry_point(command_type command, state &current_state)
+errc entry_point(command &com)
 {
-	obj3d &object = current_state.object;
-	transformations &transforms = current_state.transforms;
-
-	if (current_state.just_initialized)
-	{
-		object = obj3d_default_cube();
-		appropriate_transformations(object, transforms);
-		current_state.just_initialized = false;
-	}
-
+	static obj3d object = obj3d_default_cube();
+	transformations transforms = com.transforms;
 	errc ec = errc::ok;
 
-	switch (command)
+	switch (com.type)
 	{
 		case command_type::load_object:
-			ec = load_object_and_transforms(object, transforms, current_state.obj_path);
+			ec = load_object(object, com.obj_path);
 			break;
 		case command_type::save_object:
-			ec = save_object_and_transforms(object, transforms, current_state.obj_path);
+			// ec = save_object(object, transforms, com.obj_path);
 			break;
 		case command_type::draw_object:
-			ec = draw_object(current_state.scene, object, transforms);
+			// todo: создать объект с трансформациями
+			ec = draw_object(com.scene, object, transforms);
 			break;
 		case command_type::default_view:
-			appropriate_transformations(object, transforms);
+			reset_transforms(transforms);
 			break;
 		default:
 			ec = errc::bad_command;

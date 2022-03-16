@@ -19,22 +19,21 @@ enum class command_type
 	default_view,
 };
 
-typedef struct state
+typedef struct command
 {
+	transformations transforms{};
 	big_string obj_path{};
-    transformations transforms{};
-	obj3d object{};
-	QGraphicsScene *scene;
-	bool just_initialized = false;
-} state;
+	QGraphicsScene *scene{};
+	command_type type;
+} command;
 
 
 errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformations &transforms);
 
-errc entry_point(command_type command, state &current_state);
+errc entry_point(command &command);
 
-errc load_object_and_transforms(obj3d &object, transformations &transforms, const big_string &path);
+errc load_object(obj3d &object, const big_string &path);
 
-errc save_object_and_transforms(const obj3d &object, const transformations &transforms, const big_string &path);
+errc save_object(const obj3d &object, const transformations &transforms, const big_string &path);
 
 #endif //IHATEQT_DOMAIN_H

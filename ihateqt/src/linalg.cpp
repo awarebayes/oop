@@ -81,7 +81,7 @@ mat4x4 translation_matrix(double x_translation, double y_translation, double z_t
 	};
 }
 
-errc vec4_from_obj_string(const big_string &in, vec4 &result)
+errc vec4_from_obj_string( vec4 &result, const big_string &in)
 {
 	small_string line_type;
 	errc ec = errc::ok;
@@ -102,7 +102,7 @@ errc vec4_from_obj_string(const big_string &in, vec4 &result)
 	return ec;
 }
 
-errc vec4_to_obj_string(const vec4 &self, big_string &result)
+errc vec4_to_obj_string( big_string &result, const vec4 &self)
 {
 	sprintf(result.buf, "v %lf %lf %lf", self.components[0], self.components[1], self.components[2]);
 	return errc::ok;
@@ -148,4 +148,20 @@ mat4x4 mat_identity()
 					{ 0, 0, 0, 1 },
 			}
 	};
+}
+
+errc apply_transform(const vec4 *vertices, vec4 *transformed, const mat4x4 &matrix, int n_points)
+{
+	for (int i = 0; i < n_points; i++)
+		transformed[i] = mul_vec(vertices[i], matrix);
+	return errc::ok;
+}
+
+
+vec4 scale_vec(vec4 const &vec, const double scale)
+{
+	vec4 scaled = vec;
+	for (int i = 0; i < 3; i++)
+		scaled.components[i] *= scale;
+	return scaled;
 }

@@ -54,9 +54,10 @@ private:
 	QGraphicsScene *scene;
 	transformations get_transformations();
 	void rerender();
+	void load_object(const std::string& filename);
+	void reset_view();
+	void save_object(const std::string &path);
 	void set_transforms(const transformations &transforms);
-	bool just_initialized = true;
-	obj3d object;
 };
 
 #endif // MAINWINDOW_H
