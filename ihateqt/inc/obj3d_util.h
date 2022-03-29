@@ -17,7 +17,7 @@ errc apply_scale_to_object(obj3d &object, const double scale);
 
 errc scale_to_fit_screen(obj3d &object);
 
-errc find_mean(vec4 &center, const vec4 *vertices, const int n_vertices);
+errc find_median(vec4 &center, const vec4 *vertices, const int n_vertices);
 
 errc center_object_at_zero(obj3d &object);
 

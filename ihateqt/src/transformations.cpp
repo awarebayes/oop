@@ -67,9 +67,9 @@ errc transformations_to_matrix(mat4x4 &result, const transformations &self)
 	transform_xyz_to_matrix(scale_mat, self.scale);
 
 	result = mat_identity();
-	result = mul_mat(result, scale_mat);
-	result = mul_mat(result, rotation_mat);
-	result = mul_mat(result, translation_mat);
+	result = mat_mul(result, scale_mat);
+	result = mat_mul(result, rotation_mat);
+	result = mat_mul(result, translation_mat);
 	return errc::ok;
 }
 

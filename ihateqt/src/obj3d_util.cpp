@@ -41,19 +41,21 @@ struct MinMax
 	double max;
 };
 
-// ok
-errc find_scale_to_fit_screen(double &out_scale, const obj3d &object)
+typedef MinMax MinMaxXYZ[3];
+
+errc find_min_max_xyz(MinMaxXYZ &min_max_coords, const vec4* vertices, int n_vertices)
 {
-	if (object.n_vertices < 2)
+	if (n_vertices == 0)
 		return errc::invalid_argument;
 
-	vec4 first = object.vertices[0];
-	MinMax min_max_coords[3] = {{ first.components[0], first.components[1] },
-	                            { first.components[1], first.components[2] },
-	                            { first.components[2], first.components[2] }};
-	for (int i = 0; i < object.n_vertices; i++)
+	vec4 first = vertices[0];
+	min_max_coords[0] = { first.components[0], first.components[0] };
+	min_max_coords[1] = { first.components[1], first.components[1] };
+	min_max_coords[2] = { first.components[2], first.components[2] };
+
+	for (int i = 0; i < n_vertices; i++)
 	{
-		vec4 point = object.vertices[i];
+		vec4 point = vertices[i];
 		for (int j = 0; j < 3; j++)
 		{
 			struct MinMax &mm = min_max_coords[j];
@@ -62,13 +64,30 @@ errc find_scale_to_fit_screen(double &out_scale, const obj3d &object)
 		}
 	}
 
+	return errc::ok;
+}
+
+double find_max_coordinate_difference(const MinMaxXYZ &min_max_coords)
+{
 	double max_coordinate_difference = 0;
 	for (auto &mm: min_max_coords)
 	{
 		double coordinate_difference = mm.max - mm.min;
 		max_coordinate_difference = std::max(max_coordinate_difference, coordinate_difference);
 	}
+	return max_coordinate_difference;
+}
 
+// ok
+errc find_scale_to_fit_screen(double &out_scale, const obj3d &object)
+{
+	if (object.n_vertices < 2)
+		return errc::invalid_argument;
+
+	MinMax min_max_coords[3]{};
+	find_min_max_xyz(min_max_coords, object.vertices, object.n_vertices);
+
+	double max_coordinate_difference = find_max_coordinate_difference(min_max_coords);
 	int screen_dim = std::min(SCREEN_WIDTH, SCREEN_HEIGHT);
 	double required_scale = screen_dim / max_coordinate_difference;
 
@@ -86,7 +105,7 @@ errc apply_scale_to_object(obj3d &object, const double scale)
 		return errc::invalid_argument;
 
 	for (int i = 0; i < object.n_vertices; i++)
-		object.vertices[i] = scale_vec(object.vertices[i], scale);
+		object.vertices[i] = vec_scale(object.vertices[i], scale);
 
 	return errc::ok;
 }
@@ -102,38 +121,33 @@ errc scale_to_fit_screen(obj3d &object)
 
 
 // ok
-errc find_mean(vec4 &center, const vec4 *vertices, const int n_vertices)
+errc find_median(vec4 &center, const vec4 *vertices, const int n_vertices)
 {
 	if (n_vertices == 0)
 		return errc::invalid_argument;
 
-	center = { 0, 0, 0, 0 };
-
-	for (int i = 0; i < n_vertices; i++)
+	MinMax min_max_coords[3]{};
+	errc ec = find_min_max_xyz(min_max_coords, vertices, n_vertices);
+	if (ec == errc::ok)
 	{
-		vec4 vertex = vertices[i];
-		center.components[0] += vertex.components[0];
-		center.components[1] += vertex.components[1];
-		center.components[2] += vertex.components[2];
+		vec4 min = {min_max_coords[0].min, min_max_coords[1].min, min_max_coords[2].min, 0};
+		vec4 max = {min_max_coords[0].max, min_max_coords[1].max, min_max_coords[2].max, 0};
+		center = vec_scale(vec_add(min, max), 0.5);
 	}
 
-	center.components[0] /= (double) n_vertices;
-	center.components[1] /= (double) n_vertices;
-	center.components[2] /= (double) n_vertices;
-
-	return errc::ok;
+	return ec;
 }
 
 // ok
 errc center_object_at_zero(obj3d &object)
 {
-	vec4 center{};
+	vec4 median{};
 	errc error = errc::ok;
-	error = find_mean(center, object.vertices, object.n_vertices);
 
+	error = find_median(median, object.vertices, object.n_vertices);
 	if (error == errc::ok)
 		for (int i = 0; i < object.n_vertices; i++)
-			object.vertices[i] = vec_sub(object.vertices[i], center);
+			object.vertices[i] = vec_sub(object.vertices[i], median);
 
 	return error;
 }

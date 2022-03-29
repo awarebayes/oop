@@ -164,7 +164,7 @@ errc obj3d_to_file(const obj3d &object, const big_string &path)
 	return ec;
 }
 
-// OK, переход уровня абстракции
+// OK
 static errc obj3d_apply_transform(obj3d &dest, const obj3d &source, const transformations &transforms)
 {
 	mat4x4 transform_mat{};

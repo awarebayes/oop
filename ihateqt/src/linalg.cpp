@@ -50,9 +50,9 @@ mat4x4 rotation_matrix(double x_rot, double y_rot, double z_rot)
 {
 	mat4x4 result = mat_identity();
 
-	result = mul_mat(result, x_rot_matrix(x_rot));
-	result = mul_mat(result, y_rot_matrix(y_rot));
-	result = mul_mat(result, z_rot_matrix(z_rot));
+	result = mat_mul(result, x_rot_matrix(x_rot));
+	result = mat_mul(result, y_rot_matrix(y_rot));
+	result = mat_mul(result, z_rot_matrix(z_rot));
 	return result;
 }
 
@@ -108,7 +108,7 @@ errc vec4_to_obj_string(big_string &result, const vec4 &self)
 	return errc::ok;
 }
 
-mat4x4 mul_mat(mat4x4 const &lhs, const mat4x4 &rhs)
+mat4x4 mat_mul(mat4x4 const &lhs, const mat4x4 &rhs)
 {
 	mat4x4 result = { 0 };
 	for (int row = 0; row < 4; row++)
@@ -118,7 +118,7 @@ mat4x4 mul_mat(mat4x4 const &lhs, const mat4x4 &rhs)
 	return result;
 }
 
-vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs)
+vec4 vec_mul(vec4 const &lhs, const mat4x4 &rhs)
 {
 	vec4 result = { 0, 0, 0, 0 };
 	for (int col = 0; col < 4; col++)
@@ -127,6 +127,13 @@ vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs)
 	return result;
 }
 
+vec4 vec_add(vec4 const &lhs, const vec4 &rhs)
+{
+	vec4 result = { 0, 0, 0, 0 };
+	for (int col = 0; col < 4; col++)
+		result.components[col] = lhs.components[col] + rhs.components[col];
+	return result;
+}
 
 vec4 vec_sub(vec4 const &lhs, const vec4 &rhs)
 {
@@ -152,12 +159,12 @@ mat4x4 mat_identity()
 errc apply_transform(vec4 *dest, const vec4 *source, const mat4x4 &matrix, int n_points)
 {
 	for (int i = 0; i < n_points; i++)
-		dest[i] = mul_vec(source[i], matrix);
+		dest[i] = vec_mul(source[i], matrix);
 	return errc::ok;
 }
 
 
-vec4 scale_vec(vec4 const &vec, const double scale)
+vec4 vec_scale(vec4 const &vec, const double scale)
 {
 	vec4 scaled = vec;
 	for (int i = 0; i < 3; i++)

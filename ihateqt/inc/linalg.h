@@ -38,13 +38,15 @@ errc vec4_from_obj_string(vec4 &result, const big_string &in);
 
 errc vec4_to_obj_string(big_string &result, const vec4 &self);
 
-mat4x4 mul_mat(mat4x4 const &lhs, const mat4x4 &rhs);
+mat4x4 mat_mul(mat4x4 const &lhs, const mat4x4 &rhs);
+
+vec4 vec_add(vec4 const &lhs, const vec4 &rhs);
 
 vec4 vec_sub(vec4 const &lhs, const vec4 &rhs);
 
-vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs);
+vec4 vec_mul(vec4 const &lhs, const mat4x4 &rhs);
 
-vec4 scale_vec(vec4 const &vec, const double scale);
+vec4 vec_scale(vec4 const &vec, const double scale);
 
 errc apply_transform(vec4 *dest, const vec4 *source, const mat4x4 &matrix, int n_points);
 
