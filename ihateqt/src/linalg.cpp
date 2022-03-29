@@ -171,3 +171,12 @@ vec4 vec_scale(vec4 const &vec, const double scale)
 		scaled.components[i] *= scale;
 	return scaled;
 }
+
+errc vec_flush(FILE *file, const vec4 vec)
+{
+	big_string buffer;
+	errc ec = vec4_to_obj_string(buffer, vec);
+	if (ec == errc::ok)
+		fprintf(file, "%s\n", buffer.buf);
+	return ec;
+}

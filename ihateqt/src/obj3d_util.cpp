@@ -34,6 +34,14 @@ errc line_to_obj_string(big_string &out, const line &self)
 	return errc::ok;
 }
 
+errc line_flush(FILE *file, line &l)
+{
+	big_string buffer;
+	errc ec = line_to_obj_string(buffer, l);
+	if (ec == errc::ok)
+		fprintf(file, "%s\n", buffer.buf);
+	return ec;
+}
 
 struct MinMax
 {
@@ -150,6 +158,16 @@ errc center_object_at_zero(obj3d &object)
 			object.vertices[i] = vec_sub(object.vertices[i], median);
 
 	return error;
+}
+
+errc obj3d_flush_vertex(FILE *file, const int index, const obj3d object)
+{
+	return vec_flush(file, object.vertices[index]);
+}
+
+errc obj3d_flush_line(FILE *file, const int index, const obj3d object)
+{
+	return line_flush(file, object.lines[index]);
 }
 
 errc obj3d_read_vertex(obj3d &object, const int vertex_number, const big_string &str)

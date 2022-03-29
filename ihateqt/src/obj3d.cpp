@@ -5,7 +5,6 @@
 #include <cstring>
 #include <QGraphicsScene>
 #include "inc/obj3d.h"
-#include "inc/config.h"
 #include "inc/obj3d_util.h"
 
 
@@ -145,18 +144,10 @@ errc obj3d_to_file(const obj3d &object, const big_string &path)
 	fprintf(file, "i %d %d \n", object.n_vertices, object.n_lines);
 
 	for (int i = 0; ec == errc::ok and i < object.n_vertices; i++)
-	{
-		big_string buffer;
-		ec = vec4_to_obj_string(buffer, object.vertices[i]);
-		fprintf(file, "%s\n", buffer.buf);
-	}
+		ec = obj3d_flush_vertex(file, i, object);
 
 	for (int i = 0; ec == errc::ok and i < object.n_lines; i++)
-	{
-		big_string buffer;
-		ec = line_to_obj_string(buffer, object.lines[i]);
-		fprintf(file, "%s\n", buffer.buf);
-	}
+		ec = obj3d_flush_line(file, i, object);
 
 	fprintf(file, "e\n");
 	fclose(file);
