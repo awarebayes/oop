@@ -13,7 +13,8 @@ bool transform_xyz_is_valid(const transform_xyz &self)
 		return false;
 	if (std::isinf(self.x) || std::isinf(self.y) || std::isinf(self.z))
 		return false;
-	if (self.type != transform_type::Translate && self.type != transform_type::Rotate && self.type != transform_type::Scale)
+	if (self.type != transform_type::Translate && self.type != transform_type::Rotate &&
+	    self.type != transform_type::Scale)
 		return false;
 	return true;
 }
@@ -52,14 +53,14 @@ errc transform_xyz_to_matrix(mat4x4 &result, const transform_xyz &self)
 	return ec;
 }
 
-errc transformations_to_matrix( mat4x4 &result, const transformations &self)
+errc transformations_to_matrix(mat4x4 &result, const transformations &self)
 {
 	if (not transformations_valid(self))
 		return errc::invalid_transformations;
 
-	mat4x4 translation_mat = {.mat={0}};
-	mat4x4 rotation_mat = {.mat={0}};
-	mat4x4 scale_mat = {.mat={0}};
+	mat4x4 translation_mat = { .mat={ 0 }};
+	mat4x4 rotation_mat = { .mat={ 0 }};
+	mat4x4 scale_mat = { .mat={ 0 }};
 
 	transform_xyz_to_matrix(translation_mat, self.translate);
 	transform_xyz_to_matrix(rotation_mat, self.rotate);
@@ -74,7 +75,7 @@ errc transformations_to_matrix( mat4x4 &result, const transformations &self)
 
 void reset_transforms(transformations &self)
 {
-	self.rotate = {0, 0, 180};
-	self.scale = {1, 1, 1};
-	self.translate = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0};
+	self.rotate = { 0, 0, 180 };
+	self.scale = { 1, 1, 1 };
+	self.translate = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0 };
 }

@@ -8,7 +8,8 @@
 #define BIG_STRING_SIZE 512
 #define SMALL_STRING_SIZE 16
 
-typedef struct big_string {
+typedef struct big_string
+{
 	char buf[BIG_STRING_SIZE]{};
 	int length = BIG_STRING_SIZE;
 } big_string;

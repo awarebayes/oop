@@ -6,15 +6,14 @@
 
 errc draw_object(QGraphicsScene *scene, const obj3d &object, const transformations &transforms)
 {
-	errc ec = errc::ok;
-
 	obj3d transformed_object{};
-	ec = obj3d_apply_transform_then_copy(transformed_object, object, transforms);
+	errc ec = obj3d_apply_transform_then_copy(transformed_object, object, transforms);
 
 	if (ec == errc::ok)
-		ec = draw_obj3d(scene, transformed_object);
+		ec = obj3d_draw(scene, transformed_object);
 
 	free_obj3d(transformed_object);
+
 	return ec;
 }
 
@@ -34,6 +33,7 @@ errc save_transformed_object(const obj3d &object, const transformations &transfo
 		ec = obj3d_to_file(transformed_object, path);
 
 	free_obj3d(transformed_object);
+
 	return ec;
 }
 

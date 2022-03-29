@@ -5,16 +5,15 @@
 #include "inc/domain.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+		: QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 
 	ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	ui->graphicsView->setFixedSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	scene = new QGraphicsScene(0, 0, SCREEN_WIDTH-2, SCREEN_HEIGHT-2, parent);
+	scene = new QGraphicsScene(0, 0, SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2, parent);
 	scene->addRect(scene->sceneRect());
 	ui->graphicsView->setScene(scene);
 
@@ -24,29 +23,29 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+	delete ui;
 }
 
 transformations MainWindow::get_transformations()
 {
 	transformations res;
 	res.translate = {
-				.x = ui->TransX->value(),
-				.y = ui->TransY->value(),
-				.z = ui->TransZ->value(),
-				.type = transform_type::Translate,
-		};
+			.x = ui->TransX->value(),
+			.y = ui->TransY->value(),
+			.z = ui->TransZ->value(),
+			.type = transform_type::Translate,
+	};
 	res.scale = {
-				.x = ui->ScaleX->value(),
-				.y = ui->ScaleY->value(),
-				.z = ui->ScaleZ->value(),
-				.type = transform_type::Scale,
+			.x = ui->ScaleX->value(),
+			.y = ui->ScaleY->value(),
+			.z = ui->ScaleZ->value(),
+			.type = transform_type::Scale,
 	};
 	res.rotate = {
-				.x = ui->RotX->value(),
-				.y = ui->RotY->value(),
-				.z = ui->RotZ->value(),
-				.type = transform_type::Rotate,
+			.x = ui->RotX->value(),
+			.y = ui->RotY->value(),
+			.z = ui->RotZ->value(),
+			.type = transform_type::Rotate,
 	};
 	return res;
 }
@@ -149,7 +148,9 @@ void MainWindow::on_actionOpen_triggered()
 }
 
 
-void MainWindow::on_actionExit_triggered() {}
+void MainWindow::on_actionExit_triggered()
+{
+}
 
 
 void MainWindow::on_actionDefault_Scale_triggered()
@@ -184,9 +185,9 @@ void MainWindow::load_object(const std::string &path)
 	entry_point(com);
 }
 
-void MainWindow::save_object(const std::string& filename)
+void MainWindow::save_object(const std::string &filename)
 {
-	command com = {.scene=scene, .type = command_type::save_object};
+	command com = { .scene=scene, .type = command_type::save_object };
 	com.transforms = get_transformations();
 	strcpy(com.obj_path.buf, filename.c_str());
 	entry_point(com);

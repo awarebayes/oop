@@ -81,16 +81,16 @@ mat4x4 translation_matrix(double x_translation, double y_translation, double z_t
 	};
 }
 
-errc vec4_from_obj_string( vec4 &result, const big_string &in)
+errc vec4_from_obj_string(vec4 &result, const big_string &in)
 {
 	small_string line_type;
 	errc ec = errc::ok;
 	vec4 temp;
 
 	if (sscanf(in.buf, "%s %lf %lf %lf", line_type,
-			   &temp.components[0],
-			   &temp.components[1],
-			   &temp.components[2]) != 4)
+	           &temp.components[0],
+	           &temp.components[1],
+	           &temp.components[2]) != 4)
 		ec = errc::bad_from_string_read;
 	temp.components[3] = 1;
 
@@ -102,7 +102,7 @@ errc vec4_from_obj_string( vec4 &result, const big_string &in)
 	return ec;
 }
 
-errc vec4_to_obj_string( big_string &result, const vec4 &self)
+errc vec4_to_obj_string(big_string &result, const vec4 &self)
 {
 	sprintf(result.buf, "v %lf %lf %lf", self.components[0], self.components[1], self.components[2]);
 	return errc::ok;
@@ -135,7 +135,6 @@ vec4 vec_sub(vec4 const &lhs, const vec4 &rhs)
 		result.components[col] = lhs.components[col] - rhs.components[col];
 	return result;
 }
-
 
 
 mat4x4 mat_identity()

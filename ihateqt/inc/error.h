@@ -1,6 +1,8 @@
 #ifndef __ERROR_H__
 #define __ERROR_H__
+
 #include <map>
+
 enum class errc
 {
 	ok,

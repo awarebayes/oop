@@ -38,11 +38,13 @@ typedef struct transformations
 
 
 errc transformations_to_matrix(mat4x4 &result, const transformations &self);
+
 errc transform_xyz_to_matrix(mat4x4 &result, const transform_xyz &self);
 
 void reset_transforms(transformations &self);
 
 bool transform_xyz_is_valid(const transform_xyz &self);
+
 bool transformations_valid(const transformations &self);
 
 #endif //IHATEQT_TRANSFORMATIONS_H
