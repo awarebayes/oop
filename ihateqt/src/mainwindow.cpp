@@ -164,14 +164,12 @@ void MainWindow::on_actionSave_triggered()
 	if (filename.isEmpty())
 		return;
 
-	load_object(filename.toStdString());
+	save_object(filename.toStdString());
 	rerender();
 }
 
 void MainWindow::reset_view()
 {
-	command com = {.type = command_type::default_view};
-	entry_point(com);
 	transformations transforms;
 	reset_transforms(transforms);
 	this->set_transforms(transforms);
@@ -189,6 +187,7 @@ void MainWindow::load_object(const std::string &path)
 void MainWindow::save_object(const std::string& filename)
 {
 	command com = {.scene=scene, .type = command_type::save_object};
+	com.transforms = get_transformations();
 	strcpy(com.obj_path.buf, filename.c_str());
 	entry_point(com);
 }

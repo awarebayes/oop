@@ -46,6 +46,6 @@ vec4 mul_vec(vec4 const &lhs, const mat4x4 &rhs);
 
 vec4 scale_vec(vec4 const &vec, const double scale);
 
-errc apply_transform(const vec4 *vertices, vec4 *transformed, const mat4x4 &matrix, int n_points);
+errc apply_transform(vec4 *dest, const vec4 *source,  const mat4x4 &matrix, int n_points);
 
 #endif //INC_1_QT_CREATOR_LINALG_H

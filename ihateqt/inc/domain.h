@@ -16,7 +16,6 @@ enum class command_type
 	load_object,
 	save_object,
 	draw_object,
-	default_view,
 };
 
 typedef struct command
@@ -34,6 +33,7 @@ errc entry_point(command &command);
 
 errc load_object(obj3d &object, const big_string &path);
 
-errc save_object(const obj3d &object, const transformations &transforms, const big_string &path);
+errc save_transformed_object(const obj3d &object, const transformations &transforms, const big_string &path);
+
 
 #endif //IHATEQT_DOMAIN_H
