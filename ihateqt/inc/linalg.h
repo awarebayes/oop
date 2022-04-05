@@ -48,7 +48,7 @@ vec4 vec_mul(vec4 const &lhs, const mat4x4 &rhs);
 
 vec4 vec_scale(vec4 const &vec, const double scale);
 
-errc apply_transform(vec4 *dest, const vec4 *source, const mat4x4 &matrix, int n_points);
+errc apply_transform(vec4 *dest, const mat4x4 &matrix, int n_points);
 
 errc vec_flush(FILE *file, const vec4 vec);
 

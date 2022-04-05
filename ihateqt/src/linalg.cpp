@@ -156,10 +156,10 @@ mat4x4 mat_identity()
 	};
 }
 
-errc apply_transform(vec4 *dest, const vec4 *source, const mat4x4 &matrix, int n_points)
+errc apply_transform(vec4 *dest, const mat4x4 &matrix, int n_points)
 {
 	for (int i = 0; i < n_points; i++)
-		dest[i] = vec_mul(source[i], matrix);
+		dest[i] = vec_mul(dest[i], matrix);
 	return errc::ok;
 }
 

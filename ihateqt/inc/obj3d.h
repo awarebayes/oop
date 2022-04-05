@@ -5,21 +5,14 @@
 #ifndef IHATEQT_OBJ3D_H
 #define IHATEQT_OBJ3D_H
 
-
-#include <vector>
-#include <set>
-#include <QGraphicsScene>
 #include "linalg.h"
 #include "error.h"
 #include "transformations.h"
 #include "mishalib.h"
+#include "line.h"
+#include "scene_wrapper.h"
 
-typedef struct line
-{
-	int first, second;
-} line;
-
-typedef struct obj3d
+typedef struct
 {
 	vec4 *vertices = nullptr;
 	line *lines = nullptr;
@@ -39,9 +32,14 @@ errc obj3d_to_file(const obj3d &object, const big_string &path);
 
 errc obj3d_apply_transform_then_copy(obj3d &dest, const obj3d &source, const transformations &transforms);
 
-errc obj3d_draw(QGraphicsScene *scene, const obj3d &object);
+errc obj3d_draw(domain_scene scene, const obj3d &object);
 
-errc obj3d_move_if_ok(obj3d &dest, obj3d &source, const errc ec);
+errc obj3d_draw_line(domain_scene &scene, const obj3d &object, const int line_num);
 
+errc obj3d_get_points(vec4 &p1, vec4 &p2, const obj3d &object, const line line_map);
+
+errc obj3d_copy(obj3d &dest, const obj3d &source);
+
+errc obj3d_apply_transform(obj3d &dest, const transformations &transforms);
 
 #endif //IHATEQT_OBJ3D_H

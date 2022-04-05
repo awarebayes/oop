@@ -6,42 +6,6 @@
 #include <cstring>
 
 
-// ok
-errc line_from_obj_string(line &self, const big_string &in)
-{
-	errc ec = errc::ok;
-	line temp_line;
-	small_string line_type = "";
-	if (sscanf(
-			in.buf,
-			"%s %d %d",
-			line_type,
-			&temp_line.first,
-			&temp_line.second
-	) != 3)
-		ec = errc::bad_from_string_read;
-	if (strcmp(line_type, "l") != 0)
-		ec = errc::bad_from_string_read;
-
-	if (ec == errc::ok)
-		self = temp_line;
-	return ec;
-}
-
-errc line_to_obj_string(big_string &out, const line &self)
-{
-	sprintf(out.buf, "l %d %d", self.first, self.second);
-	return errc::ok;
-}
-
-errc line_flush(FILE *file, line &l)
-{
-	big_string buffer;
-	errc ec = line_to_obj_string(buffer, l);
-	if (ec == errc::ok)
-		fprintf(file, "%s\n", buffer.buf);
-	return ec;
-}
 
 struct MinMax
 {
@@ -119,12 +83,12 @@ errc apply_scale_to_object(obj3d &object, const double scale)
 }
 
 // ok
-errc scale_to_fit_screen(obj3d &object)
+errc scale_to_fit_screen(transformations &out, const obj3d &object)
 {
 	double scale = 1.0;
 	find_scale_to_fit_screen(scale, object);
-	errc ec = apply_scale_to_object(object, scale);
-	return ec;
+	out = transformation_scale(scale, scale, scale);
+	return errc::ok;
 }
 
 
@@ -147,15 +111,19 @@ errc find_median(vec4 &center, const vec4 *vertices, const int n_vertices)
 }
 
 // ok
-errc center_object_at_zero(obj3d &object)
+errc center_object_at_zero(transformations &out, const obj3d &object)
 {
 	vec4 median{};
 	errc error = errc::ok;
 
 	error = find_median(median, object.vertices, object.n_vertices);
 	if (error == errc::ok)
-		for (int i = 0; i < object.n_vertices; i++)
-			object.vertices[i] = vec_sub(object.vertices[i], median);
+	{
+		double med_x = median.components[0];
+		double med_y = median.components[1];
+		double med_z = median.components[2];
+		out = transformation_translate(med_x, med_y, med_z);
+	}
 
 	return error;
 }
@@ -188,6 +156,25 @@ errc obj3d_read_line(obj3d &object, const int line_number, const big_string &str
 	return error;
 }
 
+errc copy_lines(obj3d &dest, const obj3d &source)
+{
+	if (dest.n_lines != source.n_lines)
+		return errc::invalid_argument;
+
+	for (int i = 0; i < source.n_lines; i++)
+		dest.lines[i] = source.lines[i];
+	return errc::ok;
+}
+
+errc copy_vertices(obj3d &dest, const obj3d &source)
+{
+	if (dest.n_vertices != source.n_vertices)
+		return errc::invalid_argument;
+
+	for (int i = 0; i < source.n_vertices; i++)
+		dest.vertices[i] = source.vertices[i];
+	return errc::ok;
+}
 
 obj3d obj3d_default_cube()
 {
@@ -223,20 +210,5 @@ obj3d obj3d_default_cube()
 	self.lines[16] = { 3, 0 };
 	self.lines[17] = { 7, 4 };
 
-
-	center_object_at_zero(self);
-	scale_to_fit_screen(self);
-
 	return self;
-}
-
-
-errc copy_lines(obj3d &dest, const obj3d &source)
-{
-	if (dest.n_lines != source.n_lines)
-		return errc::invalid_argument;
-
-	for (int i = 0; i < source.n_lines; i++)
-		dest.lines[i] = source.lines[i];
-	return errc::ok;
 }

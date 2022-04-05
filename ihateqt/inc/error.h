@@ -2,6 +2,7 @@
 #define __ERROR_H__
 
 #include <map>
+#include <string>
 
 enum class errc
 {
