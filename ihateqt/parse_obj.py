@@ -27,12 +27,13 @@ def find_center(vertices):
 
 def scale(vertices):
     vertices = np.array(vertices)
-    diff = np.abs(vertices.max(axis=1) + vertices.min(axis=1))
+    diff = np.abs(vertices.max(axis=1) - vertices.min(axis=1))
     max_coord_diff = np.max(diff)
 
     screen_dim = np.min([SCREEN_WIDTH, SCREEN_HEIGHT])
     required_scale = screen_dim / max_coord_diff
     required_scale *= SCALE_ADDITIONAL
+
     print("Scaling with", required_scale)
 
     vertices *= required_scale
@@ -79,6 +80,7 @@ def save(path, vertices, lines):
     for l in lines:
         file.write(f"l {l.x-1} {l.y-1}\n")
 
+    file.write("e\n")
     file.close()
 
 

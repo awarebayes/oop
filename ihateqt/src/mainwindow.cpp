@@ -223,8 +223,12 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::reset_view()
 {
 	transformations transforms;
-	reset_transforms(transforms);
+	reset_transforms(transforms, SCREEN_WIDTH, SCREEN_HEIGHT);
 	this->set_transforms(transforms);
+
+	command com = { .type=command_type::reset_transforms, .screen_width=SCREEN_WIDTH, .screen_height=SCREEN_HEIGHT };
+	strcpy(com.obj_path.buf, "NONE");
+	entry_point(com);
 }
 
 void MainWindow::load_object(const std::string &path)

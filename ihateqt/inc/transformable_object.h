@@ -22,7 +22,9 @@ errc trans_object_load(transformable_object &object, const big_string &path);
 
 errc trans_object_save(const transformable_object &object, const big_string &path);
 
-errc trans_object_mutate_transform(transformable_object &object, transform_mutation mut);
+errc trans_object_mutate_transform(transformable_object &object, const transform_mutation mut);
+
+errc trans_object_reset_transforms(transformable_object &object, int screen_width, int screen_height);
 
 transformable_object default_cube();
 

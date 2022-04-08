@@ -66,7 +66,7 @@ errc init_obj3d_from_string(obj3d &self, const big_string &in)
 }
 
 // ok
-static errc init_read_obj3d_from_file(obj3d &out_object, const big_string &path)
+errc obj3d_from_file(obj3d &out_object, const big_string path)
 {
 	FILE *file = fopen(path.buf, "r");
 	if (file == nullptr)
@@ -108,25 +108,6 @@ static errc init_read_obj3d_from_file(obj3d &out_object, const big_string &path)
 		free_obj3d(temp_object);
 
 	fclose(file);
-
-	return ec;
-}
-
-// OK
-errc obj3d_from_file(obj3d &dest, const big_string path)
-{
-	errc ec = errc::ok;
-	obj3d temp_obj  = {};
-
-	ec = init_read_obj3d_from_file(temp_obj, path);
-
-	if (ec == errc::ok)
-	{
-		free_obj3d(dest);
-		dest = temp_obj;
-	}
-	else
-		free_obj3d(temp_obj);
 
 	return ec;
 }

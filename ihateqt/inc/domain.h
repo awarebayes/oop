@@ -18,6 +18,7 @@ enum class command_type
 	save_object,
 	draw_object,
 	mutate_transforms,
+	reset_transforms,
 };
 
 
@@ -27,6 +28,8 @@ typedef struct command
 	transform_mutation mutation{};
 	domain_scene scene{};
 	command_type type{};
+	int screen_width = 700;
+	int screen_height = 700;
 } command;
 
 

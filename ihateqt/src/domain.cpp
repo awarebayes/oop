@@ -22,6 +22,9 @@ errc entry_point(command &com)
 		case command_type::draw_object:
 			ec = trans_object_draw(com.scene, object);
 			break;
+		case command_type::reset_transforms:
+			ec = trans_object_reset_transforms(object, com.screen_width, com.screen_height);
+			break;
 		case command_type::mutate_transforms:
 			ec = trans_object_mutate_transform(object, com.mutation);
 			break;

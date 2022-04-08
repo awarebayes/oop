@@ -43,25 +43,17 @@ typedef struct transform_mutation
 	double value;
 } transform_mutation;
 
-transformations transformation_translate(double x, double y, double z);
-
-transformations transformation_scale(double x, double y, double z);
-
-transformations transformation_rotate(double x, double y, double z);
-
 errc transformations_to_matrix(mat4x4 &result, const transformations &self);
 
 errc transform_xyz_to_matrix(mat4x4 &result, const transform_xyz &self);
 
-void reset_transforms(transformations &self);
-
-transformations compose_transforms(const transformations &self, const transformations &other);
+void reset_transforms(transformations &self, int screen_width, int screen_height);
 
 bool transform_xyz_is_valid(const transform_xyz &self);
 
 bool transformations_valid(const transformations &self);
 
-void mutate_transforms(transformations &self, transform_mutation mut);
+errc mutate_transforms(transformations &self, transform_mutation mut);
 
 transformations identity_transforms();
 
