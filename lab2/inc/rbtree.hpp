@@ -3,21 +3,12 @@
 //
 
 #include "rbtree.h"
+#include "errors.h"
 
 
-template<typename T>
-void Node<T>::kill_children()
-{
-	if (left)
-		left->kill_children();
-	if (right)
-		right->kill_children();
-	left = nullptr;
-	right = nullptr;
-}
 
 template<typename T>
-NodePtr<T> RBTree<T>::searchTreeHelper(NodePtr<T> node, T key)
+NodePtr<T> RBTree<T>::searchTreeHelper(NodePtr<T> node, T key) const
 {
 	if (node == tnull || key == node->data)
 		return node;
@@ -81,7 +72,7 @@ void RBTree<T>::fixDelete(NodePtr<T> x)
 				s = x->parent->left;
 			}
 
-			if (s->right->color == 0 && s->right->color == 0)
+			if (s->left->color == 0 && s->right->color == 0)
 			{
 				// case 3.2
 				s->color = 1;
@@ -261,30 +252,6 @@ void RBTree<T>::fixInsert(NodePtr<T> k)
 	root->color = 0;
 }
 
-template<typename T>
-void RBTree<T>::printHelper(NodePtr<T> root, std::string indent, bool last)
-{
-	// print the tree structure on the screen
-	if (root != tnull)
-	{
-		std::cout << indent;
-		if (last)
-		{
-			std::cout << "R----";
-			indent += "     ";
-		}
-		else
-		{
-			std::cout << "L----";
-			indent += "|    ";
-		}
-
-		std::string sColor = root->color ? "RED" : "BLACK";
-		std::cout << root->data << "(" << sColor << ")" << std::endl;
-		printHelper(root->left, indent, false);
-		printHelper(root->right, indent, true);
-	}
-}
 
 template<typename T>
 RBTree<T>::RBTree()
@@ -295,7 +262,7 @@ RBTree<T>::RBTree()
 
 
 template<typename T>
-NodePtr<T> RBTree<T>::searchTree(T k)
+NodePtr<T> RBTree<T>::searchTree(T k) const
 {
 	return searchTreeHelper(root, k);
 }
@@ -303,6 +270,8 @@ NodePtr<T> RBTree<T>::searchTree(T k)
 template<typename T>
 NodePtr<T> RBTree<T>::minimum(NodePtr<T> node) const
 {
+	if (root == tnull)
+		return tnull;
 	while (node->left != tnull)
 	{
 		node = node->left;
@@ -396,7 +365,10 @@ void RBTree<T>::insert(T key)
 			x = x->right;
 		}
 		else
-			throw std::runtime_error("Force insert element already in set");
+		{
+			time_t t_time = time(NULL);
+			throw AlreadyInSetError(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time));
+		}
 	}
 
 	// y is parent of x
@@ -438,20 +410,12 @@ void RBTree<T>::remove(T key)
 }
 
 template<typename T>
-bool RBTree<T>::contains(T key)
+bool RBTree<T>::contains(T key) const
 {
 	NodePtr<T> searchResult = searchTree(key);
 	return searchResult != tnull;
 }
 
-template<typename T>
-void RBTree<T>::prettyPrint()
-{
-	if (root)
-	{
-		printHelper(root, "", true);
-	}
-}
 
 template<typename T>
 void RBTree<T>::clear()
@@ -466,4 +430,16 @@ RBTree<T>::~RBTree()
 	clear();
 	tnull = nullptr;
 	root = nullptr;
+}
+
+template<typename T>
+RBTreeIterator<T> RBTree<T>::begin() const
+{
+	return RBTreeIterator<T>(minimum(root), this);
+}
+
+template<typename T>
+RBTreeIterator<T> RBTree<T>::end() const
+{
+	return RBTreeIterator<T>(tnull, this);
 }

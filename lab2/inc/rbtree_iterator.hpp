@@ -2,13 +2,13 @@
 
 
 template<typename T>
-T *RBTree<T>::RBTreeIterator::operator->()
+T *RBTreeIterator<T>::operator->()
 {
 	return &(this->node_ptr.lock()->data);
 }
 
 template<typename T>
-typename RBTree<T>::RBTreeIterator RBTree<T>::RBTreeIterator::next()
+const RBTreeIterator<T> RBTreeIterator<T>::next()
 {
 	NodePtr<T> p;
 	NodePtr<T> tnull = tree->tnull;
@@ -65,63 +65,50 @@ typename RBTree<T>::RBTreeIterator RBTree<T>::RBTreeIterator::next()
 }
 
 template<typename T>
-T &RBTree<T>::RBTreeIterator::operator*()
+T &RBTreeIterator<T>::operator*()
 {
 	return this->node_ptr.lock()->data;
 }
 
 template<typename T>
-T RBTree<T>::RBTreeIterator::get() const
+T RBTreeIterator<T>::get() const
 {
 	return node_ptr.lock()->data;
 }
 
 template<typename T>
-typename RBTree<T>::RBTreeIterator RBTree<T>::RBTreeIterator::operator++(int)
+const RBTreeIterator<T> RBTreeIterator<T>::operator++(int)
 {
 	return next();
 }
 
 template<typename T>
-typename RBTree<T>::RBTreeIterator &RBTree<T>::RBTreeIterator::operator++()
+const RBTreeIterator<T> &RBTreeIterator<T>::operator++()
 {
 	return next();
 }
 
 
 template<typename T>
-bool RBTree<T>::RBTreeIterator::operator==(const RBTree<T>::RBTreeIterator &other)
+bool RBTreeIterator<T>::operator==(const RBTreeIterator &other)
 {
 	return this->get() == other.get();
 }
 
 template<typename T>
-bool RBTree<T>::RBTreeIterator::operator!=(const RBTree<T>::RBTreeIterator &other)
+bool RBTreeIterator<T>::operator!=(const RBTreeIterator &other)
 {
-	return this->get() != other.get();
+	auto this_shared_ptr = this->node_ptr.lock();
+	auto other_shared_ptr = other.node_ptr.lock();
+
+	if (not this_shared_ptr || not other_shared_ptr)
+		return false;
+
+	return this_shared_ptr != other_shared_ptr;
 }
 
 template<typename T>
-typename RBTree<T>::RBTreeIterator RBTree<T>::begin() const
-{
-	return RBTree<T>::RBTreeIterator(minimum(root), this);
-}
-
-template<typename T>
-typename RBTree<T>::RBTreeIterator RBTree<T>::end() const
-{
-	return RBTree<T>::RBTreeIterator(maximum(root), this);
-}
-
-
-template<typename T>
-void RBTree<T>::RBTreeIterator::skip()
-{
-	next();
-}
-
-template<typename T>
-RBTree<T>::RBTreeIterator::operator bool() const
+RBTreeIterator<T>::operator bool() const
 {
 	return *this != this->tree->end();
 }
