@@ -9,4 +9,7 @@
 
 typedef struct QGraphicsScene *domain_scene;
 
+void clear_scene(domain_scene scene);
+void scene_draw_line(domain_scene scene, double x1, double y1, double x2, double y2);
+
 #endif //IHATEQT_SCENE_WRAPPER_H

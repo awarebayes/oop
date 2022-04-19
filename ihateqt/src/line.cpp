@@ -42,12 +42,12 @@ errc line_flush(FILE *file, line &l)
 	return ec;
 }
 
-errc draw_line(domain_scene scene, vec4 point1, vec4 point2)
+errc scene_draw_line(domain_scene scene, vec4 point1, vec4 point2)
 {
 	double x1 = point1.components[0];
 	double y1 = point1.components[1];
 	double x2 = point2.components[0];
 	double y2 = point2.components[1];
-	scene->addLine(x1, y1, x2, y2);
+	scene_draw_line(scene, x1, y1, x2, y2);
 	return errc::ok;
 }

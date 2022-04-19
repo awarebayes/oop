@@ -170,23 +170,20 @@ errc obj3d_get_points(vec4 &p1, vec4 &p2, const obj3d &object, const line line_m
 	return errc::ok;
 }
 
-// ok
-errc obj3d_draw_line(domain_scene &scene, const obj3d &object, const int line_num)
-{
-	line line_map = object.lines[line_num];
-	vec4 p1 = {};
-	vec4 p2 = {};
-	obj3d_get_points(p1, p2, object, line_map);
-	draw_line(scene, p1, p2);
-	return errc::ok;
-}
-
 // OK
 errc obj3d_draw(domain_scene scene, const obj3d &object)
 {
-	scene->clear();
-	for (int i = 0; i < object.n_lines; i++)
-		obj3d_draw_line(scene, object, i);
+	vec4 *vertices = object.vertices;
+	int n_lines = object.n_lines;
+	line *lines = object.lines;
 
+	clear_scene(scene);
+	for (int i = 0; i < n_lines; i++)
+	{
+		line l = lines[i];
+		vec4 p1 = vertices[l.first];
+		vec4 p2 = vertices[l.second];
+		draw_line(scene, p1, p2);
+	}
 	return errc::ok;
 }
