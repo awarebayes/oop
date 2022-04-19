@@ -1,10 +1,11 @@
 //
 // Created by dev on 4/16/22.
 //
+#ifndef __RBTREE_HPP__
+#define __RBTREE_HPP__
 
 #include "rbtree.h"
 #include "errors.h"
-
 
 
 template<typename T>
@@ -21,41 +22,41 @@ template<typename T>
 void RBTree<T>::fixDelete(NodePtr<T> x)
 {
 	NodePtr<T> s;
-	while (x != root && x->color == 0)
+	while (x != root && x->is_red == 0)
 	{
 		if (x == x->parent->left)
 		{
 			s = x->parent->right;
-			if (s->color == 1)
+			if (s->is_red == 1)
 			{
 				// case 3.1
-				s->color = 0;
-				x->parent->color = 1;
+				s->is_red = 0;
+				x->parent->is_red = 1;
 				leftRotate(x->parent);
 				s = x->parent->right;
 			}
 
-			if (s->left->color == 0 && s->right->color == 0)
+			if (s->left->is_red == 0 && s->right->is_red == 0)
 			{
 				// case 3.2
-				s->color = 1;
+				s->is_red = 1;
 				x = x->parent;
 			}
 			else
 			{
-				if (s->right->color == 0)
+				if (s->right->is_red == 0)
 				{
 					// case 3.3
-					s->left->color = 0;
-					s->color = 1;
+					s->left->is_red = 0;
+					s->is_red = 1;
 					rightRotate(s);
 					s = x->parent->right;
 				}
 
 				// case 3.4
-				s->color = x->parent->color;
-				x->parent->color = 0;
-				s->right->color = 0;
+				s->is_red = x->parent->is_red;
+				x->parent->is_red = 0;
+				s->right->is_red = 0;
 				leftRotate(x->parent);
 				x = root;
 			}
@@ -63,42 +64,42 @@ void RBTree<T>::fixDelete(NodePtr<T> x)
 		else
 		{
 			s = x->parent->left;
-			if (s->color == 1)
+			if (s->is_red == 1)
 			{
 				// case 3.1
-				s->color = 0;
-				x->parent->color = 1;
+				s->is_red = 0;
+				x->parent->is_red = 1;
 				rightRotate(x->parent);
 				s = x->parent->left;
 			}
 
-			if (s->left->color == 0 && s->right->color == 0)
+			if (s->left->is_red == 0 && s->right->is_red == 0)
 			{
 				// case 3.2
-				s->color = 1;
+				s->is_red = 1;
 				x = x->parent;
 			}
 			else
 			{
-				if (s->left->color == 0)
+				if (s->left->is_red == 0)
 				{
 					// case 3.3
-					s->right->color = 0;
-					s->color = 1;
+					s->right->is_red = 0;
+					s->is_red = 1;
 					leftRotate(s);
 					s = x->parent->left;
 				}
 
 				// case 3.4
-				s->color = x->parent->color;
-				x->parent->color = 0;
-				s->left->color = 0;
+				s->is_red = x->parent->is_red;
+				x->parent->is_red = 0;
+				s->left->is_red = 0;
 				rightRotate(x->parent);
 				x = root;
 			}
 		}
 	}
-	x->color = 0;
+	x->is_red = 0;
 }
 
 template<typename T>
@@ -143,13 +144,12 @@ void RBTree<T>::deleteNodeHelper(NodePtr<T> node, T key)
 
 	if (z == tnull)
 	{
-		// todo throw
-		std::cout << "Couldn't find key in the tree" << std::endl;
-		return;
+		time_t t_time = time(NULL);
+		throw NotInSetError(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time));
 	}
 
 	y = z;
-	int y_original_color = y->color;
+	int y_original_color = y->is_red;
 	if (z->left == tnull)
 	{
 		x = z->right;
@@ -163,7 +163,7 @@ void RBTree<T>::deleteNodeHelper(NodePtr<T> node, T key)
 	else
 	{
 		y = minimum(z->right);
-		y_original_color = y->color;
+		y_original_color = y->is_red;
 		x = y->right;
 		if (y->parent == z)
 		{
@@ -179,7 +179,7 @@ void RBTree<T>::deleteNodeHelper(NodePtr<T> node, T key)
 		rbTransplant(z, y);
 		y->left = z->left;
 		y->left->parent = y;
-		y->color = z->color;
+		y->is_red = z->is_red;
 	}
 	if (y_original_color == 0)
 	{
@@ -191,17 +191,17 @@ template<typename T>
 void RBTree<T>::fixInsert(NodePtr<T> k)
 {
 	NodePtr<T> u;
-	while (k->parent->color == 1)
+	while (k->parent->is_red == 1)
 	{
 		if (k->parent == k->parent->parent->right)
 		{
 			u = k->parent->parent->left; // uncle
-			if (u->color == 1)
+			if (u->is_red == 1)
 			{
 				// case 3.1
-				u->color = 0;
-				k->parent->color = 0;
-				k->parent->parent->color = 1;
+				u->is_red = 0;
+				k->parent->is_red = 0;
+				k->parent->parent->is_red = 1;
 				k = k->parent->parent;
 			}
 			else
@@ -213,8 +213,8 @@ void RBTree<T>::fixInsert(NodePtr<T> k)
 					rightRotate(k);
 				}
 				// case 3.2.1
-				k->parent->color = 0;
-				k->parent->parent->color = 1;
+				k->parent->is_red = 0;
+				k->parent->parent->is_red = 1;
 				leftRotate(k->parent->parent);
 			}
 		}
@@ -222,12 +222,12 @@ void RBTree<T>::fixInsert(NodePtr<T> k)
 		{
 			u = k->parent->parent->right; // uncle
 
-			if (u->color == 1)
+			if (u->is_red == 1)
 			{
 				// mirror case 3.1
-				u->color = 0;
-				k->parent->color = 0;
-				k->parent->parent->color = 1;
+				u->is_red = 0;
+				k->parent->is_red = 0;
+				k->parent->parent->is_red = 1;
 				k = k->parent->parent;
 			}
 			else
@@ -239,8 +239,8 @@ void RBTree<T>::fixInsert(NodePtr<T> k)
 					leftRotate(k);
 				}
 				// mirror case 3.2.1
-				k->parent->color = 0;
-				k->parent->parent->color = 1;
+				k->parent->is_red = 0;
+				k->parent->parent->is_red = 1;
 				rightRotate(k->parent->parent);
 			}
 		}
@@ -249,7 +249,7 @@ void RBTree<T>::fixInsert(NodePtr<T> k)
 			break;
 		}
 	}
-	root->color = 0;
+	root->is_red = 0;
 }
 
 
@@ -345,10 +345,11 @@ template<typename T>
 void RBTree<T>::insert(T key)
 {
 	// Ordinary Binary Search Insertion
-	NodePtr<T> node = std::make_shared<Node<T>>(key);
+	NodePtr<T> node = std::make_shared<Node<T>>();
+	node->data = key;
 	node->left = tnull;
 	node->right = tnull;
-	node->color = 1; // new node must be red
+	node->is_red = 1; // new node must be red
 
 	NodePtr<T> y = nullptr;
 	NodePtr<T> x = this->root;
@@ -389,7 +390,7 @@ void RBTree<T>::insert(T key)
 	// if new node is a root node, simply return
 	if (node->parent == nullptr)
 	{
-		node->color = 0;
+		node->is_red = 0;
 		return;
 	}
 
@@ -435,11 +436,21 @@ RBTree<T>::~RBTree()
 template<typename T>
 RBTreeIterator<T> RBTree<T>::begin() const
 {
-	return RBTreeIterator<T>(minimum(root), this);
+	return RBTreeIterator<T>(minimum(root), *this);
 }
 
 template<typename T>
 RBTreeIterator<T> RBTree<T>::end() const
 {
-	return RBTreeIterator<T>(tnull, this);
+	return RBTreeIterator<T>(tnull, *this);
 }
+
+template<typename T>
+RBTreeIterator<T> RBTree<T>::find(T key) const
+{
+
+	auto search_result = searchTree(key);
+	return RBTreeIterator<T>(search_result, *this);
+}
+
+#endif

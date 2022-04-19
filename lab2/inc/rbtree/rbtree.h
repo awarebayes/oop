@@ -6,14 +6,14 @@
 #define LAB2_RBTREE_H
 
 #include <memory>
-#include "abstract_set.h"
+#include "abstract/abstract_set.h"
 #include "rbtree_node.h"
 #include "rbtree_iterator.h"
 #include "rbtree_iterator.hpp"
 
 
 template<typename T>
-class RBTree: public BasicSetI<T, RBTreeIterator<T>>
+class RBTree : public BasicSetI<T, RBTreeIterator<T>>
 {
 	friend class RBTreeIterator<T>;
 
@@ -44,6 +44,7 @@ private:
 
 public:
 	RBTree();
+
 	~RBTree();
 
 	void insert(T key);
@@ -54,10 +55,12 @@ public:
 
 	void clear();
 
+	RBTreeIterator<T> find(T key) const;
+
 	RBTreeIterator<T> begin() const;
+
 	RBTreeIterator<T> end() const;
 };
-
 
 
 #endif //LAB2_RBTREE_H

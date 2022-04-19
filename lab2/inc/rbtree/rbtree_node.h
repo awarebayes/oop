@@ -14,13 +14,9 @@ struct Node
 	std::shared_ptr<Node<T>> parent;
 	std::shared_ptr<Node<T>> left;
 	std::shared_ptr<Node<T>> right;
-	int color = 0; // 1 -> Red, 0 -> Black
+	int is_red = 0; // 1 -> Red, 0 -> Black
 
 	Node() = default;
-	explicit Node(T data) : data(data) {};
-	explicit Node(std::shared_ptr<Node<T>> parent_) : parent(parent_) {};
-	explicit Node(T data_, std::shared_ptr<Node<T>> parent_) : data(data_), parent(parent_) {};
-
 	void kill_children();
 };
 

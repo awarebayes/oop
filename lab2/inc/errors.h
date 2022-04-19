@@ -9,11 +9,11 @@ class BaseError : public std::exception
 {
 public:
 	explicit BaseError(
-			const std::string& filename,
-			const std::string& classname,
+			const std::string &filename,
+			const std::string &classname,
 			const int line,
 			const char *time,
-			const std::string& info)
+			const std::string &info)
 	{
 		msg = "In: " + filename +
 		      "\n inside: " + classname +
@@ -21,7 +21,9 @@ public:
 		      "\nat: " + time +
 		      "\noccured: " + info;
 	}
-	[[nodiscard]] const char* what() const noexcept override {
+
+	[[nodiscard]] const char *what() const noexcept override
+	{
 		return msg.c_str();
 	}
 
@@ -33,12 +35,14 @@ class AlreadyInSetError : public BaseError
 {
 public:
 	AlreadyInSetError(
-			const std::string& filename,
-			const std::string& classname,
+			const std::string &filename,
+			const std::string &classname,
 			const int line,
 			const char *time,
-			const std::string& info = "Element was already in set"
-	): BaseError(filename, classname, line, time, info){}
+			const std::string &info = "Element was already in set"
+	) : BaseError(filename, classname, line, time, info)
+	{
+	}
 };
 
 
@@ -46,12 +50,29 @@ class NotInSetError : public BaseError
 {
 public:
 	NotInSetError(
-			const std::string& filename,
-			const std::string& classname,
+			const std::string &filename,
+			const std::string &classname,
 			const int line,
 			const char *time,
-			const std::string& info = "Element was not in set"
-	): BaseError(filename, classname, line, time, info){}
+			const std::string &info = "Element was not in set"
+	) : BaseError(filename, classname, line, time, info)
+	{
+	}
+};
+
+
+class IterationError : public BaseError
+{
+public:
+	IterationError(
+			const std::string &filename,
+			const std::string &classname,
+			const int line,
+			const char *time,
+			const std::string &info = "Element was not in set"
+	) : BaseError(filename, classname, line, time, info)
+	{
+	}
 };
 
 #endif //LAB2_ERRORS_H
