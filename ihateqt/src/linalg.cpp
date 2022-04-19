@@ -156,10 +156,10 @@ mat4x4 mat_identity()
 	};
 }
 
-errc apply_transform(vec4 *dest, const vec4 *source, const mat4x4 &matrix, int n_points)
+errc apply_transform(vec4 *dest, const mat4x4 &matrix, int n_points)
 {
 	for (int i = 0; i < n_points; i++)
-		dest[i] = vec_mul(source[i], matrix);
+		dest[i] = vec_mul(dest[i], matrix);
 	return errc::ok;
 }
 
@@ -170,4 +170,13 @@ vec4 vec_scale(vec4 const &vec, const double scale)
 	for (int i = 0; i < 3; i++)
 		scaled.components[i] *= scale;
 	return scaled;
+}
+
+errc vec_flush(FILE *file, const vec4 vec)
+{
+	big_string buffer;
+	errc ec = vec4_to_obj_string(buffer, vec);
+	if (ec == errc::ok)
+		fprintf(file, "%s\n", buffer.buf);
+	return ec;
 }

@@ -73,9 +73,46 @@ errc transformations_to_matrix(mat4x4 &result, const transformations &self)
 	return errc::ok;
 }
 
-void reset_transforms(transformations &self)
+void reset_transforms(transformations &self, int screen_width, int screen_height)
 {
-	self.rotate = { 0, 0, 180 };
-	self.scale = { 1, 1, 1 };
-	self.translate = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0 };
+	self.rotate = { 0, 0, 180, transform_type::Rotate };
+	self.scale = { 1, 1, 1 , transform_type::Scale};
+	self.translate = { static_cast<double>(screen_width / 2), static_cast<double>(screen_height / 2), 0, transform_type::Translate };
+}
+
+void mutate_xyz(transform_xyz &xyz, double val, axis ax)
+{
+	switch (ax)
+	{
+		case axis::X:
+			xyz.x = val;
+			break;
+		case axis::Y:
+			xyz.y = val;
+			break;
+		case axis::Z:
+			xyz.z = val;
+			break;
+	}
+}
+
+
+errc mutate_transforms(transformations &self, transform_mutation mut)
+{
+	errc ec = errc::ok;
+	switch (mut.type)
+	{
+		case transform_type::Translate:
+			mutate_xyz(self.translate, mut.value, mut.ax);
+			break;
+		case transform_type::Scale:
+			mutate_xyz(self.scale, mut.value, mut.ax);
+			break;
+		case transform_type::Rotate:
+			mutate_xyz(self.rotate, mut.value, mut.ax);
+			break;
+		default:
+			ec = errc::invalid_argument;
+	}
+	return ec;
 }

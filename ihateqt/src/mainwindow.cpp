@@ -56,13 +56,19 @@ void MainWindow::rerender()
 	strcpy(com.obj_path.buf, "NONE");
 	com.scene = scene;
 	com.type = command_type::draw_object;
-	com.transforms = get_transformations();
 	entry_point(com);
 }
 
 
 void MainWindow::on_TransX_valueChanged(double arg1)
 {
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Translate, .ax=axis::X, .value=arg1};
+	entry_point(com);
+
 	rerender();
 }
 
@@ -70,6 +76,12 @@ void MainWindow::on_TransX_valueChanged(double arg1)
 void MainWindow::on_TransY_valueChanged(double arg1)
 {
 
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Translate, .ax=axis::Y, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
@@ -77,13 +89,24 @@ void MainWindow::on_TransY_valueChanged(double arg1)
 void MainWindow::on_TransZ_valueChanged(double arg1)
 {
 
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Translate, .ax=axis::Z, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
 
 void MainWindow::on_RotX_valueChanged(double arg1)
 {
-
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Rotate, .ax=axis::X, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
@@ -91,6 +114,12 @@ void MainWindow::on_RotX_valueChanged(double arg1)
 void MainWindow::on_RotY_valueChanged(double arg1)
 {
 
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Rotate, .ax=axis::Y, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
@@ -98,6 +127,12 @@ void MainWindow::on_RotY_valueChanged(double arg1)
 void MainWindow::on_RotZ_valueChanged(double arg1)
 {
 
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Rotate, .ax=axis::Z, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
@@ -105,20 +140,36 @@ void MainWindow::on_RotZ_valueChanged(double arg1)
 void MainWindow::on_ScaleX_valueChanged(double arg1)
 {
 
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Scale, .ax=axis::X, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
 
 void MainWindow::on_ScaleY_valueChanged(double arg1)
 {
-
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Scale, .ax=axis::Y, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
 
 void MainWindow::on_ScaleZ_valueChanged(double arg1)
 {
-
+	command com{};
+	strcpy(com.obj_path.buf, "NONE");
+	com.scene = scene;
+	com.type = command_type::mutate_transforms;
+	com.mutation = {.type = transform_type::Scale, .ax=axis::Z, .value=arg1};
+	entry_point(com);
 	rerender();
 }
 
@@ -172,8 +223,12 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::reset_view()
 {
 	transformations transforms;
-	reset_transforms(transforms);
+	reset_transforms(transforms, SCREEN_WIDTH, SCREEN_HEIGHT);
 	this->set_transforms(transforms);
+
+	command com = { .type=command_type::reset_transforms, .screen_width=SCREEN_WIDTH, .screen_height=SCREEN_HEIGHT };
+	strcpy(com.obj_path.buf, "NONE");
+	entry_point(com);
 }
 
 void MainWindow::load_object(const std::string &path)
@@ -187,8 +242,7 @@ void MainWindow::load_object(const std::string &path)
 
 void MainWindow::save_object(const std::string &filename)
 {
-	command com = { .scene=scene, .type = command_type::save_object };
-	com.transforms = get_transformations();
+	command com = { .type = command_type::save_object };
 	strcpy(com.obj_path.buf, filename.c_str());
 	entry_point(com);
 }

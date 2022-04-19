@@ -3,10 +3,9 @@
 //
 #include <cstdio>
 #include <cstring>
-#include <QGraphicsScene>
 #include "inc/obj3d.h"
-#include "inc/config.h"
 #include "inc/obj3d_util.h"
+#include "inc/mishalib.h"
 
 
 errc init_obj3d(obj3d &self, const int n_vertices, const int n_lines)
@@ -44,6 +43,8 @@ errc free_obj3d(obj3d &self)
 	free(self.lines);
 	self.vertices = nullptr;
 	self.lines = nullptr;
+	self.n_lines = 0;
+	self.n_vertices = 0;
 
 	return errc::ok;
 }
@@ -65,21 +66,7 @@ errc init_obj3d_from_string(obj3d &self, const big_string &in)
 }
 
 // ok
-errc obj3d_move_if_ok(obj3d &dest, obj3d &source, const errc ec)
-{
-	if (ec == errc::ok)
-	{
-		free_obj3d(dest);
-		dest = source;
-	}
-	else
-		free_obj3d(source);
-	return errc::ok;
-}
-
-
-// ok
-static errc init_read_obj3d_from_file(obj3d &out_object, const big_string &path)
+errc obj3d_from_file(obj3d &out_object, const big_string path)
 {
 	FILE *file = fopen(path.buf, "r");
 	if (file == nullptr)
@@ -87,7 +74,7 @@ static errc init_read_obj3d_from_file(obj3d &out_object, const big_string &path)
 
 	obj3d temp_object{};
 
-	errc error = errc::ok;
+	errc ec = errc::ok;
 	big_string buffer;
 	small_string line_type;
 
@@ -96,41 +83,32 @@ static errc init_read_obj3d_from_file(obj3d &out_object, const big_string &path)
 
 	bool break_flag = false;
 
-	while (not break_flag and error == errc::ok)
+	while (not break_flag and ec == errc::ok)
 	{
-		fgets(buffer.buf, buffer.length, file);
-		sscanf(buffer.buf, "%s", line_type);
+		get_big_line(buffer, file);
+		get_big_line_type(line_type, buffer);
 
 		if (strcmp(line_type, "i") == 0)
-			error = init_obj3d_from_string(temp_object, buffer);
+			ec = init_obj3d_from_string(temp_object, buffer);
 		else if (strcmp(line_type, "v") == 0)
-			error = obj3d_read_vertex(temp_object, n_vertices_read++, buffer);
+			ec = obj3d_read_vertex(temp_object, n_vertices_read++, buffer);
 		else if (strcmp(line_type, "l") == 0)
-			error = obj3d_read_line(temp_object, n_lines_read++, buffer);
+			ec = obj3d_read_line(temp_object, n_lines_read++, buffer);
 		else if (strcmp(line_type, "e") == 0)
 			break_flag = true;
 	}
 
-	obj3d_move_if_ok(out_object, temp_object, error);
+
+	if (ec == errc::ok)
+	{
+		free_obj3d(out_object);
+		out_object = temp_object;
+	}
+	else
+		free_obj3d(temp_object);
+
 	fclose(file);
 
-	return error;
-}
-
-// OK
-errc obj3d_from_file(obj3d &dest, const big_string path)
-{
-	errc ec = errc::ok;
-	obj3d temp_obj{};
-
-	ec = init_read_obj3d_from_file(temp_obj, path);
-
-	if (ec == errc::ok)
-		ec = center_object_at_zero(temp_obj);
-	if (ec == errc::ok)
-		ec = scale_to_fit_screen(temp_obj);
-
-	obj3d_move_if_ok(dest, temp_obj, ec);
 	return ec;
 }
 
@@ -145,18 +123,10 @@ errc obj3d_to_file(const obj3d &object, const big_string &path)
 	fprintf(file, "i %d %d \n", object.n_vertices, object.n_lines);
 
 	for (int i = 0; ec == errc::ok and i < object.n_vertices; i++)
-	{
-		big_string buffer;
-		ec = vec4_to_obj_string(buffer, object.vertices[i]);
-		fprintf(file, "%s\n", buffer.buf);
-	}
+		ec = obj3d_flush_vertex(file, i, object);
 
 	for (int i = 0; ec == errc::ok and i < object.n_lines; i++)
-	{
-		big_string buffer;
-		ec = line_to_obj_string(buffer, object.lines[i]);
-		fprintf(file, "%s\n", buffer.buf);
-	}
+		ec = obj3d_flush_line(file, i, object);
 
 	fprintf(file, "e\n");
 	fclose(file);
@@ -165,44 +135,58 @@ errc obj3d_to_file(const obj3d &object, const big_string &path)
 }
 
 // OK
-static errc obj3d_apply_transform(obj3d &dest, const obj3d &source, const transformations &transforms)
+errc obj3d_apply_transform(obj3d &dest, const transformations &transforms)
 {
 	mat4x4 transform_mat{};
 	transformations_to_matrix(transform_mat, transforms);
-	apply_transform(dest.vertices, source.vertices, transform_mat, source.n_vertices);
+	apply_transform(dest.vertices, transform_mat, dest.n_vertices);
 	return errc::ok;
 }
 
 // OK
-errc obj3d_apply_transform_then_copy(obj3d &dest, const obj3d &source, const transformations &transforms)
+errc obj3d_copy(obj3d &dest, const obj3d &source)
 {
 	errc ec = errc::ok;
 	obj3d temp_dest{};
 
-	init_obj3d_as(temp_dest, source);
-	ec = copy_lines(temp_dest, source);
+	ec = init_obj3d_as(temp_dest, source);
 	if (ec == errc::ok)
-		ec = obj3d_apply_transform(temp_dest, source, transforms);
+	{
+		free_obj3d(dest);
+		dest = temp_dest;
+		copy_lines(dest, source);
+		copy_vertices(dest, source);
+	}
 
-	obj3d_move_if_ok(dest, temp_dest, ec);
 	return ec;
 }
 
-// OK
-errc obj3d_draw(QGraphicsScene *scene, const obj3d &object)
+errc obj3d_get_points(vec4 &p1, vec4 &p2, const obj3d &object, const line line_map)
 {
-	if (object.n_vertices == 0 or object.n_lines == 0)
-		return errc::bad_render_call;
+	int index1 = line_map.first;
+	int index2 = line_map.second;
+	p1 = object.vertices[index1];
+	p2 = object.vertices[index2];
+	return errc::ok;
+}
 
+// ok
+errc obj3d_draw_line(domain_scene &scene, const obj3d &object, const int line_num)
+{
+	line line_map = object.lines[line_num];
+	vec4 p1 = {};
+	vec4 p2 = {};
+	obj3d_get_points(p1, p2, object, line_map);
+	draw_line(scene, p1, p2);
+	return errc::ok;
+}
+
+// OK
+errc obj3d_draw(domain_scene scene, const obj3d &object)
+{
 	scene->clear();
-
 	for (int i = 0; i < object.n_lines; i++)
-	{
-		line l = object.lines[i];
-		vec4 point1 = object.vertices[l.first];
-		vec4 point2 = object.vertices[l.second];
-		scene->addLine(point1.components[0], point1.components[1],
-		               point2.components[0], point2.components[1]);
-	}
+		obj3d_draw_line(scene, object, i);
+
 	return errc::ok;
 }

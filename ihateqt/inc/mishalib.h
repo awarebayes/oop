@@ -7,6 +7,7 @@
 
 #define BIG_STRING_SIZE 512
 #define SMALL_STRING_SIZE 16
+#include "inc/error.h"
 
 typedef struct big_string
 {
@@ -15,5 +16,9 @@ typedef struct big_string
 } big_string;
 
 typedef char small_string[SMALL_STRING_SIZE];
+
+errc get_big_line(big_string &buffer, FILE *file);
+
+errc get_big_line_type(small_string  &line_type, const big_string &buffer);
 
 #endif //IHATEQT_MISHALIB_H
