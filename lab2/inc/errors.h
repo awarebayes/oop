@@ -75,4 +75,18 @@ public:
 	}
 };
 
+class IterationStoppedError : public BaseError
+{
+public:
+	IterationStoppedError(
+			const std::string &filename,
+			const std::string &classname,
+			const int line,
+			const char *time,
+			const std::string &info = "Element was not in set"
+	) : BaseError(filename, classname, line, time, info)
+	{
+	}
+};
+
 #endif //LAB2_ERRORS_H

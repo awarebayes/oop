@@ -37,10 +37,8 @@ public:
 
 private:
 	std::weak_ptr<Node<T>> current_node;
-	std::weak_ptr<Node<T>> root_ptr;
 	std::weak_ptr<Node<T>> tnull_ptr;
 
-	void reset_iteration();
 	void back_to_parents();
 	void find_successor();
 

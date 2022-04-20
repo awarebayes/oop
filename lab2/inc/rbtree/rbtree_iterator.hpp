@@ -2,35 +2,13 @@
 #define __RBTREE_ITERATOR_HPP__
 
 #include "rbtree_iterator.h"
+#include "errors.h"
 
 
 template<typename T>
 T *RBTreeIterator<T>::operator->()
 {
 	return &(this->current_node.lock()->data);
-}
-
-
-template<typename T>
-void RBTreeIterator<T>::reset_iteration()
-{
-
-	NodePtr<T> shared_node_ptr = root_ptr.lock();
-	NodePtr<T> tnull = tnull_ptr.lock();
-
-	// error! ++ requested for an empty tree
-	if (shared_node_ptr == tnull)
-	{
-		time_t t_time = time(NULL);
-		throw IterationError(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time));
-	}
-	// move to the smallest value in the tree,
-	// which is the first node inorder
-	while (shared_node_ptr->left != tnull)
-	{
-		shared_node_ptr = shared_node_ptr->left;
-	}
-	current_node = shared_node_ptr;
 }
 
 template<typename T>
@@ -70,8 +48,9 @@ const RBTreeIterator<T> RBTreeIterator<T>::next()
 
 	if (shared_node_ptr == tnull)
 	{
-		reset_iteration();
-		return next();
+
+		time_t t_time = time(NULL);
+		throw IterationStoppedError(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time));
 	}
 	else if (shared_node_ptr->right != tnull)
 		find_successor();
@@ -133,7 +112,6 @@ template<typename T>
 RBTreeIterator<T>::RBTreeIterator(const NodePtr<T> node_ptr_, const RBTree<T> &tree_)
 {
 	current_node = node_ptr_;
-	root_ptr = tree_.root;
 	tnull_ptr = tree_.tnull;
 }
 

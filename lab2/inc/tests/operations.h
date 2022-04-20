@@ -29,6 +29,10 @@ void check_difference_works(int set1_size, int set2_size, int mod)
 {
 	std::vector<int> std_set1 = random_std_vector(set1_size, mod);
 	std::vector<int> std_set2 = random_std_vector(set2_size, mod);
+
+	std::sort(std_set1.begin(), std_set1.end());
+	std::sort(std_set2.begin(), std_set2.end());
+
 	OrderedSet<int> my_set1 = my_set_from_std(std_set1);
 	OrderedSet<int> my_set2 = my_set_from_std(std_set2);
 	OrderedSet<int> my_res = my_set1.difference(my_set2);
@@ -38,6 +42,8 @@ void check_difference_works(int set1_size, int set2_size, int mod)
 	std::set_difference(std_set1.begin(), std_set1.end(),
 	               std_set2.begin(), std_set2.end(),
 	               std::back_inserter(std_res));
+
+	std::sort(std_res.begin(), std_res.end());
 
 	assert_sets_equal(my_res, std_res);
 }
@@ -66,12 +72,13 @@ void check_intersection_works(int set1_size, int set2_size, int mod)
 {
 	std::vector<int> std_set1 = random_std_vector(set1_size, mod);
 	std::vector<int> std_set2 = random_std_vector(set2_size, mod);
+	std::sort(std_set1.begin(), std_set1.end());
+	std::sort(std_set2.begin(), std_set2.end());
 	OrderedSet<int> my_set1 = my_set_from_std(std_set1);
 	OrderedSet<int> my_set2 = my_set_from_std(std_set2);
 	OrderedSet<int> my_res = my_set1.intersection(my_set2);
 
 	std::vector<int> std_res;
-
 
 	std::set_intersection(std_set1.begin(), std_set1.end(),
 	               std_set2.begin(), std_set2.end(),

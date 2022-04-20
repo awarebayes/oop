@@ -5,7 +5,8 @@
 #ifndef LAB2_CREATION_H
 #define LAB2_CREATION_H
 #include "gtest/gtest.h"
-#include "concrete_set.h"
+#include "ordered_set/ordered_set.h"
+#include "ordered_set/ordered_set.hpp"
 
 TEST(Creation, Default) {
 	OrderedSet<int> a;

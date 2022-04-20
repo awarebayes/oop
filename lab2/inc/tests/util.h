@@ -6,14 +6,14 @@
 #define LAB2_UTIL_H
 
 #include "gtest/gtest.h"
-#include "concrete_set.h"
+#include "ordered_set/ordered_set.h"
 #include <random>
+
+std::mt19937 gen(42); // seed the generator
 
 OrderedSet<int> random_my_set(int target_size, int mod)
 {
 	assert(mod >= target_size);
-	std::random_device rd; // obtain a random number from hardware
-	std::mt19937 gen(rd()); // seed the generator
 	std::uniform_int_distribution<int> distr(0, mod); // define the range
 	OrderedSet<int> my_set;
 
@@ -29,8 +29,6 @@ OrderedSet<int> random_my_set(int target_size, int mod)
 std::set<int> random_std_set(int target_size, int mod)
 {
 	assert(mod >= target_size);
-	std::random_device rd; // obtain a random number from hardware
-	std::mt19937 gen(rd()); // seed the generator
 	std::uniform_int_distribution<int> distr(0, mod); // define the range
 	std::set<int> my_set;
 
@@ -46,8 +44,6 @@ std::set<int> random_std_set(int target_size, int mod)
 std::vector<int> random_std_vector(int target_size, int mod)
 {
 	assert(mod >= target_size);
-	std::random_device rd; // obtain a random number from hardware
-	std::mt19937 gen(rd()); // seed the generator
 	std::uniform_int_distribution<int> distr(0, mod); // define the range
 	std::vector<int> my_set;
 
