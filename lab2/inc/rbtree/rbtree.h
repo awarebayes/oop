@@ -18,6 +18,7 @@ class RBTree : public BasicSetI
 
 private:
 	NodePtr<T> root;
+	NodePtr<T> tnull;
 
 	NodePtr<T> searchTreeHelper(NodePtr<T> node, T key) const;
 

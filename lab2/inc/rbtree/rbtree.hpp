@@ -256,7 +256,8 @@ void RBTree<T>::fixInsert(NodePtr<T> k)
 template<typename T>
 RBTree<T>::RBTree()
 {
-	root = nullptr;
+	tnull = std::make_shared<Node<T>>();
+	root = tnull;
 }
 
 
