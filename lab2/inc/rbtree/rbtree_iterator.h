@@ -37,12 +37,11 @@ public:
 
 private:
 	std::weak_ptr<Node<T>> current_node;
-	std::weak_ptr<Node<T>> tnull_ptr;
 
 	void back_to_parents();
 	void find_successor();
 
-	RBTreeIterator(const NodePtr<T> node_ptr_, const RBTree<T> &tree_);
+	explicit RBTreeIterator(const NodePtr<T> node_ptr_);
 };
 
 

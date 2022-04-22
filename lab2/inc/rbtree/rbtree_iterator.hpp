@@ -28,12 +28,11 @@ template<typename T>
 void RBTreeIterator<T>::find_successor()
 {
 	NodePtr<T> shared_node_ptr = current_node.lock();
-	NodePtr<T> tnull = tnull_ptr.lock();
 	// successor is the farthest left node of
 	// right subtree
 	shared_node_ptr = shared_node_ptr->right;
 
-	while (shared_node_ptr->left != tnull)
+	while (shared_node_ptr->left != nullptr)
 	{
 		shared_node_ptr = shared_node_ptr->left;
 	}
@@ -44,15 +43,13 @@ template<typename T>
 const RBTreeIterator<T> RBTreeIterator<T>::next()
 {
 	NodePtr<T> shared_node_ptr = current_node.lock();
-	NodePtr<T> tnull = tnull_ptr.lock();
 
-	if (shared_node_ptr == tnull)
+	if (shared_node_ptr == nullptr)
 	{
-
-		time_t t_time = time(NULL);
+		time_t t_time = time(nullptr);
 		throw IterationStoppedError(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time));
 	}
-	else if (shared_node_ptr->right != tnull)
+	else if (shared_node_ptr->right != nullptr)
 		find_successor();
 	else
 		back_to_parents();
@@ -95,24 +92,23 @@ bool RBTreeIterator<T>::operator!=(const RBTreeIterator &other)
 {
 	auto this_shared_ptr = this->current_node.lock();
 	auto other_shared_ptr = other.current_node.lock();
-
-	if (not this_shared_ptr || not other_shared_ptr)
+	if (not this_shared_ptr and not other_shared_ptr)
 		return false;
-
+	if (not other_shared_ptr)
+		return true;
 	return this_shared_ptr != other_shared_ptr;
 }
 
 template<typename T>
 RBTreeIterator<T>::operator bool() const
 {
-	return *this != this->tree->end();
+	current_node.lock() == nullptr;
 }
 
 template<typename T>
-RBTreeIterator<T>::RBTreeIterator(const NodePtr<T> node_ptr_, const RBTree<T> &tree_)
+RBTreeIterator<T>::RBTreeIterator(const NodePtr<T> node_ptr_)
 {
 	current_node = node_ptr_;
-	tnull_ptr = tree_.tnull;
 }
 
 

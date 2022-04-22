@@ -18,46 +18,41 @@ class RBTree : public BasicSetI
 
 private:
 	NodePtr<T> root;
-	NodePtr<T> tnull;
 
-	NodePtr<T> searchTreeHelper(NodePtr<T> node, T key) const;
-
-	void fixDelete(NodePtr<T> x);
-
-	void rbTransplant(NodePtr<T> u, NodePtr<T> v);
-
-	void deleteNodeHelper(NodePtr<T> node, T key);
-
-	void fixInsert(NodePtr<T> k);
-
-	NodePtr<T> searchTree(T k) const;
-
+protected:
+	void rotateLeft(NodePtr<T> node);
+	void rotateRight(NodePtr<T> node);
+	void fixInsertRBTree(NodePtr<T> node);
+	void fixDeleteRBTree(NodePtr<T> node);
+	NodePtr<T> searchRBT(NodePtr<T> node, T value) const;
+	int getColor(NodePtr<T> node) const;
+	void setColor(NodePtr<T> node, int color);
+	NodePtr<T> insertBST(NodePtr<T> node, NodePtr<T> ptr);
+	NodePtr<T> deleteBST(NodePtr<T> node, T key);
 	NodePtr<T> minimum(NodePtr<T> node) const;
-
 	NodePtr<T> maximum(NodePtr<T> node) const;
-
-	void leftRotate(NodePtr<T> x);
-
-	void rightRotate(NodePtr<T> x);
-
+	NodePtr<T> searchTree(T key) const;
+	int getBlackHeight(NodePtr<T>);
+	
 public:
 	RBTree();
 
-	~RBTree();
+	~RBTree() override;
 
 	void insert(T key);
 
 	void remove(T key);
 
-	bool contains(T key) const;
-
 	void clear();
+
+	bool contains(T key) const;
 
 	RBTreeIterator<T> find(T key) const;
 
 	RBTreeIterator<T> begin() const;
 
 	RBTreeIterator<T> end() const;
+
 };
 
 

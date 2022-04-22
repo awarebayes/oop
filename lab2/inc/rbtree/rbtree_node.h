@@ -7,6 +7,8 @@
 
 #include <memory>
 
+enum NodeColor {RED, BLACK, DOUBLE_BLACK};
+
 template<typename T>
 struct Node
 {
@@ -14,9 +16,10 @@ struct Node
 	std::shared_ptr<Node<T>> parent;
 	std::shared_ptr<Node<T>> left;
 	std::shared_ptr<Node<T>> right;
-	int is_red = 0; // 1 -> Red, 0 -> Black
+	int color = RED;
 
 	Node() = default;
+	explicit Node(T value) : data(value) {};
 	void kill_children();
 };
 
@@ -30,6 +33,7 @@ void Node<T>::kill_children()
 	left = nullptr;
 	right = nullptr;
 }
+
 
 template<typename T>
 using NodePtr = std::shared_ptr<Node<T>>;
