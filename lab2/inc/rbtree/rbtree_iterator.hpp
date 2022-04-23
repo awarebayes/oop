@@ -28,14 +28,9 @@ template<typename T>
 void RBTreeIterator<T>::find_successor()
 {
 	NodePtr<T> shared_node_ptr = current_node.lock();
-	// successor is the farthest left node of
-	// right subtree
 	shared_node_ptr = shared_node_ptr->right;
-
 	while (shared_node_ptr->left != nullptr)
-	{
 		shared_node_ptr = shared_node_ptr->left;
-	}
 	current_node = shared_node_ptr;
 }
 

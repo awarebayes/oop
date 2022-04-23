@@ -31,4 +31,32 @@ TEST(Creation, DublicateArgs) {
 	EXPECT_EQ(a, (OrderedSet<int>{1,2,3,4}));
 }
 
+
+TEST(Creation, CArray) {
+	int arr[] = {1, 2, 3, 4};
+	OrderedSet<int> a = OrderedSet(arr, 4);
+	EXPECT_EQ(a, (OrderedSet<int>{1,2,3,4}));
+}
+
+TEST(Creation, StdVector) {
+	std::vector<int> vec = {1, 2, 3, 4};
+	OrderedSet<int> a = OrderedSet(vec);
+	EXPECT_EQ(a, (OrderedSet<int>{1,2,3,4}));
+}
+
+TEST(Creation, StdSet) {
+	std::set<int> set = {1, 2, 3, 4};
+	OrderedSet<int> a = OrderedSet(set);
+	EXPECT_EQ(a, (OrderedSet<int>{1,2,3,4}));
+}
+
+TEST(Creation, StdSetIterator) {
+	std::set<int> set = {1, 2, 3, 4};
+	OrderedSet<int> a = OrderedSet<int>(std::begin(set), std::end(set));
+	EXPECT_EQ(a, (OrderedSet<int>{1,2,3,4}));
+}
+
+
+
+
 #endif //LAB2_CREATION_H
