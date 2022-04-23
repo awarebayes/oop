@@ -41,7 +41,7 @@ private:
 	void back_to_parents();
 	void find_successor();
 
-	explicit RBTreeIterator(const NodePtr<T> node_ptr_);
+	explicit RBTreeIterator(NodePtr<T> node_ptr_);
 };
 
 

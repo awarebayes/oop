@@ -310,7 +310,7 @@ void RBTree<T>::fixDeleteRBTree(NodePtr<T> node)
 }
 
 template<typename T>
-NodePtr<T> RBTree<T>::deleteBST(NodePtr<T> start, T data)
+NodePtr<T> RBTree<T>::deleteBST(NodePtr<T> start, const T &data)
 {
 	if (start == nullptr)
 		return start;
@@ -342,7 +342,7 @@ int RBTree<T>::getBlackHeight(NodePtr<T> node)
 }
 
 template<typename T>
-NodePtr<T> RBTree<T>::searchRBT(NodePtr<T> node, T value) const
+NodePtr<T> RBTree<T>::searchRBT(NodePtr<T> node, const T &value) const
 {
 	if (node == nullptr or node->data == value)
 	{
@@ -364,6 +364,13 @@ void RBTree<T>::clear()
 {
 	root->kill_children();
 	root = nullptr;
+}
+
+template<typename T>
+void RBTree<T>::move(RBTree<T> &other)
+{
+	this->root = other.root;
+	other.root = nullptr;
 }
 
 #endif

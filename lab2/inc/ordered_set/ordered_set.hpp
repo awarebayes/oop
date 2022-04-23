@@ -249,9 +249,9 @@ void OrderedSet<T>::operator-(const OrderedSet::MyType &other) const
 }
 
 template<typename T>
-OrderedSet<T>::OrderedSet(const OrderedSet::MyType &&other) noexcept
+OrderedSet<T>::OrderedSet(OrderedSet::MyType &&other) noexcept
 {
-	// todo
+	this->set.move(other.set);
 }
 
 

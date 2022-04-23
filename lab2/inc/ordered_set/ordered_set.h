@@ -20,12 +20,11 @@ public:
 	~OrderedSet() = default;
 
 	OrderedSet(const MyType &other);
-	OrderedSet(const MyType &&other) noexcept; // todo move
+	OrderedSet(MyType &&other) noexcept;
 
 	OrderedSet(std::initializer_list<T> elems);
 
 	OrderedSet(const T *elem_list, size_t len);
-	// todo iterator
 
 	void update(const MyType &other);
 

@@ -39,16 +39,19 @@ void RBTreeIterator<T>::find_successor()
 	current_node = shared_node_ptr;
 }
 
+void iteration_stopped()
+{
+	time_t t_time = time(nullptr);
+	throw IterationStoppedError(__FILE__, "RBTreeIterator<T>", __LINE__, ctime(&t_time));
+}
+
 template<typename T>
 const RBTreeIterator<T> RBTreeIterator<T>::next()
 {
 	NodePtr<T> shared_node_ptr = current_node.lock();
 
 	if (shared_node_ptr == nullptr)
-	{
-		time_t t_time = time(nullptr);
-		throw IterationStoppedError(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time));
-	}
+		iteration_stopped();
 	else if (shared_node_ptr->right != nullptr)
 		find_successor();
 	else

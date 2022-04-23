@@ -24,11 +24,11 @@ protected:
 	void rotateRight(NodePtr<T> node);
 	void fixInsertRBTree(NodePtr<T> node);
 	void fixDeleteRBTree(NodePtr<T> node);
-	NodePtr<T> searchRBT(NodePtr<T> node, T value) const;
+	NodePtr<T> searchRBT(NodePtr<T> node, const T & value) const;
 	int getColor(NodePtr<T> node) const;
 	void setColor(NodePtr<T> node, int color);
 	NodePtr<T> insertBST(NodePtr<T> node, NodePtr<T> ptr);
-	NodePtr<T> deleteBST(NodePtr<T> node, T key);
+	NodePtr<T> deleteBST(NodePtr<T> node, const T &value);
 	NodePtr<T> minimum(NodePtr<T> node) const;
 	NodePtr<T> maximum(NodePtr<T> node) const;
 	NodePtr<T> searchTree(T key) const;
@@ -43,7 +43,7 @@ public:
 
 	void remove(T key);
 
-	void clear();
+	void clear() override;
 
 	bool contains(T key) const;
 
@@ -53,6 +53,7 @@ public:
 
 	RBTreeIterator<T> end() const;
 
+	void move(RBTree<T> &other);
 };
 
 
