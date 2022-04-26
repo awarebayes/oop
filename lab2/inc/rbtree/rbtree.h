@@ -36,21 +36,15 @@ protected:
 	
 public:
 	RBTree();
-
 	~RBTree() override;
 
 	void insert(T key);
-
 	void remove(T key);
-
 	void clear() override;
-
 	bool contains(T key) const;
 
 	RBTreeIterator<T> find(T key) const;
-
 	RBTreeIterator<T> begin() const;
-
 	RBTreeIterator<T> end() const;
 
 	void move(RBTree<T> &other);
