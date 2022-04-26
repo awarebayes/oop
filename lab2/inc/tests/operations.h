@@ -118,4 +118,21 @@ TEST(Operations, Intersection)
 	check_intersection_works(1000, 100, 10000);
 }
 
+
+TEST(Operations, IsSubset)
+{
+	OrderedSet<int> a{0,1,2,3};
+	OrderedSet<int> b{0, 1, 3};
+	EXPECT_TRUE(b.is_subset(a));
+	EXPECT_FALSE(a.is_subset(b));
+}
+
+TEST(Operations, Update) {
+	OrderedSet<int> a{1, 2, 3, 4};
+	OrderedSet<int> b{4, 5, 6};
+	a.update(b);
+	EXPECT_EQ(a, (OrderedSet<int>{1,2,3,4,5,6}));
+	EXPECT_EQ(a.size(), 6);
+}
+
 #endif //LAB2_OPERATIONS_H

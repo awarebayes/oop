@@ -148,14 +148,14 @@ bool OrderedSet<T>::is_subset(const OrderedSet::MyType &other) const
 template<typename T>
 OrderedSet<T>::OrderedSet(const std::initializer_list<T> elems)
 {
-	for (auto elem: elems)
+	for (auto &elem: elems)
 		this->insert(elem);
 }
 
 template<typename T>
 OrderedSet<T>::OrderedSet(const OrderedSet::MyType &other)
 {
-	for (auto elem: other)
+	for (auto &elem: other)
 		this->insert(elem);
 }
 
@@ -167,9 +167,37 @@ OrderedSet<T>::OrderedSet(const T *elem_list, size_t len)
 }
 
 template<typename T>
+OrderedSet<T>::OrderedSet(OrderedSet::MyType &&other) noexcept
+{
+	this->set.move(other.set);
+	other.capacity = 0;
+}
+
+template<typename T>
+OrderedSet<T>::OrderedSet(std::set<T> std_set)
+{
+	for (auto &el: std_set)
+		this->insert(el);
+}
+
+template<typename T>
+OrderedSet<T>::OrderedSet(std::vector<T> std_vector)
+{
+	for (auto &el: std_vector)
+		this->insert(el);
+}
+
+template<typename T>
+OrderedSet<T>::OrderedSet(typename std::set<T>::iterator begin, typename std::set<T>::iterator end)
+{
+	for (auto it = begin; it != end; it++)
+		this->insert(*it);
+}
+
+template<typename T>
 void OrderedSet<T>::update(const OrderedSet::MyType &other)
 {
-	for (auto elem: other)
+	for (auto &elem: other)
 		this->insert(elem);
 }
 
@@ -177,14 +205,15 @@ template<typename T>
 OrderedSet<T> &OrderedSet<T>::operator=(const OrderedSet::MyType &other)
 {
 	set->clear();
-	for (auto elem: other)
+	for (auto &elem: other)
 		this->insert(elem);
 }
 
 template<typename T>
 OrderedSet<T> &OrderedSet<T>::operator=(const OrderedSet::MyType &&other)
  noexcept {
-	set = std::unique_ptr(other.set);
+	this->set.move(other.set);
+	other.capacity = 0;
 }
 
 template<typename T>
@@ -248,11 +277,7 @@ void OrderedSet<T>::operator-(const OrderedSet::MyType &other) const
 	return this->difference(other);
 }
 
-template<typename T>
-OrderedSet<T>::OrderedSet(OrderedSet::MyType &&other) noexcept
-{
-	this->set.move(other.set);
-}
+
 
 
 #endif //LAB2_ORDERED_SET_HPP

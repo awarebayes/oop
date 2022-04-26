@@ -19,9 +19,7 @@ NodePtr<T> RBTree<T>::minimum(NodePtr<T> node) const
 	if (root == nullptr)
 		return nullptr;
 	while (node->left != nullptr)
-	{
 		node = node->left;
-	}
 	return node;
 }
 
@@ -29,9 +27,7 @@ template<typename T>
 NodePtr<T> RBTree<T>::maximum(NodePtr<T> node) const
 {
 	while (node->right != nullptr)
-	{
 		node = node->right;
-	}
 	return node;
 }
 
@@ -108,6 +104,10 @@ NodePtr<T> RBTree<T>::insertBST(NodePtr<T> start, NodePtr<T> ptr)
 	} else if (ptr->data > start->data) {
 		start->right = insertBST(start->right, ptr);
 		start->right->parent = start;
+	} else
+	{
+		time_t t_time = time(nullptr);
+		throw AlreadyInSetError(__FILE__, "RBTreeIterator<T>", __LINE__, ctime(&t_time));
 	}
 
 	return start;
@@ -345,9 +345,7 @@ template<typename T>
 NodePtr<T> RBTree<T>::searchRBT(NodePtr<T> node, const T &value) const
 {
 	if (node == nullptr or node->data == value)
-	{
 		return node;
-	}
 	if (node->data > value)
 		return searchRBT(node->left, value);
 	return searchRBT(node->right, value);

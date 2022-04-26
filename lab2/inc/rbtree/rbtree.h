@@ -14,10 +14,9 @@
 template<typename T>
 class RBTree : public BasicSetI
 {
-	friend class RBTreeIterator<T>;
-
 private:
 	NodePtr<T> root;
+	friend class RBTreeIterator<T>;
 
 protected:
 	void rotateLeft(NodePtr<T> node);

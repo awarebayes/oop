@@ -19,12 +19,14 @@ public:
 	OrderedSet() = default;
 	~OrderedSet() = default;
 
+	explicit OrderedSet(std::initializer_list<T> elems);
+	OrderedSet(const T *elem_list, size_t len);
+	explicit OrderedSet(std::set<T> std_set);
+	explicit OrderedSet(std::vector<T> std_vector);
+	OrderedSet(typename std::set<T>::iterator begin, typename std::set<T>::iterator end);
+
 	OrderedSet(const MyType &other);
 	OrderedSet(MyType &&other) noexcept;
-
-	OrderedSet(std::initializer_list<T> elems);
-
-	OrderedSet(const T *elem_list, size_t len);
 
 	void update(const MyType &other);
 
