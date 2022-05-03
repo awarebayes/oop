@@ -1,7 +1,6 @@
 #include "inc/mainwindow.h"
 
 #include <QApplication>
-#include "inc/domain.h"
 
 int main(int argc, char *argv[])
 {
