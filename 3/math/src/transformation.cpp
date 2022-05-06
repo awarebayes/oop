@@ -57,10 +57,10 @@ std::shared_ptr<Transformation> Scale::share() const
 Matrix<4> Translation::get_matrix() const
 {
 	return {
-		1,             0,             0,             0,
-		0,             1,             0,             0,
-		0,             0,             1,             0,
-		x, y, z, 1
+		1,             0,             0,             x,
+		0,             1,             0,             y,
+		0,             0,             1,             z,
+		0,             0,             0,             1
 	};
 }
 
@@ -89,16 +89,9 @@ std::shared_ptr<Transformation> Identity::share() const
 	return std::make_shared<Identity>(get_matrix());
 }
 
-CompositeTransformation CompositeTransformation::compose(const std::shared_ptr<Transformation>& next_transform)
-{
-	this->this_transform = std::make_shared<CompositeTransformation>(next_transform);
-	return CompositeTransformation(this->share());
-}
 
 Matrix<4> CompositeTransformation::get_matrix() const
 {
-	if (this->this_transform == nullptr)
-		return prev_transform->get_matrix();
 	return prev_transform->get_matrix() * this_transform->get_matrix();
 }
 
@@ -110,6 +103,23 @@ std::shared_ptr<Transformation> CompositeTransformation::share() const
 CompositeTransformation::CompositeTransformation(const Transformation &transform)
 {
 	prev_transform = Identity(transform.get_matrix()).share();
+	this_transform = Identity(Matrix<4>::identity()).share();
 }
 
+CompositeTransformation::CompositeTransformation(std::shared_ptr<Transformation> transform)
+{
+	prev_transform = std::move(transform);
+	this_transform = Identity(Matrix<4>::identity()).share();
+}
 
+CompositeTransformation CompositeTransformation::compose(const Transformation &next_transform)
+{
+	this->this_transform = std::make_shared<CompositeTransformation>(next_transform);
+	return {*this};
+}
+
+CompositeTransformation CompositeTransformation::compose(const std::shared_ptr<Transformation>& next_transform)
+{
+	this->this_transform = std::make_shared<CompositeTransformation>(next_transform);
+	return {*this};
+}

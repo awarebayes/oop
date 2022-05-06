@@ -32,7 +32,13 @@ public:
 	Vector();
 	Vector(std::initializer_list<float> init);
 	float& operator()(size_t i);
-	Vector<n> operator*(Matrix<n>& other);
+	float operator()(size_t i) const;
 };
+
+template <size_t n>
+Vector<n> operator*(const Vector<n> &lhs, const Matrix<n>& rhs);
+
+template <size_t n>
+Vector<n> operator*(const Matrix<n> &lhs, const Vector<n> &rhs);
 
 #endif //INC_3_LINALG_H

@@ -9,8 +9,6 @@ ObjFileMeshSource::ObjFileMeshSource(const std::string &path)
 	in_file = std::ifstream(path);
 	if (in_file.fail())
 		throw std::runtime_error("Could not open file");
-	line_buffer.reserve(256);
-	vertex_buffer.reserve(256);
 }
 
 template<typename T>
@@ -57,7 +55,6 @@ void ObjFileMeshSource::iter_file_line()
 
 void ObjFileMeshSource::read_vertex(std::stringstream &ss)
 {
-
 	Vertex vertex{0, 0, 0, 1};
 	ss >> vertex(0) >> vertex(1) >> vertex(2);
 	if (ss.fail())

@@ -15,6 +15,8 @@ public:
 	std::unique_ptr<Transformation> look_at_object(VisibleObject &object) const;
 	void change_look_direction(float x, float y, float z);
 	void change_position(float x, float y, float z);
+	[[nodiscard]] Matrix<4> get_matrix() const;
+	void accept(Visitor& v) override;
 };
 
 #endif //INC_3_CAMERA_H

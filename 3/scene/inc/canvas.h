@@ -10,6 +10,7 @@ class Canvas
 public:
 	virtual void clear() = 0;
 	virtual void draw_line(int x1, int y1, int x2, int y2) = 0;
+	Canvas() = default;
 	virtual ~Canvas() = default;
 };
 

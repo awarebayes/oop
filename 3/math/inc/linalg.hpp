@@ -50,9 +50,23 @@ Matrix<n> Matrix<n>::identity()
 }
 
 template<size_t n>
-Vector<n> Vector<n>::operator*(Matrix<n> &other)
+Vector<n> operator*(const Vector<n> &lhs, const Matrix<n> &rhs)
 {
-	return Vector<n>();
+	Vector<n> result;
+	for (int col = 0; col < n; col++)
+		for (int inner = 0; inner < n; inner++)
+			result(col) += lhs(inner) * rhs(inner, col);
+	return result;
+}
+
+template<size_t n>
+Vector<n> operator*(const Matrix<n> &lhs, const Vector<n> &rhs)
+{
+	Vector<n> result;
+	for (int col = 0; col < n; col++)
+		for (int inner = 0; inner < n; inner++)
+			result(col) += lhs(col, inner) * rhs(inner);
+	return result;
 }
 
 template<size_t n>
@@ -76,6 +90,14 @@ Vector<n>::Vector()
 {
 	for (int i = 0; i < n; i++)
 		components[i] = 0;
+}
+
+template<size_t n>
+float Vector<n>::operator()(size_t i) const
+{
+
+	assert(i < n);
+	return components[i];
 }
 
 #endif //INC_3_LINALG_HPP

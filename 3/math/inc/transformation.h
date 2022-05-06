@@ -58,6 +58,7 @@ public:
 	explicit Identity(const Matrix<4>& trans) : mat(trans) {};
 	explicit Identity(const Transformation& trans) : mat(trans.get_matrix()) {};
 	[[nodiscard]] Matrix<4> get_matrix() const override;
+	[[nodiscard]] std::shared_ptr<Transformation> share() const override;
 };
 
 class CompositeTransformation : public Transformation
@@ -66,10 +67,12 @@ private:
 	std::shared_ptr<Transformation> this_transform{};
 	std::shared_ptr<Transformation> prev_transform{};
 public:
-	explicit CompositeTransformation(std::shared_ptr<Transformation> transform) : prev_transform(std::move(transform)) {};
+	explicit CompositeTransformation(std::shared_ptr<Transformation> transform);
 	explicit CompositeTransformation(const Transformation &transform);
 	CompositeTransformation compose(const std::shared_ptr<Transformation>& next_transform);
+	CompositeTransformation compose(const Transformation& next_transform);
 	[[nodiscard]] Matrix<4> get_matrix() const override;
+	[[nodiscard]] std::shared_ptr<Transformation> share() const override;
 };
 
 

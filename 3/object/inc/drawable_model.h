@@ -11,11 +11,6 @@
 #include "math/inc/transformation.h"
 
 class DrawableModel : public VisibleObject
-{
-private:
-	std::unique_ptr<Transformation> transform;
-public:
-	virtual void draw(std::unique_ptr<Canvas> &canvas) const = 0;
-};
+{};
 
 #endif //INC_3_DRAWABLE_MODEL_H

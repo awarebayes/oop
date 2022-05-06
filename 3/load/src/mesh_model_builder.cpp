@@ -30,23 +30,23 @@ void MeshModelBuilder::read_vertices()
 
 MeshModelBuilder::MeshModelBuilder(const std::string &path) : source(path)
 {
-	lines.reserve(256);
-	vertices.reserve(256);
+	//lines.reserve(256);
+	//vertices.reserve(256);
 }
 
-std::unique_ptr<DrawableModel> MeshModelBuilder::collect()
+std::shared_ptr<DrawableModel> MeshModelBuilder::collect()
 {
-	return std::make_unique<MeshModel>(vertices, lines);
+	return std::make_shared<MeshModel>(vertices, lines);
 }
 
-std::unique_ptr<MeshModel> MeshModelBuilder::collect_as_mesh()
+std::shared_ptr<MeshModel> MeshModelBuilder::collect_as_mesh()
 {
 
-	return std::make_unique<MeshModel>(vertices, lines);
+	return std::make_shared<MeshModel>(vertices, lines);
 }
 
 
-std::unique_ptr<DrawableModel> MeshModelDirector::build_model()
+std::shared_ptr<DrawableModel> MeshModelDirector::build_model()
 {
 	MeshModelBuilder builder = MeshModelBuilder(object_path);
 	builder.read_vertices();

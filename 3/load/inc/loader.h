@@ -11,7 +11,7 @@
 class ModelLoader
 {
 public:
-	virtual std::unique_ptr<DrawableModel> load_model(const std::string &path) = 0;
+	virtual std::shared_ptr<DrawableModel> load_model(const std::string &path) = 0;
 };
 
 
@@ -20,7 +20,7 @@ class AllLoader
 private:
 	std::unique_ptr<ModelLoader> model_loader{};
 public:
-	virtual std::unique_ptr<DrawableModel> load_model(const std::string &path);
+	virtual std::shared_ptr<DrawableModel> load_model(const std::string &path);
 };
 
 #endif //INC_3_LOADER_H

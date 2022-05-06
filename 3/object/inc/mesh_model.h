@@ -9,14 +9,10 @@
 #include <utility>
 #include <vector>
 #include "math/inc/linalg.h"
+#include "visitor/inc/base_visitor.h"
+#include "visitor/inc/draw_visitor.h"
 
-class Line
-{
-public:
-	int first = 0;
-	int second = 0;
-};
-
+typedef std::pair<int, int> Line;
 typedef Vector<4> Vertex;
 
 class MeshModel : public DrawableModel
@@ -24,9 +20,13 @@ class MeshModel : public DrawableModel
 private:
 	std::vector<Vertex> vertices{};
 	std::vector<Line> lines{};
+	friend class DrawVisitor;
 public:
-	MeshModel(std::vector<Vertex> vertices, std::vector<Line> lines) : vertices(std::move(vertices)), lines(std::move(lines)) {};
-	void draw(std::unique_ptr<Canvas> &canvas) const override;
+	MeshModel(std::vector<Vertex> vertices, std::vector<Line> lines);
+	void accept(Visitor& visitor);
+	const std::vector<Vertex>& get_vertices() const;
+	const std::vector<Line>& get_lines() const;
+	bool is_mesh() override {return true;};
 };
 
 

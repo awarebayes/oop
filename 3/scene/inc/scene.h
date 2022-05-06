@@ -4,15 +4,24 @@
 
 #ifndef INC_3_TEST_SCENE_H
 #define INC_3_SCENE_H
-#include <ordered_map>
 
-class Scene
+#include <object/inc/camera.h>
+#include <vector>
+#include <map>
+#include "scene/inc/visible_group.h"
+
+class Scene : Visitable
 {
 private:
-	std::ordered_map<shared_ptr<SceneObject>> objects{};
+	VisibleGroup visible_objects;
 public:
-	int add_object(shared_ptr<SceneObject> object);
-	void remove_object(shared_ptr<SceneObject> object);
+	Scene() = default;
+	virtual ~Scene() = default;
+
+	int add_object(const std::shared_ptr<VisibleObject>& object);
+	bool remove_object(int object_id);
+	std::shared_ptr<VisibleObject> get_object(int object_id);
+	void accept(Visitor& v) override;
 };
 
 #endif //INC_3_TEST_SCENE_H

@@ -8,6 +8,8 @@
 class BaseManager
 {
 public:
+	BaseManager() = default;
+	virtual ~BaseManager() = default;
 };
 
 #endif //INC_3_BASE_MANAGER_H

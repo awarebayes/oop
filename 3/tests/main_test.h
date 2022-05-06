@@ -6,5 +6,6 @@
 #define INC_3_MAIN_TEST_H
 #include "tests/test_math.h"
 #include "tests/test_load.h"
+#include "tests/test_draw.h"
 
 #endif //INC_3_MAIN_TEST_H

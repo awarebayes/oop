@@ -10,13 +10,13 @@
 class ModelBuilder
 {
 public:
-	virtual std::unique_ptr<DrawableModel> collect() = 0;
+	virtual std::shared_ptr<DrawableModel> collect() = 0;
 };
 
 class ModelDirector
 {
 public:
-	virtual std::unique_ptr<DrawableModel> build_model() = 0;
+	virtual std::shared_ptr<DrawableModel> build_model() = 0;
 };
 
 #endif //INC_3_ABSTRACT_H

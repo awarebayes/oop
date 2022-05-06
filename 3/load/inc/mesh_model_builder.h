@@ -20,8 +20,8 @@ private:
 	std::vector<Vertex> vertices{};
 public:
 	explicit MeshModelBuilder(const std::string &path);
-	std::unique_ptr<DrawableModel> collect() override;
-	std::unique_ptr<MeshModel> collect_as_mesh();
+	std::shared_ptr<DrawableModel> collect() override;
+	std::shared_ptr<MeshModel> collect_as_mesh();
 	void read_vertices();
 	void read_lines();
 };
@@ -32,7 +32,7 @@ private:
 	std::string object_path;
 public:
 	explicit MeshModelDirector(std::string path) : object_path(std::move(path)) {};
-	std::unique_ptr<DrawableModel> build_model() override;
+	std::shared_ptr<DrawableModel> build_model() override;
 };
 
 #endif //INC_3_MESH_MODEL_BUILDER_H

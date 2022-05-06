@@ -44,7 +44,8 @@ TEST(Math, VectorCreationAlt)
 
 TEST(Math, MatrixMultiplication)
 {
-	Matrix<3> m1{
+	Matrix<3> m1
+	{
 		1, 2, 3,
 		4, 5, 6,
 		7, 8, 9,
@@ -73,8 +74,8 @@ TEST(Math, MatrixMultiplication)
 
 TEST(Math, TransformationTranslate)
 {
-	auto t1 = Translation(0, 10, 0).share();
-	auto t2 = Translation(0, -10, 0).share();
+	auto t1 = Translation(0, 10, 0);
+	auto t2 = Translation(0, -10, 0);
 	auto c = CompositeTransformation(t1).compose(t2);
 	Matrix<4> m = c.get_matrix();
 
