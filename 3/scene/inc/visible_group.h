@@ -13,6 +13,10 @@ class VisibleGroup : public VisibleObject
 	object_map objects{};
 	int obj_count = 0;
 public:
+	VisibleGroup() = default;
+	~VisibleGroup() override = default;
+
+	bool is_grouped() override {return true;};
 	int add_object(const std::shared_ptr<VisibleObject>& obj);
 	bool remove_object(int object_id);
 	std::shared_ptr<VisibleObject> get_object(int object_id);

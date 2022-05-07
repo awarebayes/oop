@@ -5,8 +5,9 @@
 #ifndef INC_3_SCENE_MANAGER_H
 #define INC_3_SCENE_MANAGER_H
 
-#include <scene/inc/scene.h>
+#include <memory>
 #include "manager/inc/base_manager.h"
+#include <scene/inc/scene.h>
 
 class SceneManager : public BaseManager
 {

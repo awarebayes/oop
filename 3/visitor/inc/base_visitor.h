@@ -8,6 +8,7 @@
 class Camera;
 class VisibleGroup;
 class VisibleObject;
+class MeshModelReference;
 class Scene;
 class MeshModel;
 
@@ -17,6 +18,7 @@ public:
 	virtual void visit(Camera &camera) = 0;
 	virtual void visit(VisibleGroup &group) = 0;
 	virtual void visit(MeshModel &model) = 0;
+	virtual void visit(MeshModelReference &ref) = 0;
 	virtual void visit(VisibleObject &object) = 0;
 	virtual void visit(Scene &scene) = 0;
 };

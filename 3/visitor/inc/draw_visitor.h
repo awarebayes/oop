@@ -5,9 +5,11 @@
 #ifndef INC_3_DRAW_VISITOR_H
 #define INC_3_DRAW_VISITOR_H
 
-#include <scene/inc/canvas.h>
+#include <drawer/inc/base_canvas.h>
 #include <memory>
 #include <object/inc/mesh_model.h>
+#include <scene/inc/visible_group.h>
+#include <object/inc/model_ref.h>
 #include <object/inc/camera.h>
 
 #include "visitor/inc/base_visitor.h"
@@ -24,7 +26,12 @@ public:
 	void visit(MeshModel &model) override;
 	void visit(Scene &scene) override;
 	void visit(VisibleObject &object) override;
-
+	void visit(MeshModelReference &ref) override;
+private:
+	void visit_with_new_transform(VisibleGroup &group, const Matrix<4> &transformation);
+	void visit_with_new_transform(MeshModel &model, const Matrix<4> &transformation);
+	void visit_with_new_transform(VisibleObject &object, const Matrix<4> &transform);
+	void draw_model(MeshModel &model, const Matrix<4> &transformation_matrix);
 };
 
 

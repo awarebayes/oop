@@ -8,36 +8,44 @@
 
 Transformer &Transformer::rotate(float x, float y, float z)
 {
-	transformable._transform = CompositeTransformation(transformable._transform)
+	auto transform_ptr = transformable.get_transform();
+	transformable.set_transform(
+			CompositeTransformation(transform_ptr)
 							 .compose(Rotation(x, y, z))
-							 .share();
+							 .share());
 	return *this;
 }
 
 Transformer &Transformer::scale(float x, float y, float z)
 {
-	transformable._transform = CompositeTransformation(transformable._transform)
+	auto transform_ptr = transformable.get_transform();
+	transformable.set_transform(
+			CompositeTransformation(transform_ptr->share())
 			.compose(Scale(x, y, z))
-			.share();
+			.share());
 	return *this;
 }
 
 Transformer &Transformer::translate(float x, float y, float z)
 {
 
-	transformable._transform = CompositeTransformation(transformable._transform)
+	auto transform_ptr = transformable.get_transform();
+	transformable.set_transform(
+			CompositeTransformation(transform_ptr->share())
 			.compose(Translation(x, y, z))
-			.share();
+			.share());
 	return *this;
 }
 
 Transformer &Transformer::rotate_around_vertex(const Vertex &v, float x, float y, float z)
 {
-	transformable._transform = CompositeTransformation(transformable._transform)
+	auto transform_ptr = transformable.get_transform();
+	transformable.set_transform(
+			CompositeTransformation(transform_ptr->share() )
 			.compose(Translation(v(0), v(1), v(2)))
 			.compose(Rotation(x, y, z))
 			.compose(Translation(-v(0), -v(1), -v(2)))
-			.share();
+			.share());
 	return *this;
 }
 

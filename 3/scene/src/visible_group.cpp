@@ -32,8 +32,7 @@ std::map<int, std::shared_ptr<VisibleObject>>::iterator VisibleGroup::end()
 
 void VisibleGroup::accept(Visitor &v)
 {
-	for (auto &[_, object]: objects)
-		v.visit(*object);
+	v.visit(*this);
 }
 
 std::shared_ptr<VisibleObject> VisibleGroup::get_object(int object_id)

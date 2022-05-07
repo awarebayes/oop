@@ -16,10 +16,12 @@ class Matrix
 private:
 	float components[n * n]{};
 public:
+	Matrix(std::initializer_list<float> init);
+
+	static Matrix<n> identity();
+
 	float& operator()(size_t i, size_t j);
 	float operator()(size_t i, size_t j) const;
-	Matrix(std::initializer_list<float> init);
-	static Matrix<n> identity();
 };
 
 
@@ -33,6 +35,8 @@ public:
 	Vector(std::initializer_list<float> init);
 	float& operator()(size_t i);
 	float operator()(size_t i) const;
+	float length() const;
+	Vector<n> normalize() const;
 };
 
 template <size_t n>

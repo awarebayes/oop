@@ -19,6 +19,4 @@ const std::vector<Line> &MeshModel::get_lines() const
 }
 
 MeshModel::MeshModel(std::vector<Vertex> vertices, std::vector<Line> lines)  : vertices(std::move(vertices)), lines(std::move(lines))
-{
-	_transform = Identity().share();
-}
+{}

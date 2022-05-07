@@ -5,8 +5,8 @@
 #ifndef INC_3_TEST_CANVAS_CPP
 #define INC_3_TEST_CANVAS_H
 
-#include "scene/inc/canvas.h"
 #include <vector>
+#include "base_canvas.h"
 
 class TestLine
 {

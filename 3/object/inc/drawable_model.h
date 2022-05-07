@@ -6,7 +6,7 @@
 #define INC_3_DRAWABLE_MODEL_H
 
 #include <memory>
-#include "scene/inc/canvas.h"
+#include "drawer/inc/base_canvas.h"
 #include "scene_object.h"
 #include "math/inc/transformation.h"
 

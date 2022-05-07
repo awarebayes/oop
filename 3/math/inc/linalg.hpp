@@ -6,6 +6,8 @@
 #define INC_3_LINALG_HPP
 
 #include "math/inc/linalg.h"
+#include <cmath>
+
 template<size_t n>
 float& Matrix<n>::operator()(size_t i, size_t j)
 {
@@ -99,5 +101,28 @@ float Vector<n>::operator()(size_t i) const
 	assert(i < n);
 	return components[i];
 }
+
+template<size_t n>
+float Vector<n>::length() const
+{
+	float sum;
+	for (int i =0; i < n; i++)
+		sum += components[i];
+	return sqrtf(sum);
+}
+
+template<size_t n>
+Vector<n> Vector<n>::normalize() const
+{
+	std::array<float, n> args_arr;
+	float len = length();
+	for (int i=0; i < n; i++)
+		args_arr[i] = components[i] / len;
+	return Vector<n>(args_arr);
+}
+
+//Vector<3> cross(const Vector<3> &v1, const Vector<3> &v2) {
+//	return {v1(1)*v2(2) - v1(2)*v2(1), v1(2)*v2(0) - v1(0)*v2(2), v1(0)*v2(1) - v1(1)*v2(0)};
+//}
 
 #endif //INC_3_LINALG_HPP
