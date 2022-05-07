@@ -4,7 +4,6 @@
 
 #include <manager/inc/test_draw_manager.h>
 #include <manager/inc/scene_manager.h>
-#include <drawer/inc/qt_canvas.h>
 #include <drawer/inc/test_canvas.h>
 
 void TestDrawManager::draw_scene()

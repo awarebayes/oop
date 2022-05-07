@@ -1,13 +1,13 @@
 //
-// Created by dev on 5/6/22.
+// Created by dev on 5/7/22.
 //
 
-#include <manager/inc/test_draw_manager.h>
+
 #include <manager/inc/scene_manager.h>
 #include <drawer/inc/qt_canvas.h>
-#include <drawer/inc/base_canvas.h>
 #include <manager/inc/draw_manager.h>
-
+#include <visitor/inc/draw_visitor.h>
+#include <drawer/inc/qt_canvas_factory.h>
 
 void DrawManager::draw_scene()
 {
@@ -19,6 +19,11 @@ void DrawManager::draw_scene()
 	visitor.visit(*scene);
 }
 
+void DrawManager::set_canvas(std::shared_ptr<Canvas> &canvas_)
+{
+	canvas_ = canvas;
+}
+
 std::shared_ptr<DrawManager> DrawManagerCreator::get()
 {
 	if (not singleton) create();
@@ -27,15 +32,8 @@ std::shared_ptr<DrawManager> DrawManagerCreator::get()
 
 void DrawManagerCreator::create()
 {
-	static auto canvas = std::make_shared<Canvas>();
-	static auto manager = std::make_shared<DrawManager>(canvas);
+	static auto manager = std::make_shared<DrawManager>();
 	singleton = manager;
-}
-
-std::shared_ptr<DrawManager> DrawManagerCreator::get_test()
-{
-	auto canvas = std::make_shared<Canvas>();
-	return std::make_shared<DrawManager>(canvas);
 }
 
 
