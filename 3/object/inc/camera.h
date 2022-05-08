@@ -11,6 +11,9 @@ class Camera : public InvisibleObject
 private:
 	Vector<3> position;
 	Vector<3> look_direction;
+
+	Matrix<4> viewport();
+
 public:
 	std::unique_ptr<Transformation> look_at_object(VisibleObject &object) const;
 	void change_look_direction(float x, float y, float z);

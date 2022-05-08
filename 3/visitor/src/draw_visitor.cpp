@@ -29,7 +29,7 @@ void DrawVisitor::visit(Camera &cam)
 
 void DrawVisitor::visit(Scene &scene)
 {
-
+	scene.accept(*this);
 }
 
 void DrawVisitor::visit(MeshModel &model)

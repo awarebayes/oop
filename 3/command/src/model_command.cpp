@@ -11,7 +11,7 @@ void LoadMeshCommand::exec()
 	result = load_manager->load_mesh_model(_path);
 }
 
-LoadMeshCommand::LoadMeshCommand(const std::string &path, int &result_) : result(result_)
+LoadMeshCommand::LoadMeshCommand(const std::string &path)
 {
 	_path = path;
 }

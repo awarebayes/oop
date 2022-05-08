@@ -5,6 +5,12 @@
 #ifndef INC_3_FACADE_H
 #define INC_3_FACADE_H
 
+#include <command/inc/base_command.h>
+#include <command/inc/model_command.h>
+#include <command/inc/object_command.h>
+#include <command/inc/scene_command.h>
+#include <memory>
+
 class RendererFacade
 {
 public:

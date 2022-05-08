@@ -11,6 +11,7 @@
 #include <scene/inc/visible_group.h>
 #include <object/inc/model_ref.h>
 #include <object/inc/camera.h>
+#include <scene/inc/scene.h>
 
 #include "visitor/inc/base_visitor.h"
 

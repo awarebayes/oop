@@ -13,7 +13,7 @@ class QtCanvasFactory
 {
 public:
 	explicit QtCanvasFactory(std::shared_ptr<QGraphicsScene> &scene);
-	std::unique_ptr<Canvas> create();
+	std::shared_ptr<Canvas> create();
 private:
 	std::shared_ptr<QGraphicsScene> scene{};
 };

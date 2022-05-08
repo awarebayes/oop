@@ -11,6 +11,8 @@
 
 void DrawManager::draw_scene()
 {
+	if (not canvas)
+		return;
 	canvas->clear();
 	auto scene_manager = SceneManagerCreator().get();
 	auto scene = scene_manager->get_scene();
@@ -21,7 +23,7 @@ void DrawManager::draw_scene()
 
 void DrawManager::set_canvas(std::shared_ptr<Canvas> &canvas_)
 {
-	canvas_ = canvas;
+	canvas = canvas_;
 }
 
 std::shared_ptr<DrawManager> DrawManagerCreator::get()

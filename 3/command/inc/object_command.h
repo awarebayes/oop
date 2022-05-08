@@ -6,6 +6,7 @@
 #define INC_3_OBJECT_COMMAND_H
 
 #include "base_command.h"
+#include "math/inc/linalg.h"
 
 class ObjectCommand : public Command {};
 
@@ -44,23 +45,23 @@ private:
 class ObjectCloneCommand : public ObjectCommand
 {
 public:
-	ObjectCloneCommand(int object_id, int &result_id);
+	explicit ObjectCloneCommand(int object_id);
 	void exec() override;
 	[[nodiscard]] int get_result() const;
 private:
 	int object_id;
-	int &result_id;
+	int result_id;
 };
 
 class ObjectDeleteCommand : public ObjectCommand
 {
 public:
-	ObjectDeleteCommand(int object_id, bool &successful);
+	explicit ObjectDeleteCommand(int object_id);
 	void exec() override;
 	[[nodiscard]] bool get_result() const;
 private:
 	int object_id;
-	bool &succ;
+	bool succ;
 };
 
 #endif //INC_3_OBJECT_COMMAND_H

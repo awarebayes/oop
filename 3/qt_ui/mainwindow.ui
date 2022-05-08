@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1027</width>
+    <height>754</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>1001</width>
+      <height>651</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>712</width>
+      <height>570</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="feedback_thingy">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>688</y>
+      <width>1001</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;NORMAL&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_edit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>660</y>
+      <width>1001</width>
+      <height>25</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1027</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Model</string>
+    </property>
+    <addaction name="actionLoadModel"/>
+   </widget>
+   <widget class="QMenu" name="menuObject">
+    <property name="title">
+     <string>Object</string>
+    </property>
+    <addaction name="actionSelect"/>
+    <addaction name="actionMove_2"/>
+    <addaction name="actionScale"/>
+    <addaction name="actionRotate"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete"/>
+   </widget>
+   <widget class="QMenu" name="menuScene">
+    <property name="title">
+     <string>Scene</string>
+    </property>
+    <addaction name="actionGroupObjects"/>
+    <addaction name="actionView_Objects"/>
+   </widget>
+   <widget class="QMenu" name="menuCamera">
+    <property name="title">
+     <string>Camera</string>
+    </property>
+    <addaction name="actionNext_Camera"/>
+    <addaction name="actionNew_Camera"/>
+    <addaction name="actionSet_Camera"/>
+    <addaction name="actionLook_at_object"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuObject"/>
+   <addaction name="menuScene"/>
+   <addaction name="menuCamera"/>
+  </widget>
+  <action name="actionLoadModel">
+   <property name="text">
+    <string>LoadModel</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="text">
+    <string>Select</string>
+   </property>
+  </action>
+  <action name="actionMove_2">
+   <property name="text">
+    <string>Move</string>
+   </property>
+  </action>
+  <action name="actionScale">
+   <property name="text">
+    <string>Scale</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="text">
+    <string>Rotate</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionGroupObjects">
+   <property name="text">
+    <string>Group Objects</string>
+   </property>
+  </action>
+  <action name="actionView_Objects">
+   <property name="text">
+    <string>View Objects</string>
+   </property>
+  </action>
+  <action name="actionNext_Camera">
+   <property name="text">
+    <string>Next Camera</string>
+   </property>
+  </action>
+  <action name="actionNew_Camera">
+   <property name="text">
+    <string>New Camera</string>
+   </property>
+  </action>
+  <action name="actionSet_Camera">
+   <property name="text">
+    <string>Set Camera</string>
+   </property>
+  </action>
+  <action name="actionLook_at_object">
+   <property name="text">
+    <string>Look at object</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -29,3 +29,8 @@ void Camera::accept(Visitor &v)
 	v.visit(*this);
 }
 
+Matrix<4> Camera::viewport()
+{
+	return {};
+}
+

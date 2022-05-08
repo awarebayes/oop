@@ -42,7 +42,7 @@ void ObjectRotateCommand::exec()
 	t_manager->rotate(object_id, rotation);
 }
 
-ObjectCloneCommand::ObjectCloneCommand(int object_id_, int &result_id_) : result_id(result_id_)
+ObjectCloneCommand::ObjectCloneCommand(int object_id_)
 {
 	object_id = object_id_;
 }
@@ -60,7 +60,7 @@ int ObjectCloneCommand::get_result() const
 	return result_id;
 }
 
-ObjectDeleteCommand::ObjectDeleteCommand(int object_id_, bool &successful) : succ(successful)
+ObjectDeleteCommand::ObjectDeleteCommand(int object_id_)
 {
 	object_id = object_id_;
 }

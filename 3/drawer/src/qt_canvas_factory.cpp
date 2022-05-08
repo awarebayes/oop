@@ -9,7 +9,7 @@ QtCanvasFactory::QtCanvasFactory(std::shared_ptr<QGraphicsScene> &scene_)
 	scene = scene_;
 }
 
-std::unique_ptr<Canvas> QtCanvasFactory::create()
+std::shared_ptr<Canvas> QtCanvasFactory::create()
 {
-	return make_unique<QtCanvas>(scene);
+	return std::make_shared<QtCanvas>(scene);
 }
