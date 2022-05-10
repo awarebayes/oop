@@ -56,7 +56,7 @@ void ObjFileMeshSource::iter_file_line()
 void ObjFileMeshSource::read_vertex(std::stringstream &ss)
 {
 	Vertex vertex{0, 0, 0, 1};
-	ss >> vertex(0) >> vertex(1) >> vertex(2);
+	ss >> vertex[0] >> vertex[1] >> vertex[2];
 	if (ss.fail())
 		throw std::runtime_error("unable to read line");
 	vertex_buffer.push_back(vertex);

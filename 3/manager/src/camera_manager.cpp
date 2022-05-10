@@ -14,7 +14,7 @@ void CameraManager::set_active_camera(int camera_id)
 
 int CameraManager::new_camera()
 {
-	cams[cam_count++] = std::make_shared<FPSCamera>(Vector<3>{0, 0, -100});
+	cams[cam_count++] = std::make_shared<FPSCamera>(glm::vec3{0, 0, -100});
 	return cam_count - 1;
 }
 
@@ -23,16 +23,16 @@ std::shared_ptr<Camera> CameraManager::get_camera(int camera_id)
 	return cams[camera_id];
 }
 
-void CameraManager::offset_camera(int cam_id, const Vector<3> &offset)
-{
-	auto cam = cams[cam_id];
-	cam->move(offset);
-}
-
 void CameraManager::rotate_camera(int cam_id, float x_offset, float y_offset)
 {
 	auto cam = cams[cam_id];
 	cam->rotate(x_offset, y_offset);
+}
+
+void CameraManager::offset_camera(int cam_id, const std::array<float, 3> &offset)
+{
+	auto cam = cams[cam_id];
+	cam->move({offset[0], offset[1], offset[2]});
 }
 
 void CameraManagerCreator::create()

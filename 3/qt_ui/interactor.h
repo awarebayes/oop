@@ -29,6 +29,8 @@ private:
 	void handle_key_with_vision_object(int key);
 	void handle_key_with_camera_object(int key);
 	void handle_command_select(std::stringstream& command);
+	void handle_command_load(std::stringstream& command);
+	void handle_command_create(std::stringstream& command);
 	void help();
 
 public:

@@ -2,88 +2,22 @@
 // Created by dev on 5/1/22.
 //
 #include <cmath>
+#include <glm/ext/matrix_transform.hpp>
 #include "math/inc/transformation.h"
-
-
-Matrix<4> x_rot_matrix(float deg)
-{
-	float theta = deg * M_PI / 180;
-	return
-	{
-		1, 0,           0,            0,
-		0, cosf(theta), -sinf(theta), 0,
-		0, sinf(theta), cosf(theta),  0,
-		0, 0,           0,            1
-	};
-}
-
-Matrix<4> y_rot_matrix(float deg)
-{
-	float theta = deg * M_PI / 180;
-	return {
-		cosf(theta),  0, sinf(theta), 0,
-		0,            1, 0,           0,
-		-sinf(theta), 0, cosf(theta), 0,
-		0,            0, 0,           1,
-	};
-}
-
-Matrix<4> z_rot_matrix(float deg)
-{
-	float theta = deg * M_PI / 180;
-	return {
-			cosf(theta), -sinf(theta), 0, 0,
-			sinf(theta), cosf(theta), 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1,
-	};
-}
-
-Matrix<4> Scale::get_matrix() const
-{
-	return {
-		x, 0,  0,  0,
-		0,  y, 0,  0,
-		0,  0,  z, 0,
-		0,  0,  0,  1,
-	};
-}
-
 
 Scale Scale::operator+(const Scale &scale) const
 {
 	return {x + scale.x, y + scale.y, z + scale.z};
 }
 
-Matrix<4> Translation::get_matrix() const
-{
-	return {
-		1,             0,             0,             x,
-		0,             1,             0,             y,
-		0,             0,             1,             z,
-		0,             0,             0,             1
-	};
-}
-
-
 Translation Translation::operator+(const Translation &other) const
 {
 	return {x + other.x, y + other.y, z + other.z};
 }
 
-Matrix<4> Rotation::get_matrix() const
-{
-	return x_rot_matrix(x) * y_rot_matrix(y) * z_rot_matrix(z);
-}
-
 Rotation Rotation::operator+(const Rotation &other) const
 {
 	return {x + other.x, y + other.y, z + other.z};
-}
-
-Matrix<4> Transformation::get_matrix() const
-{
-	return translation.get_matrix() * rotation.get_matrix() * scale.get_matrix();
 }
 
 Transformation Transformation::operator+(const Scale &other) const
@@ -118,4 +52,18 @@ Transformation::Transformation(const Transformation &other)
 	rotation = other.rotation;
 	translation = other.translation;
 	scale = other.scale;
+}
+
+glm::mat4 Transformation::get_matrix()
+{
+	glm::vec3 trans = {translation.x, translation.y, translation.z};
+	glm::vec3 scl = {scale.x, scale.y, scale.z};
+	glm::mat4 id = glm::mat4(1.0f);
+	glm::mat4 model = glm::translate(id, trans);
+	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, -1.0f));
+	model = glm::scale(model, scl);
+	return model;
+
 }

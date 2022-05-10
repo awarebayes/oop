@@ -7,21 +7,23 @@
 #include <sstream>
 #include "logic.h"
 
-void Logic::load_object(const std::string &path)
+int Logic::load_object(const std::string &path)
 {
 	auto load_com = std::make_shared<LoadMeshCommand>(path);
 	facade.exec(load_com);
 	int result_id = load_com->get_result();
 	meta.add_object(result_id, "Object loaded from: " + path);
+	return result_id;
 }
 
-void Logic::new_camera()
+int Logic::new_camera()
 {
 	auto com = std::make_shared<CameraNewCommand>();
 	facade.exec(com);
 	int cam_id = com->get_result();
 	meta.add_camera(cam_id);
 	set_active_camera(cam_id);
+	return cam_id;
 }
 
 void Logic::draw()
@@ -76,7 +78,7 @@ void Logic::set_active_camera(int camera_id)
 
 void Logic::move_camera(int camera_id, float dx, float dy, float dz)
 {
-	auto offset = Vector<3>{dx, dy, dz};
+	auto offset = std::array<float, 3>{dx, dy, dz};
 	auto com = std::make_shared<CameraMoveCommand>(camera_id, offset);
 	facade.exec(com);
 	draw();

@@ -8,46 +8,39 @@
 #include <memory>
 #include <utility>
 #include "linalg.hpp"
+#include <glm/mat4x4.hpp> // glm::mat4
 
 class BaseTransformation
 {
-public:
-	[[nodiscard]] virtual Matrix<4> get_matrix() const = 0;
 };
 
 class Scale : public BaseTransformation
 {
-private:
-	float x{1}, y{1}, z{1};
 public:
+	float x{1}, y{1}, z{1};
 	Scale() = default;
 	Scale(float x, float y, float z) : x(x), y(y), z(z) {};
 	virtual ~Scale() = default;
-	[[nodiscard]] Matrix<4> get_matrix() const override;
 	Scale operator +(const Scale &scale) const;
 };
 
 class Translation : public BaseTransformation
 {
-private:
-	float x{}, y{}, z{};
 public:
+	float x{}, y{}, z{};
 	Translation() = default;
 	Translation(float x, float y, float z) : x(x), y(y), z(z) {};
 	virtual ~Translation() = default;
-	[[nodiscard]] Matrix<4> get_matrix() const override;
 	Translation operator +(const Translation &other) const;
 };
 
 class Rotation : public BaseTransformation
 {
-private:
-	float x{}, y{}, z{};
 public:
+	float x{}, y{}, z{};
 	Rotation() = default;
 	Rotation(float x, float y, float z) : x(x), y(y), z(z) {};
 	virtual ~Rotation() = default;
-	[[nodiscard]] Matrix<4> get_matrix() const override;
 	Rotation operator +(const Rotation &other) const;
 };
 
@@ -62,7 +55,7 @@ public:
 	Transformation(const Transformation &other);
 	Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale_);
 	virtual ~Transformation() = default;
-	[[nodiscard]] Matrix<4> get_matrix() const override;
+	[[nodiscard]] glm::mat4 get_matrix();
 	Transformation operator +(const Scale &scale) const;
 	Transformation operator +(const Translation &other) const;
 	Transformation operator +(const Rotation &other) const;

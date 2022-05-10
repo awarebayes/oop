@@ -68,13 +68,13 @@ void Interactor::handle_key_with_camera_object(int key)
 	else if (key == Qt::Key_Q)
 		return logic->move_camera(selected_id, 0, 0, -10);
 	else if (key == Qt::Key_J)
-		return logic->rotate_camera(selected_id, 10, 0);
-	else if (key == Qt::Key_K)
-		return logic->rotate_camera(selected_id, -10, 0);
-	else if (key == Qt::Key_H)
-		return logic->rotate_camera(selected_id, 0, -10);
-	else if (key == Qt::Key_L)
 		return logic->rotate_camera(selected_id, 0, 10);
+	else if (key == Qt::Key_K)
+		return logic->rotate_camera(selected_id, 0, -10);
+	else if (key == Qt::Key_H)
+		return logic->rotate_camera(selected_id, 10, 0);
+	else if (key == Qt::Key_L)
+		return logic->rotate_camera(selected_id, -10, 0);
 }
 
 void Interactor::handle_command(const std::string &command)
@@ -85,7 +85,11 @@ void Interactor::handle_command(const std::string &command)
 	ss >> command_type;
 	if (command_type == "select")
 		return handle_command_select(ss);
-	if (command_type == "print_objects")
+	if (command_type == "create")
+		return handle_command_create(ss);
+	if (command_type == "load")
+		return handle_command_load(ss);
+	if (command_type == "print")
 		return update_callback(logic->print_objects());
 	if (command_type == "help")
 		return help();
@@ -116,6 +120,8 @@ void Interactor::handle_command_select(std::stringstream &command)
 		selected_id = obj_id_i;
 		selected_type = SelectedObjectType::Camera;
 		update_callback("selected camera: " + obj_id);
+		logic->draw();
+		logic->set_active_camera(obj_id_i);
 	}
 	else
 	{
@@ -127,7 +133,44 @@ void Interactor::help()
 {
 	update_callback("help - show help\n"
 					"select [object, camera] <id>\n"
-					"print_objects - displays list of VisibleObject in scene\n");
+					"print - displays list of VisibleObject in scene\n");
+}
+
+void Interactor::handle_command_create(std::stringstream &command)
+{
+	std::string obj_type;
+	command >> obj_type;
+	if (obj_type == "camera")
+	{
+		int cam_id = logic->new_camera();
+		update_callback("created and selected camera: " + std::to_string(cam_id));
+		selected_id = cam_id;
+		selected_type = SelectedObjectType::Camera;
+		logic->draw();
+		logic->set_active_camera(cam_id);
+	}
+	else
+	{
+		update_callback("Invalid command. Use 'create camera' to create a camera.");
+	}
+}
+
+void Interactor::handle_command_load(std::stringstream &command)
+{
+	std::string obj_type;
+	std::string path;
+	command >> obj_type;
+	command >> path;
+	if (obj_type == "object" and not command.fail())
+	{
+		int obj_id = logic->load_object(path);
+		update_callback("loaded an object from: " + path + " with id " + std::to_string(obj_id));
+		logic->draw();
+	}
+	else
+	{
+		update_callback("Invalid command. Use 'load object <path>' to load an object.");
+	}
 }
 
 

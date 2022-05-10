@@ -21,16 +21,16 @@ int CameraNewCommand::get_result() const
 	return camera_id;
 }
 
-CameraMoveCommand::CameraMoveCommand(int camera_id_, const Vector<3> &offset_)
-{
-	offset = offset_;
-	camera_id = camera_id_;
-}
-
 void CameraMoveCommand::exec()
 {
 	auto c_manager = CameraManagerCreator().get();
 	c_manager->offset_camera(camera_id, offset);
+}
+
+CameraMoveCommand::CameraMoveCommand(int camera_id_, const std::array<float, 3> &offset_)
+{
+	offset = offset_;
+	camera_id = camera_id_;
 }
 
 CameraRotateCommand::CameraRotateCommand(int camera_id_, float x_offset_, float y_offset_)
