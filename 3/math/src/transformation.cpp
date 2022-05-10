@@ -49,9 +49,10 @@ Matrix<4> Scale::get_matrix() const
 	};
 }
 
-std::shared_ptr<Transformation> Scale::share() const
+
+Scale Scale::operator+(const Scale &scale) const
 {
-	return std::make_shared<Scale>(x,y,z);
+	return {x + scale.x, y + scale.y, z + scale.z};
 }
 
 Matrix<4> Translation::get_matrix() const
@@ -64,9 +65,10 @@ Matrix<4> Translation::get_matrix() const
 	};
 }
 
-std::shared_ptr<Transformation> Translation::share() const
+
+Translation Translation::operator+(const Translation &other) const
 {
-	return std::make_shared<Translation>(x,y,z);
+	return {x + other.x, y + other.y, z + other.z};
 }
 
 Matrix<4> Rotation::get_matrix() const
@@ -74,52 +76,46 @@ Matrix<4> Rotation::get_matrix() const
 	return x_rot_matrix(x) * y_rot_matrix(y) * z_rot_matrix(z);
 }
 
-std::shared_ptr<Transformation> Rotation::share() const
+Rotation Rotation::operator+(const Rotation &other) const
 {
-	return std::make_shared<Rotation>(x,y,z);
+	return {x + other.x, y + other.y, z + other.z};
 }
 
-Matrix<4> Identity::get_matrix() const
+Matrix<4> Transformation::get_matrix() const
 {
-	return mat;
+	return translation.get_matrix() * rotation.get_matrix() * scale.get_matrix();
 }
 
-std::shared_ptr<Transformation> Identity::share() const
+Transformation Transformation::operator+(const Scale &other) const
 {
-	return std::make_shared<Identity>(get_matrix());
+	return {rotation, translation, scale + other};
 }
 
-
-Matrix<4> CompositeTransformation::get_matrix() const
+Transformation::Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale_)
 {
-	return prev_transform->get_matrix() * this_transform->get_matrix();
+	rotation = rotation_;
+	scale = scale_;
+	translation = translation_;
 }
 
-std::shared_ptr<Transformation> CompositeTransformation::share() const
+Transformation Transformation::operator+(const Translation &other) const
 {
-	return std::make_shared<Identity>(get_matrix());
+	return {rotation, translation + other, scale};
 }
 
-CompositeTransformation::CompositeTransformation(const Transformation &transform)
+Transformation Transformation::operator+(const Rotation &other) const
 {
-	prev_transform = Identity(transform.get_matrix()).share();
-	this_transform = Identity(Matrix<4>::identity()).share();
+	return {rotation + other, translation, scale};
 }
 
-CompositeTransformation::CompositeTransformation(std::shared_ptr<Transformation> transform)
+Transformation Transformation::operator+(const Transformation &other) const
 {
-	prev_transform = std::move(transform);
-	this_transform = Identity(Matrix<4>::identity()).share();
+	return {rotation + other.rotation, translation + other.translation, scale + other.scale};
 }
 
-CompositeTransformation CompositeTransformation::compose(const Transformation &next_transform)
+Transformation::Transformation(const Transformation &other)
 {
-	this->this_transform = std::make_shared<CompositeTransformation>(next_transform);
-	return {*this};
-}
-
-CompositeTransformation CompositeTransformation::compose(const std::shared_ptr<Transformation>& next_transform)
-{
-	this->this_transform = std::make_shared<CompositeTransformation>(next_transform);
-	return {*this};
+	rotation = other.rotation;
+	translation = other.translation;
+	scale = other.scale;
 }

@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 	auto draw_manager = DrawManagerCreator().get();
 	auto canvas = f.create();
 	draw_manager->set_canvas(canvas);
-	vim = std::make_unique<Vim>([this](const std::string&status){this->set_status(status);});
+	interactor = std::make_unique<Interactor>([this](const std::string&status){this->set_status(status);});
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +46,7 @@ void MainWindow::on_actionView_Objects_triggered()
 void MainWindow::keyPressEvent(QKeyEvent *e)
 {
 	int key = e->key();
-	vim->handle_key(key);
+	interactor->handle_key(key);
 }
 
 void MainWindow::set_status(const std::string &status)
@@ -54,10 +54,8 @@ void MainWindow::set_status(const std::string &status)
 	ui->feedback_thingy->setText(QString::fromUtf8(status.c_str()));
 }
 
-
-
 void MainWindow::on_line_edit_returnPressed()
 {
-
+	interactor->handle_command(ui->line_edit->text().toStdString());
 }
 

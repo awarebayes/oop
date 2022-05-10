@@ -18,7 +18,7 @@ class LoadMeshCommand : public ModelCommand
 public:
 	LoadMeshCommand() = delete;
 	explicit LoadMeshCommand(const std::string& path);
-	~LoadMeshCommand() = default;
+	~LoadMeshCommand() override = default;
 	void exec() override;
 	[[nodiscard]] int get_result() const;
 private:

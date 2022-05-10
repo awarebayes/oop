@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1027</width>
-    <height>754</height>
+    <width>1020</width>
+    <height>855</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,19 +30,6 @@
      </size>
     </property>
    </widget>
-   <widget class="QLabel" name="feedback_thingy">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>688</y>
-      <width>1001</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;NORMAL&gt;</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="line_edit">
     <property name="geometry">
      <rect>
@@ -53,6 +40,16 @@
      </rect>
     </property>
    </widget>
+   <widget class="QTextBrowser" name="feedback_thingy">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>690</y>
+      <width>1001</width>
+      <height>111</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -60,7 +57,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1027</width>
+     <width>1020</width>
      <height>22</height>
     </rect>
    </property>

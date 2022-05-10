@@ -28,3 +28,13 @@ int SceneMeta::get_selected()
 {
 	return selected_object_id;
 }
+
+void SceneMeta::add_camera(int camera)
+{
+	camera_ids.insert(camera);
+}
+
+std::set<int> &SceneMeta::get_cameras()
+{
+	return camera_ids;
+}

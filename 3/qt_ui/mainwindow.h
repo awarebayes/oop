@@ -6,7 +6,7 @@
 #include <QGraphicsScene>
 #include <QKeyEvent>
 #include "scene_meta.h"
-#include "vim.h"
+#include "interactor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,7 +21,7 @@ public:
     ~MainWindow();
 
 private:
-	std::unique_ptr<Vim> vim;
+	std::unique_ptr<Interactor> interactor;
     Ui::MainWindow *ui;
 	QGraphicsScene *scene;
 	void set_status(const std::string &status);

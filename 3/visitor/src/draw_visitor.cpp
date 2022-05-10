@@ -12,15 +12,6 @@ DrawVisitor::DrawVisitor(std::shared_ptr<Canvas> canvas_, std::shared_ptr<Camera
 	camera = std::move(camera_);
 }
 
-void DrawVisitor::visit(VisibleGroup &group)
-{
-	Matrix<4> displacement = group.get_transform()->get_matrix();
-	for (auto &[_, object]: group)
-	{
-		auto object_matrix = object->get_transform()->get_matrix();
-		visit_with_new_transform(*object, displacement * object_matrix);
-	}
-}
 
 void DrawVisitor::visit(Camera &cam)
 {
@@ -35,9 +26,7 @@ void DrawVisitor::visit(Scene &scene)
 void DrawVisitor::visit(MeshModel &model)
 {
 	Matrix<4> model_matrix = model.get_transform()->get_matrix();
-	Matrix<4> camera_matrix = camera->get_matrix();
-	Matrix<4> transformation_matrix = camera_matrix * model_matrix;
-	draw_model(model, transformation_matrix);
+	draw_model(model, model_matrix);
 }
 
 void DrawVisitor::visit(VisibleObject &object)
@@ -57,12 +46,21 @@ void DrawVisitor::visit_with_new_transform(VisibleGroup &group, const Matrix<4> 
 		visit_with_new_transform(*object, transformation);
 }
 
+void DrawVisitor::visit(VisibleGroup &group)
+{
+	// Caution
+	Matrix<4> displacement = group.get_transform()->get_matrix();
+	auto previous_transform = displacement;
+	for (auto &[_, object]: group)
+	{
+		auto object_matrix = object->get_transform()->get_matrix();
+		visit_with_new_transform(*object, previous_transform * object_matrix);
+	}
+}
 
 void DrawVisitor::visit_with_new_transform(MeshModel &model, const Matrix<4> &transformation)
 {
-	Matrix<4> camera_matrix = camera->get_matrix();
-	Matrix<4> transformation_matrix = camera_matrix * transformation;
-	draw_model(model, transformation_matrix);
+	draw_model(model, transformation);
 }
 
 void DrawVisitor::visit_with_new_transform(VisibleObject &object, const Matrix<4> &transform)
@@ -84,13 +82,15 @@ void DrawVisitor::visit_with_new_transform(VisibleObject &object, const Matrix<4
 	}
 }
 
-void DrawVisitor::draw_model(MeshModel &model, const Matrix<4> &transformation_matrix)
+void DrawVisitor::draw_model(MeshModel &model, const Matrix<4> &model_matrix)
 {
 	const auto& vertices = model.get_vertices();
+	Matrix<4> view_matrix = camera->get_matrix();
+	Matrix<4> matr = view_matrix * model_matrix;
 	for (const auto &line: model.get_lines())
 	{
-		Vertex v1 = transformation_matrix * vertices[line.first];
-		Vertex v2 = transformation_matrix * vertices[line.second];
+		Vertex v1 = matr * vertices[line.first];
+		Vertex v2 = matr * vertices[line.second];
 		canvas->draw_line(
 				v1(0), v1(1),
 				v2(0), v2(1));

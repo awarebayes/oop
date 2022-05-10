@@ -9,20 +9,14 @@
 Transformer &Transformer::rotate(float x, float y, float z)
 {
 	auto transform_ptr = transformable.get_transform();
-	transformable.set_transform(
-			CompositeTransformation(transform_ptr)
-							 .compose(Rotation(x, y, z))
-							 .share());
+	transformable.set_transform(std::make_shared<Transformation>(*transform_ptr + Rotation(x, y, z)));
 	return *this;
 }
 
 Transformer &Transformer::scale(float x, float y, float z)
 {
 	auto transform_ptr = transformable.get_transform();
-	transformable.set_transform(
-			CompositeTransformation(transform_ptr->share())
-			.compose(Scale(x, y, z))
-			.share());
+	transformable.set_transform(std::make_shared<Transformation>(*transform_ptr + Scale(x, y, z)));
 	return *this;
 }
 
@@ -30,22 +24,14 @@ Transformer &Transformer::translate(float x, float y, float z)
 {
 
 	auto transform_ptr = transformable.get_transform();
-	transformable.set_transform(
-			CompositeTransformation(transform_ptr->share())
-			.compose(Translation(x, y, z))
-			.share());
+	transformable.set_transform(std::make_shared<Transformation>(*transform_ptr + Translation(x, y, z)));
 	return *this;
 }
 
 Transformer &Transformer::rotate_around_vertex(const Vertex &v, float x, float y, float z)
 {
 	auto transform_ptr = transformable.get_transform();
-	transformable.set_transform(
-			CompositeTransformation(transform_ptr->share() )
-			.compose(Translation(v(0), v(1), v(2)))
-			.compose(Rotation(x, y, z))
-			.compose(Translation(-v(0), -v(1), -v(2)))
-			.share());
+	throw std::runtime_error("Not implemented!");
 	return *this;
 }
 

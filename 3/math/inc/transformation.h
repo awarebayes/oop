@@ -9,70 +9,64 @@
 #include <utility>
 #include "linalg.hpp"
 
-class Transformation
+class BaseTransformation
 {
 public:
-	virtual Matrix<4> get_matrix() const = 0;
-	virtual std::shared_ptr<Transformation> share() const = 0;
+	[[nodiscard]] virtual Matrix<4> get_matrix() const = 0;
 };
 
-class Scale : public Transformation
+class Scale : public BaseTransformation
 {
 private:
-	float x, y, z;
+	float x{1}, y{1}, z{1};
 public:
+	Scale() = default;
 	Scale(float x, float y, float z) : x(x), y(y), z(z) {};
 	virtual ~Scale() = default;
 	[[nodiscard]] Matrix<4> get_matrix() const override;
-	[[nodiscard]] std::shared_ptr<Transformation> share() const override;
+	Scale operator +(const Scale &scale) const;
 };
 
-class Translation : public Transformation
+class Translation : public BaseTransformation
 {
 private:
-	float x, y, z;
+	float x{}, y{}, z{};
 public:
+	Translation() = default;
 	Translation(float x, float y, float z) : x(x), y(y), z(z) {};
 	virtual ~Translation() = default;
 	[[nodiscard]] Matrix<4> get_matrix() const override;
-	[[nodiscard]] virtual std::shared_ptr<Transformation> share() const;
+	Translation operator +(const Translation &other) const;
 };
 
-class Rotation : public Transformation
+class Rotation : public BaseTransformation
 {
 private:
-	float x, y, z;
+	float x{}, y{}, z{};
 public:
+	Rotation() = default;
 	Rotation(float x, float y, float z) : x(x), y(y), z(z) {};
 	virtual ~Rotation() = default;
 	[[nodiscard]] Matrix<4> get_matrix() const override;
-	[[nodiscard]] std::shared_ptr<Transformation> share() const override;
+	Rotation operator +(const Rotation &other) const;
 };
 
-
-class Identity : public Transformation
-{
-	Matrix<4> mat;
-public:
-	explicit Identity() : mat(Matrix<4>::identity()){};
-	explicit Identity(const Matrix<4>& trans) : mat(trans) {};
-	explicit Identity(const Transformation& trans) : mat(trans.get_matrix()) {};
-	[[nodiscard]] Matrix<4> get_matrix() const override;
-	[[nodiscard]] std::shared_ptr<Transformation> share() const override;
-};
-
-class CompositeTransformation : public Transformation
+class Transformation : public BaseTransformation
 {
 private:
-	std::shared_ptr<Transformation> this_transform{};
-	std::shared_ptr<Transformation> prev_transform{};
+	Rotation rotation{};
+	Translation translation{};
+	Scale scale{};
 public:
-	explicit CompositeTransformation(std::shared_ptr<Transformation> transform);
-	explicit CompositeTransformation(const Transformation &transform);
-	CompositeTransformation compose(const std::shared_ptr<Transformation>& next_transform);
-	CompositeTransformation compose(const Transformation& next_transform);
+	Transformation() = default;
+	Transformation(const Transformation &other);
+	Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale_);
+	virtual ~Transformation() = default;
 	[[nodiscard]] Matrix<4> get_matrix() const override;
-	[[nodiscard]] std::shared_ptr<Transformation> share() const override;
+	Transformation operator +(const Scale &scale) const;
+	Transformation operator +(const Translation &other) const;
+	Transformation operator +(const Rotation &other) const;
+	Transformation operator +(const Transformation &other) const;
 };
 
 

@@ -8,6 +8,11 @@
 #include "math/inc/linalg.h"
 #include <cmath>
 
+inline float radians(float degrees)
+{
+	return (float)(degrees * M_PI / 180.0f);
+}
+
 template<size_t n>
 float& Matrix<n>::operator()(size_t i, size_t j)
 {
@@ -105,24 +110,46 @@ float Vector<n>::operator()(size_t i) const
 template<size_t n>
 float Vector<n>::length() const
 {
-	float sum;
+	float sum = 0;
 	for (int i =0; i < n; i++)
-		sum += components[i];
+		sum += components[i] * components[i];
 	return sqrtf(sum);
 }
 
 template<size_t n>
 Vector<n> Vector<n>::normalize() const
 {
-	std::array<float, n> args_arr;
+	std::array<float, n> args_arr{};
 	float len = length();
 	for (int i=0; i < n; i++)
 		args_arr[i] = components[i] / len;
-	return Vector<n>(args_arr);
+	return Vector(args_arr);
 }
 
-//Vector<3> cross(const Vector<3> &v1, const Vector<3> &v2) {
-//	return {v1(1)*v2(2) - v1(2)*v2(1), v1(2)*v2(0) - v1(0)*v2(2), v1(0)*v2(1) - v1(1)*v2(0)};
-//}
+template<size_t n>
+Vector<n>::Vector(std::array<float, n> init)
+{
+	for (int i=0; i < n; i++)
+		components[i] = init[i];
+}
+
+template<size_t n>
+Vector<n> operator-(const Vector<n> &lhs, const Vector<n> &rhs)
+{
+	std::array<float, n> args_arr{};
+	for (int i=0; i < n; i++)
+		args_arr[i] = lhs(i) - rhs(i);
+	return {args_arr};
+}
+
+template<size_t n>
+Vector<n> operator+(const Vector<n> &lhs, const Vector<n> &rhs)
+{
+	std::array<float, n> args_arr{};
+	for (int i=0; i < n; i++)
+		args_arr[i] = lhs(i) + rhs(i);
+	return {args_arr};
+}
+
 
 #endif //INC_3_LINALG_HPP

@@ -41,7 +41,7 @@ Thumbs.db
 # xemacs temporary files
 *.flc
 
-# Vim temporary files
+# Interactor temporary files
 .*.swp
 
 # Visual Studio generated files

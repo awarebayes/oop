@@ -20,9 +20,9 @@ class Line:
 
 def find_center(vertices):
     vertices = np.array(vertices)
-    #median = (vertices.min(axis=0) + vertices.max(axis=0)) / 2
-    #vertices = vertices - median
-    #print("Shifing by", -median)
+    median = (vertices.min(axis=0) + vertices.max(axis=0)) / 2
+    vertices = vertices - median
+    print("Shifing by", -median)
     return vertices
 
 def scale(vertices):

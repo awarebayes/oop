@@ -11,6 +11,8 @@
 
 class SceneObject : public Visitable
 {
+private:
+	std::shared_ptr<Transformation> transform = std::make_shared<Transformation>();
 public:
 	SceneObject() = default;
 	virtual bool is_visible() = 0;
@@ -19,12 +21,12 @@ public:
 	virtual bool is_reference() = 0;
 	virtual ~SceneObject() = default;
 	void accept(Visitor& v) override = 0;
+	virtual std::shared_ptr<Transformation> get_transform() {return transform;};
+	virtual void set_transform(std::shared_ptr<Transformation> transform_) {transform = std::move(transform_);};
 };
 
 class VisibleObject : public SceneObject
 {
-private:
-	std::shared_ptr<Transformation> transform = Identity().share();
 public:
 	VisibleObject() = default;
 	bool is_visible() override {return true;};
@@ -34,8 +36,6 @@ public:
 	~VisibleObject() override = default;
 	void accept(Visitor& v) override = 0;
 
-	virtual std::shared_ptr<Transformation> get_transform() {return transform;};
-	virtual void set_transform(std::shared_ptr<Transformation> transform_) {transform = std::move(transform_);};
 };
 
 class InvisibleObject : public SceneObject

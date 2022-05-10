@@ -9,6 +9,7 @@
 #include <command/inc/model_command.h>
 #include <command/inc/object_command.h>
 #include <command/inc/scene_command.h>
+#include <command/inc/camera_command.h>
 #include <memory>
 
 class RendererFacade

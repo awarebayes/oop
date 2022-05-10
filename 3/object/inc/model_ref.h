@@ -13,7 +13,7 @@ class MeshModelReference : public VisibleObject
 {
 private:
 	std::shared_ptr<MeshModel> reference;
-	std::shared_ptr<Transformation> proxy_transform = Identity().share();
+	std::shared_ptr<Transformation> proxy_transform = std::make_shared<Transformation>();
 public:
 	explicit MeshModelReference(std::shared_ptr<MeshModel>  ref) : reference(std::move(ref)) {};
 	~MeshModelReference() override = default;

@@ -17,13 +17,14 @@ public:
 	CameraManager() = default;
 	~CameraManager() override = default;
 	CameraManager(const CameraManager &) = delete;
-	void move_to_point(const Vector<3> &point);
-	void look_at(const Vector<3> &point);
+	void offset_camera(int cam_id, const Vector<3> &offset);
+	void rotate_camera(int cam_id, float x_offset, float y_offset);
 	void set_active_camera(int camera_id);
 	int new_camera();
+	std::shared_ptr<Camera> get_camera(int camera_id);
 private:
-	std::map<int, std::shared_ptr<Camera>> cams;
-	int cam_count;
+	std::map<int, std::shared_ptr<FPSCamera>> cams;
+	int cam_count{};
 };
 
 class CameraManagerCreator

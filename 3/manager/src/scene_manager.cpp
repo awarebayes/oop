@@ -4,7 +4,8 @@
 #include "manager/inc/scene_manager.h"
 
 
-SceneManager::SceneManager() : scene(std::make_shared<Scene>()) {}
+SceneManager::SceneManager() : scene(std::make_shared<Scene>())
+{}
 
 std::shared_ptr<Scene> SceneManager::get_scene() const
 {

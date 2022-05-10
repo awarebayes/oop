@@ -76,7 +76,7 @@ TEST(Math, TransformationTranslate)
 {
 	auto t1 = Translation(0, 10, 0);
 	auto t2 = Translation(0, -10, 0);
-	auto c = CompositeTransformation(t1).compose(t2);
+	auto c = t1 + t2;
 	Matrix<4> m = c.get_matrix();
 
 	matrix_eq(m ,Matrix<4>{
