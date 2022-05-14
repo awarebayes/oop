@@ -14,7 +14,7 @@ void CameraManager::set_active_camera(int camera_id)
 
 int CameraManager::new_camera()
 {
-	cams[cam_count++] = std::make_shared<FPSCamera>(glm::vec3{0, 0, -100});
+	cams[cam_count++] = std::make_shared<FPSCamera>(Vector3{0, 0, -100});
 	return cam_count - 1;
 }
 

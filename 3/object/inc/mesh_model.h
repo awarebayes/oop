@@ -11,10 +11,9 @@
 #include "math/inc/linalg.h"
 #include "visitor/inc/base_visitor.h"
 #include "visitor/inc/draw_visitor.h"
-#include <glm/vec4.hpp> // glm::vec4
 
 typedef std::pair<int, int> Line;
-typedef glm::vec4 Vertex;
+typedef Vector4 Vertex;
 
 class MeshModel : public DrawableModel
 {

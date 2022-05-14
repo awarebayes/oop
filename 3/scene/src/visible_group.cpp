@@ -20,12 +20,12 @@ bool VisibleGroup::remove_object(int object_id)
 	return false;
 }
 
-std::map<int, std::shared_ptr<VisibleObject>>::iterator VisibleGroup::begin()
+std::map<int, std::shared_ptr<VisibleObject>>::const_iterator VisibleGroup::begin()
 {
 	return objects.begin();
 }
 
-std::map<int, std::shared_ptr<VisibleObject>>::iterator VisibleGroup::end()
+std::map<int, std::shared_ptr<VisibleObject>>::const_iterator VisibleGroup::end()
 {
 	return objects.end();
 }

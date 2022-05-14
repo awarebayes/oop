@@ -8,7 +8,7 @@
 #include <memory>
 #include <utility>
 #include "linalg.hpp"
-#include <glm/mat4x4.hpp> // glm::mat4
+#include "glm_wrapper.h"
 
 class BaseTransformation
 {
@@ -55,7 +55,7 @@ public:
 	Transformation(const Transformation &other);
 	Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale_);
 	virtual ~Transformation() = default;
-	[[nodiscard]] glm::mat4 get_matrix();
+	[[nodiscard]] Matrix4 get_matrix();
 	Transformation operator +(const Scale &scale) const;
 	Transformation operator +(const Translation &other) const;
 	Transformation operator +(const Rotation &other) const;

@@ -20,8 +20,8 @@ public:
 	int add_object(const std::shared_ptr<VisibleObject>& obj);
 	bool remove_object(int object_id);
 	std::shared_ptr<VisibleObject> get_object(int object_id);
-	object_map::iterator begin();
-	object_map::iterator end();
+	object_map::const_iterator begin();
+	object_map::const_iterator end();
 	void accept(Visitor& v) override;
 };
 

@@ -29,10 +29,10 @@ public:
 	void visit(VisibleObject &object) override;
 	void visit(MeshModelReference &ref) override;
 private:
-	void visit_with_new_transform(VisibleGroup &group, const glm::mat4 &transformation);
-	void visit_with_new_transform(MeshModel &model, const glm::mat4 &transformation);
-	void visit_with_new_transform(VisibleObject &object, const glm::mat4 &transform);
-	void draw_model(MeshModel &model, const glm::mat4 &model_matrix);
+	void visit_with_new_transform(VisibleGroup &group, const Matrix4 &transformation);
+	void visit_with_new_transform(MeshModel &model, const Matrix4 &transformation);
+	void visit_with_new_transform(VisibleObject &object, const Matrix4 &transform);
+	void draw_model(MeshModel &model, const Matrix4 &model_matrix);
 };
 
 

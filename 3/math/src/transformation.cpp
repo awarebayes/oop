@@ -54,15 +54,15 @@ Transformation::Transformation(const Transformation &other)
 	scale = other.scale;
 }
 
-glm::mat4 Transformation::get_matrix()
+Matrix4 Transformation::get_matrix()
 {
-	glm::vec3 trans = {translation.x, translation.y, translation.z};
-	glm::vec3 scl = {scale.x, scale.y, scale.z};
-	glm::mat4 id = glm::mat4(1.0f);
-	glm::mat4 model = glm::translate(id, trans);
-	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, -1.0f));
+	Vector3 trans = {translation.x, translation.y, translation.z};
+	Vector3 scl = {scale.x, scale.y, scale.z};
+	Matrix4 id = Matrix4(1.0f);
+	Matrix4 model = glm::translate(id, trans);
+	model = glm::rotate(model, glm::radians(rotation.x), Vector3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotation.y), Vector3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotation.z), Vector3(0.0f, 0.0f, -1.0f));
 	model = glm::scale(model, scl);
 	return model;
 

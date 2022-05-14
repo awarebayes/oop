@@ -15,7 +15,7 @@ void matrix_eq(const glm::mat3x3 &m1, const glm::mat3 &m2)
 			EXPECT_FLOAT_EQ(m1[i][j], m2[i][j]);
 }
 
-void matrix_eq(const glm::mat4 &m1, const glm::mat4 &m2)
+void matrix_eq(const Matrix4 &m1, const Matrix4 &m2)
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
