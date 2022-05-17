@@ -7,8 +7,7 @@
 
 #include <drawer/inc/base_canvas.h>
 #include <memory>
-#include <object/inc/mesh_model.h>
-#include <scene/inc/visible_group.h>
+#include <scene/inc/scene_group.h>
 #include <object/inc/model_ref.h>
 #include <object/inc/camera.h>
 #include <scene/inc/scene.h>
@@ -20,19 +19,16 @@ class DrawVisitor : public Visitor
 private:
 	std::shared_ptr<Canvas> canvas;
 	std::shared_ptr<Camera> camera;
+	Matrix4 context = Matrix4(1.0f);
+	void clear_transform_context();
+	void add_transform_context(const Matrix4 &ctx);
 public:
 	DrawVisitor(std::shared_ptr<Canvas> canvas, std::shared_ptr<Camera> camera);
 	void visit(Camera &camera) override;
-	void visit(VisibleGroup &group) override;
-	void visit(MeshModel &model) override;
+	void visit(SceneGroup &group) override;
 	void visit(Scene &scene) override;
-	void visit(VisibleObject &object) override;
 	void visit(MeshModelReference &ref) override;
-private:
-	void visit_with_new_transform(VisibleGroup &group, const Matrix4 &transformation);
-	void visit_with_new_transform(MeshModel &model, const Matrix4 &transformation);
-	void visit_with_new_transform(VisibleObject &object, const Matrix4 &transform);
-	void draw_model(MeshModel &model, const Matrix4 &model_matrix);
+	void visit(LightSource &lightSource);
 };
 
 

@@ -8,21 +8,18 @@
 #include <utility>
 
 #include "object/inc/scene_object.h"
+#include "drawable_model.h"
+#include "mesh_model.h"
 
-class MeshModelReference : public VisibleObject
+class MeshModelReference : public Model
 {
 private:
-	std::shared_ptr<MeshModel> reference;
-	std::shared_ptr<Transformation> proxy_transform = std::make_shared<Transformation>();
+	std::shared_ptr<MeshModel> base;
 public:
-	explicit MeshModelReference(std::shared_ptr<MeshModel>  ref) : reference(std::move(ref)) {};
+	explicit MeshModelReference(std::shared_ptr<MeshModel>  ref) : base(std::move(ref)) {};
 	~MeshModelReference() override = default;
-	bool is_reference() override {return true;};
-	std::shared_ptr<MeshModel> deref() {return reference;};
-	std::shared_ptr<Transformation> get_transform() override {return proxy_transform;};
-	virtual void set_transform(std::shared_ptr<Transformation> transform_) {proxy_transform = std::move(transform_);};
 	void accept(Visitor& v) override { v.visit(*this); };
+	std::shared_ptr<const MeshModel> get_base() { return base; };
 };
 
-
-#endif //INC_3_MODEL_REF_H
+#endif

@@ -17,12 +17,9 @@ public:
 	SceneManager(const SceneManager &) = delete;
 	SceneManager &operator=(const SceneManager &) = delete;
 	[[nodiscard]] std::shared_ptr<Scene> get_scene() const;
-	[[nodiscard]] std::shared_ptr<Camera> get_camera() const;
 	void set_scene(const std::shared_ptr<Scene> &scene_);
-	void set_camera(const std::shared_ptr<Camera> &camera );
 private:
 	std::shared_ptr<Scene> scene;
-	std::shared_ptr<Camera> camera;
 };
 
 class SceneManagerCreator

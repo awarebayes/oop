@@ -20,10 +20,12 @@ public:
 	void offset_camera(int cam_id, const std::array<float, 3> &offset);
 	void rotate_camera(int cam_id, float x_offset, float y_offset);
 	void set_active_camera(int camera_id);
+	std::shared_ptr<Camera> get_active_camera();
 	int new_camera();
 	std::shared_ptr<Camera> get_camera(int camera_id);
 private:
-	std::map<int, std::shared_ptr<FPSCamera>> cams;
+	std::map<int, std::shared_ptr<Camera>> cams;
+	std::shared_ptr<Camera> active_camera;
 	int cam_count{};
 };
 

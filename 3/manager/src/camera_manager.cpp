@@ -8,14 +8,18 @@
 void CameraManager::set_active_camera(int camera_id)
 {
 	auto cam = cams[camera_id];
-	auto scene_manager = SceneManagerCreator().get();
-	scene_manager->set_camera(cam);
+	active_camera = cam;
 }
 
 int CameraManager::new_camera()
 {
-	cams[cam_count++] = std::make_shared<FPSCamera>(Vector3{0, 0, -100});
-	return cam_count - 1;
+	// cam_count++;ad
+	auto camera = std::make_shared<FPSCamera>(Vector3{0, 0, -100});
+	auto scene_manager = SceneManagerCreator().get();
+	auto scene = scene_manager->get_scene();
+	auto camera_id = scene->add_object(camera);
+	cams[camera_id] = camera;
+	return camera_id;
 }
 
 std::shared_ptr<Camera> CameraManager::get_camera(int camera_id)
@@ -33,6 +37,11 @@ void CameraManager::offset_camera(int cam_id, const std::array<float, 3> &offset
 {
 	auto cam = cams[cam_id];
 	cam->move({offset[0], offset[1], offset[2]});
+}
+
+std::shared_ptr<Camera> CameraManager::get_active_camera()
+{
+	return active_camera;
 }
 
 void CameraManagerCreator::create()

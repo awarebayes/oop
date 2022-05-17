@@ -17,16 +17,6 @@ void SceneManager::set_scene(const std::shared_ptr<Scene> &scene_)
 	scene = scene_;
 }
 
-void SceneManager::set_camera(const std::shared_ptr<Camera> &camera_)
-{
-	camera = camera_;
-}
-
-std::shared_ptr<Camera> SceneManager::get_camera() const
-{
-	return camera;
-};
-
 void SceneManagerCreator::create()
 {
 	static auto manager = std::make_shared<SceneManager>();

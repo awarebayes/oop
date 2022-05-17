@@ -42,24 +42,6 @@ void ObjectRotateCommand::exec()
 	t_manager->rotate(object_id, rotation);
 }
 
-ObjectCloneCommand::ObjectCloneCommand(int object_id_)
-{
-	object_id = object_id_;
-}
-
-void ObjectCloneCommand::exec()
-{
-	auto s_manager = SceneManagerCreator().get();
-	auto scene = s_manager->get_scene();
-	int clone_id = scene->clone_object(object_id);
-	result_id = clone_id;
-}
-
-int ObjectCloneCommand::get_result() const
-{
-	return result_id;
-}
-
 ObjectDeleteCommand::ObjectDeleteCommand(int object_id_)
 {
 	object_id = object_id_;

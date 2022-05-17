@@ -27,11 +27,13 @@ std::map<int, std::string> &SceneMeta::get_objects()
 int SceneMeta::get_selected()
 {
 	return selected_object_id;
+
 }
 
 void SceneMeta::add_camera(int camera)
 {
 	camera_ids.insert(camera);
+	object_map[camera] = "Camera";
 }
 
 std::set<int> &SceneMeta::get_cameras()

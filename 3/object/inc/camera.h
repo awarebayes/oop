@@ -15,6 +15,8 @@ public:
 	[[nodiscard]] virtual Matrix4 get_view_matrix() const;
 	[[nodiscard]] virtual Matrix4 get_projection_matrix() const;
 	void accept(Visitor& v) override {};
+	virtual void rotate(float x_offset, float y_offset) {};
+	virtual void move(const Vector3 &offset) {};
 };
 
 const float YAW         = -90.0f;
@@ -31,8 +33,8 @@ public:
 	void accept(Visitor& v) override;
 	[[nodiscard]] Matrix4 get_view_matrix() const override;
 	[[nodiscard]] Matrix4 get_projection_matrix() const override;
-	void rotate(float x_offset, float y_offset);
-	void move(const Vector3 &offset);
+	void rotate(float x_offset, float y_offset) override;
+	void move(const Vector3 &offset) override;
 private:
 	void updateCameraVectors();
 

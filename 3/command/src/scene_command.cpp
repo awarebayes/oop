@@ -16,8 +16,6 @@ void RenderSceneCommand::exec()
 
 void SetActiveCameraSceneCommand::exec()
 {
-	auto scene_manager = SceneManagerCreator().get();
 	auto camera_manager = CameraManagerCreator().get();
-	auto cam = camera_manager->get_camera(cam_id);
-	scene_manager->set_camera(cam);
+	camera_manager->set_active_camera(cam_id);
 }

@@ -34,19 +34,14 @@ MeshModelBuilder::MeshModelBuilder(const std::string &path) : source(path)
 	//vertices.reserve(256);
 }
 
-std::shared_ptr<DrawableModel> MeshModelBuilder::collect()
+std::shared_ptr<Model> MeshModelBuilder::collect()
 {
-	return std::make_shared<MeshModel>(vertices, lines);
+	auto model = std::make_shared<MeshModel>(vertices, lines);
+	std::shared_ptr<Model> ref = std::make_shared<MeshModelReference>(model);
+	return ref;
 }
 
-std::shared_ptr<MeshModel> MeshModelBuilder::collect_as_mesh()
-{
-
-	return std::make_shared<MeshModel>(vertices, lines);
-}
-
-
-std::shared_ptr<DrawableModel> MeshModelDirector::build_model()
+std::shared_ptr<Model> MeshModelDirector::build_model()
 {
 	MeshModelBuilder builder = MeshModelBuilder(object_path);
 	builder.read_vertices();

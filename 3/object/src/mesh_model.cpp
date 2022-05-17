@@ -3,11 +3,6 @@
 //
 #include "object/inc/mesh_model.h"
 
-void MeshModel::accept(Visitor& visitor)
-{
-	visitor.visit(*this);
-}
-
 const std::vector<Vertex> &MeshModel::get_vertices() const
 {
 	return vertices;
