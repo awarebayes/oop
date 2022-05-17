@@ -33,7 +33,7 @@ int SceneMeta::get_selected()
 void SceneMeta::add_camera(int camera)
 {
 	camera_ids.insert(camera);
-	object_map[camera] = "Camera";
+	object_map[camera] = "ICamera";
 }
 
 std::set<int> &SceneMeta::get_cameras()

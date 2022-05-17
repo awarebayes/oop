@@ -3,7 +3,7 @@
 //
 #include <scene/inc/scene_group.h>
 
-int SceneGroup::add_object(const std::shared_ptr<SceneObject>& obj)
+int SceneGroup::add_object(const std::shared_ptr<ISceneObject>& obj)
 {
 	objects[obj_count++] = obj;
 	return obj_count-1;
@@ -35,7 +35,7 @@ void SceneGroup::accept(Visitor &v)
 	v.visit(*this);
 }
 
-std::shared_ptr<SceneObject> SceneGroup::get_object(int object_id)
+std::shared_ptr<ISceneObject> SceneGroup::get_object(int object_id)
 {
 	return objects[object_id];
 }

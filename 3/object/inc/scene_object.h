@@ -11,19 +11,19 @@
 #include "math/inc/transformation.h"
 #include "visitor/inc/base_visitor.h"
 
-class SceneObject;
+class ISceneObject;
 
-using ObjectMap = std::map<int, std::shared_ptr<SceneObject>>;
+using ObjectMap = std::map<int, std::shared_ptr<ISceneObject>>;
 using Iterator = ObjectMap::iterator;
 using ConstIterator = ObjectMap::const_iterator;
 
-class SceneObject : public Visitable
+class ISceneObject : public Visitable
 {
 private:
 	std::shared_ptr<Transformation> transform = std::make_shared<Transformation>();
 public:
-	SceneObject() = default;
-	virtual ~SceneObject() = default;
+	ISceneObject() = default;
+	virtual ~ISceneObject() = default;
 
 	virtual bool is_visible() { return false; };
 	virtual bool is_grouped() {return false;};
@@ -36,11 +36,11 @@ public:
 	virtual void set_transform(std::shared_ptr<Transformation> transform_) {transform = std::move(transform_);};
 
 	// composite
-	virtual int add_object(const std::shared_ptr<SceneObject>& object) { return false; };
+	virtual int add_object(const std::shared_ptr<ISceneObject>& object) { return false; };
 	virtual bool remove_object(const Iterator &iter) { return false; };
 };
 
-class VisibleObject : public SceneObject
+class VisibleObject : public ISceneObject
 {
 public:
 	VisibleObject() = default;
@@ -49,7 +49,7 @@ public:
 
 };
 
-class InvisibleObject : public SceneObject
+class InvisibleObject : public ISceneObject
 {
 public:
 	InvisibleObject() = default;

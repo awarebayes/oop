@@ -87,7 +87,7 @@
    </widget>
    <widget class="QMenu" name="menuCamera">
     <property name="title">
-     <string>Camera</string>
+     <string>ICamera</string>
     </property>
     <addaction name="actionNext_Camera"/>
     <addaction name="actionNew_Camera"/>
@@ -141,17 +141,17 @@
   </action>
   <action name="actionNext_Camera">
    <property name="text">
-    <string>Next Camera</string>
+    <string>Next ICamera</string>
    </property>
   </action>
   <action name="actionNew_Camera">
    <property name="text">
-    <string>New Camera</string>
+    <string>New ICamera</string>
    </property>
   </action>
   <action name="actionSet_Camera">
    <property name="text">
-    <string>Set Camera</string>
+    <string>Set ICamera</string>
    </property>
   </action>
   <action name="actionLook_at_object">

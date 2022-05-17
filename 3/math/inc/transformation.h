@@ -49,13 +49,13 @@ class Transformation : public BaseTransformation
 private:
 	Rotation rotation{};
 	Translation translation{};
-	Scale scale{};
+	Scale scale_{};
 public:
 	Transformation() = default;
 	Transformation(const Transformation &other);
 	Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale_);
 	virtual ~Transformation() = default;
-	[[nodiscard]] Matrix4 get_matrix();
+	[[nodiscard]] Matrix4 get_matrix() const;
 	Transformation operator +(const Scale &scale) const;
 	Transformation operator +(const Translation &other) const;
 	Transformation operator +(const Rotation &other) const;

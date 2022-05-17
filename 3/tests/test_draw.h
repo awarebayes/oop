@@ -14,7 +14,7 @@
 TEST(Draw, TestSimpleDraw)
 {
 	auto canv = std::make_shared<TestCanvas>();
-	auto cam = std::make_shared<Camera>();
+	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
 	auto line = MeshModelLoader().load_model("./tests/res/simple_line.obj");
 	line->accept(visitor);
@@ -24,7 +24,7 @@ TEST(Draw, TestSimpleDraw)
 TEST(Draw, TestSimpleRotate)
 {
 	auto canv = std::make_shared<TestCanvas>();
-	auto cam = std::make_shared<Camera>();
+	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
 	auto line = MeshModelLoader().load_model("./tests/res/simple_line.obj");
 	auto transform_manager = Transformer(*line);
@@ -36,7 +36,7 @@ TEST(Draw, TestSimpleRotate)
 TEST(Draw, TestDrawScene)
 {
 	auto canv = std::make_shared<TestCanvas>();
-	auto cam = std::make_shared<Camera>();
+	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
 	auto line1 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
 	auto line2 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
@@ -56,7 +56,7 @@ TEST(Draw, TestDrawScene)
 TEST(Draw, TestDrawManager)
 {
 	auto canv = std::make_shared<TestCanvas>();
-	auto cam = std::make_shared<Camera>();
+	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
 	auto line1 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
 	auto line2 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
@@ -75,7 +75,7 @@ TEST(Draw, TestDrawManager)
 TEST(Draw, TestCloning)
 {
 	auto canv = std::make_shared<TestCanvas>();
-	auto cam = std::make_shared<Camera>();
+	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
 	auto line1 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
 	auto scene = Scene();

@@ -7,7 +7,7 @@
 #include "object/inc/scene_object.h"
 #include <map>
 
-class SceneGroup : public SceneObject
+class SceneGroup : public ISceneObject
 {
 	ObjectMap objects{};
 	int obj_count = 0;
@@ -16,9 +16,9 @@ public:
 	~SceneGroup() override = default;
 
 	bool is_grouped() override {return true;};
-	int add_object(const std::shared_ptr<SceneObject>& obj);
+	int add_object(const std::shared_ptr<ISceneObject>& obj);
 	bool remove_object(int object_id);
-	std::shared_ptr<SceneObject> get_object(int object_id);
+	std::shared_ptr<ISceneObject> get_object(int object_id);
 	ObjectMap::const_iterator begin();
 	ObjectMap::const_iterator end();
 	void accept(Visitor& v) override;

@@ -3,12 +3,13 @@
 //
 
 #include <load/inc/mesh_objfile_source.h>
+#include <exception/loader_exceptions.h>
 
 ObjFileMeshSource::ObjFileMeshSource(const std::string &path)
 {
 	in_file = std::ifstream(path);
 	if (in_file.fail())
-		throw std::runtime_error("Could not open file");
+		throw FileError(__FILE__, __LINE__, "Could not open file");
 }
 
 template<typename T>
@@ -58,7 +59,7 @@ void ObjFileMeshSource::read_vertex(std::stringstream &ss)
 	Vertex vertex{0, 0, 0, 1};
 	ss >> vertex[0] >> vertex[1] >> vertex[2];
 	if (ss.fail())
-		throw std::runtime_error("unable to read line");
+		throw FileError(__FILE__, __LINE__, "Could not read vertex");
 	vertex_buffer.push_back(vertex);
 }
 
@@ -67,7 +68,7 @@ void ObjFileMeshSource::read_line(std::stringstream &ss)
 	Line line{};
 	ss >> line.first >> line.second;
 	if (ss.fail())
-		throw std::runtime_error("unable to read line");
+		throw FileError(__FILE__, __LINE__, "Could not read line");
 	line_buffer.push_back(line);
 }
 

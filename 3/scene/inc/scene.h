@@ -17,9 +17,9 @@ public:
 	Scene() = default;
 	virtual ~Scene() = default;
 
-	int add_object(const std::shared_ptr<SceneObject>& object);
+	int add_object(const std::shared_ptr<ISceneObject>& object);
 	bool remove_object(int object_id);
-	std::shared_ptr<SceneObject> get_object(int object_id);
+	std::shared_ptr<ISceneObject> get_object(int object_id);
 	void accept(Visitor& v) override;
 };
 

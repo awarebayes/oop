@@ -40,12 +40,12 @@ Matrix4 FPSCamera::get_view_matrix() const
 void FPSCamera::updateCameraVectors()
 {
 	Vector3 front;
-	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	front.y = sin(glm::radians(Pitch));
-	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Front = glm::normalize(front);
-	Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	Up    = glm::normalize(glm::cross(Right, Front));
+	front.x = cos(radians(Yaw)) * cos(radians(Pitch));
+	front.y = sin(radians(Pitch));
+	front.z = sin(radians(Yaw)) * cos(radians(Pitch));
+	Front = normalize(front);
+	Right = normalize(cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Up    = normalize(cross(Right, Front));
 }
 
 void FPSCamera::rotate(float x_offset, float y_offset)
@@ -66,15 +66,28 @@ void FPSCamera::move(const Vector3 &offset)
 
 Matrix4 FPSCamera::get_projection_matrix() const
 {
-	return glm::perspective(glm::radians(90.0f), aspect, zNear, zFar);
+	return perspective(radians(90.0f), aspect, zNear, zFar);
 }
 
-Matrix4 Camera::get_view_matrix() const
+Matrix4 TestCamera::get_view_matrix() const
 {
 	return Matrix4(1.0f);
 }
 
-Matrix4 Camera::get_projection_matrix() const
+Matrix4 TestCamera::get_projection_matrix() const
 {
 	return Matrix4(1.0f);
+}
+
+void TestCamera::accept(Visitor &v)
+{
+	v.visit(*this);
+}
+
+std::shared_ptr<ICamera> CameraFactory::create(const CameraType &cam_type)
+{
+	if (cam_type == CameraType::Test)
+		return std::make_shared<TestCamera>();
+	if (cam_type == CameraType::FPS)
+		return std::make_shared<FPSCamera>(Vector3(0, 0, -100));
 }

@@ -139,7 +139,7 @@ Vector<n> operator-(const Vector<n> &lhs, const Vector<n> &rhs)
 	std::array<float, n> args_arr{};
 	for (int i=0; i < n; i++)
 		args_arr[i] = lhs(i) - rhs(i);
-	return {args_arr};
+	return Vector<n>{args_arr};
 }
 
 template<size_t n>

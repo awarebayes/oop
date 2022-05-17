@@ -5,14 +5,14 @@
 #include <visitor/inc/draw_visitor.h>
 #include <utility>
 
-DrawVisitor::DrawVisitor(std::shared_ptr<Canvas> canvas_, std::shared_ptr<Camera> camera_)
+DrawVisitor::DrawVisitor(std::shared_ptr<Canvas> canvas_, std::shared_ptr<ICamera> camera_)
 {
 	canvas = std::move(canvas_);
 	camera = std::move(camera_);
 }
 
 
-void DrawVisitor::visit(Camera &cam)
+void DrawVisitor::visit(ICamera &cam)
 {
 
 }
@@ -30,7 +30,7 @@ void DrawVisitor::visit(SceneGroup &group)
 	{
 		object->accept(*this);
 	}
-	add_transform_context(glm::inverse(displacement));
+	add_transform_context(inverse(displacement));
 }
 
 void DrawVisitor::clear_transform_context()

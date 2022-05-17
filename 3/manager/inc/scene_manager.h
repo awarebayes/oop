@@ -17,6 +17,9 @@ public:
 	SceneManager(const SceneManager &) = delete;
 	SceneManager &operator=(const SceneManager &) = delete;
 	[[nodiscard]] std::shared_ptr<Scene> get_scene() const;
+	[[nodiscard]] std::shared_ptr<ISceneObject> get_object(int obj_id);
+	[[nodiscard]] bool remove_object(int obj_id);
+	int add_object(const std::shared_ptr<ISceneObject> &object);
 	void set_scene(const std::shared_ptr<Scene> &scene_);
 private:
 	std::shared_ptr<Scene> scene;

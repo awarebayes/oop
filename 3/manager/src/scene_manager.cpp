@@ -17,6 +17,21 @@ void SceneManager::set_scene(const std::shared_ptr<Scene> &scene_)
 	scene = scene_;
 }
 
+int SceneManager::add_object(const std::shared_ptr<ISceneObject> &object)
+{
+	return scene->add_object(object);
+}
+
+std::shared_ptr<ISceneObject> SceneManager::get_object(int obj_id)
+{
+	return scene->get_object(obj_id);
+}
+
+bool SceneManager::remove_object(int obj_id)
+{
+	return scene->remove_object(obj_id);
+}
+
 void SceneManagerCreator::create()
 {
 	static auto manager = std::make_shared<SceneManager>();
