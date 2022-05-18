@@ -10,7 +10,7 @@
 #include "scene_object.h"
 #include "math/inc/transformation.h"
 
-class DrawableModel : public VisibleObject
+class Model : public VisibleObject
 {};
 
 #endif //INC_3_DRAWABLE_MODEL_H

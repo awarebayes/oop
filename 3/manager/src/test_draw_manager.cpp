@@ -5,13 +5,15 @@
 #include <manager/inc/test_draw_manager.h>
 #include <manager/inc/scene_manager.h>
 #include <drawer/inc/test_canvas.h>
+#include <manager/inc/camera_manager.h>
 
 void TestDrawManager::draw_scene()
 {
 	canvas->clear();
 	auto scene_manager = SceneManagerCreator().get();
+	auto camera_manager = CameraManagerCreator().get();
+	auto camera = camera_manager->get_active_camera();
 	auto scene = scene_manager->get_scene();
-	auto camera = scene_manager->get_camera();
 	DrawVisitor visitor(canvas, camera);
 	visitor.visit(*scene);
 }

@@ -4,6 +4,7 @@
 
 #include <command/inc/camera_command.h>
 #include <manager/inc/camera_manager.h>
+#include <manager/inc/manager_solution.h>
 
 CameraNewCommand::CameraNewCommand()
 {
@@ -12,7 +13,7 @@ CameraNewCommand::CameraNewCommand()
 
 void CameraNewCommand::exec()
 {
-	auto manager = CameraManagerCreator().get();
+	auto manager = ManagerSolution::get_camera_manager();
  	camera_id = manager->new_camera();
 }
 
@@ -23,7 +24,7 @@ int CameraNewCommand::get_result() const
 
 void CameraMoveCommand::exec()
 {
-	auto c_manager = CameraManagerCreator().get();
+	auto c_manager = ManagerSolution::get_camera_manager();
 	c_manager->offset_camera(camera_id, offset);
 }
 
@@ -42,6 +43,6 @@ CameraRotateCommand::CameraRotateCommand(int camera_id_, float x_offset_, float 
 
 void CameraRotateCommand::exec()
 {
-	auto c_manager = CameraManagerCreator().get();
+	auto c_manager = ManagerSolution::get_camera_manager();
 	c_manager->rotate_camera(camera_id, x_offset, y_offset);
 }

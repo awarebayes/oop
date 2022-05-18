@@ -10,8 +10,7 @@
 class MeshModelLoader : public ModelLoader
 {
 public:
-	std::shared_ptr<DrawableModel> load_model(const std::string &path) override;
+	std::shared_ptr<Model> load_model(const std::string &path) override;
 };
-
 
 #endif //INC_3_MESH_MODEL_LOADER_H

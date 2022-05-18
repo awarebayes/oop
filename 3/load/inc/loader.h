@@ -4,14 +4,14 @@
 
 #ifndef INC_3_LOADER_H
 #define INC_3_LOADER_H
-#include "object/inc/drawable_model.h"
 #include <memory>
+#include "object/inc/drawable_model.h"
 
 
 class ModelLoader
 {
 public:
-	virtual std::shared_ptr<DrawableModel> load_model(const std::string &path) = 0;
+	virtual std::shared_ptr<Model> load_model(const std::string &path) = 0;
 };
 
 
@@ -20,7 +20,7 @@ class AllLoader
 private:
 	std::unique_ptr<ModelLoader> model_loader{};
 public:
-	virtual std::shared_ptr<DrawableModel> load_model(const std::string &path);
+	virtual std::shared_ptr<Model> load_model(const std::string &path);
 };
 
 #endif //INC_3_LOADER_H

@@ -4,13 +4,13 @@
 
 #include <manager/inc/load_manager.h>
 #include <string>
-#include <manager/inc/scene_manager.h>
 #include <load/inc/mesh_model_loader.h>
+#include <manager/inc/manager_solution.h>
 
 
 int LoadManager::load_mesh_model(const std::string &path)
 {
-	auto scene_manager = SceneManagerCreator().get();
+	auto scene_manager = ManagerSolution::get_scene_manager();
 	auto scene = scene_manager->get_scene();
 	auto model = MeshModelLoader().load_model(path);
 	return scene->add_object(model);

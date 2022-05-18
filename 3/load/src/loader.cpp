@@ -7,7 +7,7 @@
 
 
 
-std::shared_ptr<DrawableModel> AllLoader::load_model(const std::string &path)
+std::shared_ptr<Model> AllLoader::load_model(const std::string &path)
 {
 	return model_loader->load_model(path);
 }

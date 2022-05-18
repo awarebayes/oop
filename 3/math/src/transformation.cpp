@@ -22,48 +22,47 @@ Rotation Rotation::operator+(const Rotation &other) const
 
 Transformation Transformation::operator+(const Scale &other) const
 {
-	return {rotation, translation, scale + other};
+	return { rotation, translation, scale_ + other};
 }
 
-Transformation::Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale_)
+Transformation::Transformation(const Rotation &rotation_, const Translation &translation_, const Scale &scale__)
 {
 	rotation = rotation_;
-	scale = scale_;
+	scale_ = scale__;
 	translation = translation_;
 }
 
 Transformation Transformation::operator+(const Translation &other) const
 {
-	return {rotation, translation + other, scale};
+	return { rotation, translation + other, scale_};
 }
 
 Transformation Transformation::operator+(const Rotation &other) const
 {
-	return {rotation + other, translation, scale};
+	return {rotation + other, translation, scale_};
 }
 
 Transformation Transformation::operator+(const Transformation &other) const
 {
-	return {rotation + other.rotation, translation + other.translation, scale + other.scale};
+	return {rotation + other.rotation, translation + other.translation, scale_ + other.scale_};
 }
 
 Transformation::Transformation(const Transformation &other)
 {
 	rotation = other.rotation;
 	translation = other.translation;
-	scale = other.scale;
+	scale_ = other.scale_;
 }
 
-glm::mat4 Transformation::get_matrix()
+Matrix4 Transformation::get_matrix() const
 {
-	glm::vec3 trans = {translation.x, translation.y, translation.z};
-	glm::vec3 scl = {scale.x, scale.y, scale.z};
-	glm::mat4 id = glm::mat4(1.0f);
-	glm::mat4 model = glm::translate(id, trans);
-	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, -1.0f));
-	model = glm::scale(model, scl);
+	Vector3 trans = {translation.x, translation.y, translation.z};
+	Vector3 scl = { scale_.x, scale_.y, scale_.z};
+	Matrix4 id = Matrix4(1.0f);
+	Matrix4 model = translate(id, trans);
+	model = rotate(model, radians(rotation.x), Vector3(1.0f, 0.0f, 0.0f));
+	model = rotate(model, radians(rotation.y), Vector3(0.0f, 1.0f, 0.0f));
+	model = rotate(model, radians(rotation.z), Vector3(0.0f, 0.0f, -1.0f));
+	model = scale(model, scl);
 	return model;
-
 }

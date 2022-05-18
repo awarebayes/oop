@@ -11,17 +11,17 @@
 #include "load/inc/abstract.h"
 #include "load/inc/mesh_objfile_source.h"
 #include "object/inc/mesh_model.h"
+#include "object/inc/model_ref.h"
 
 class MeshModelBuilder : public ModelBuilder
 {
 private:
-	ObjFileMeshSource source;
+	ObjFileMeshSource source; // accept loader here
 	std::vector<Line> lines{};
 	std::vector<Vertex> vertices{};
 public:
 	explicit MeshModelBuilder(const std::string &path);
-	std::shared_ptr<DrawableModel> collect() override;
-	std::shared_ptr<MeshModel> collect_as_mesh();
+	std::shared_ptr<Model> collect() override;
 	void read_vertices();
 	void read_lines();
 };
@@ -32,7 +32,7 @@ private:
 	std::string object_path;
 public:
 	explicit MeshModelDirector(std::string path) : object_path(std::move(path)) {};
-	std::shared_ptr<DrawableModel> build_model() override;
+	std::shared_ptr<Model> build_model() override;
 };
 
 #endif //INC_3_MESH_MODEL_BUILDER_H

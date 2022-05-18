@@ -18,7 +18,7 @@ Matrix<4> lookAt(const Vector<3> &eye, const Vector<3> & center, const Vector<3>
 {
 	Vector<3> f = (center - eye);
 	f = f.normalize();
-	Vector<3>  u = (up).normalize();
+	Vector<3>  u = up.normalize();
 	Vector<3>  s = (cross(f, u)).normalize();
 	u = cross(s, f);
 

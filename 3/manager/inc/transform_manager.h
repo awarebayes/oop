@@ -13,9 +13,9 @@
 class Transformer
 {
 private:
-	VisibleObject &transformable;
+	ISceneObject &transformable;
 public:
-	explicit Transformer(VisibleObject &init) : transformable(init) {};
+	explicit Transformer(ISceneObject &init) : transformable(init) {};
 	Transformer &rotate(float x, float y, float z);
 	Transformer &scale(float x, float y, float z);
 	Transformer &translate(float x, float y, float z);

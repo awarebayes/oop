@@ -4,6 +4,7 @@
 
 #include <manager/inc/transform_manager.h>
 #include <manager/inc/scene_manager.h>
+#include <manager/inc/manager_solution.h>
 #include "math/inc/transformation.h"
 
 Transformer &Transformer::rotate(float x, float y, float z)
@@ -37,7 +38,7 @@ Transformer &Transformer::rotate_around_vertex(const Vertex &v, float x, float y
 
 void TransformManager::move(int object_id, const Vector<3> &param) const
 {
-	auto scene_manager = SceneManagerCreator().get();
+	auto scene_manager = ManagerSolution::get_scene_manager();
 	auto scene = scene_manager->get_scene();
 	auto object = scene->get_object(object_id);
 	Transformer(*object).translate(param(0), param(1), param(2));
@@ -45,7 +46,7 @@ void TransformManager::move(int object_id, const Vector<3> &param) const
 
 void TransformManager::rotate(int object_id, const Vector<3> &param) const
 {
-	auto scene_manager = SceneManagerCreator().get();
+	auto scene_manager = ManagerSolution::get_scene_manager();
 	auto scene = scene_manager->get_scene();
 	auto object = scene->get_object(object_id);
 	Transformer(*object).rotate(param(0), param(1), param(2));
@@ -53,7 +54,7 @@ void TransformManager::rotate(int object_id, const Vector<3> &param) const
 
 void TransformManager::scale(int object_id, const Vector<3> &param) const
 {
-	auto scene_manager = SceneManagerCreator().get();
+	auto scene_manager = ManagerSolution::get_scene_manager();
 	auto scene = scene_manager->get_scene();
 	auto object = scene->get_object(object_id);
 	Transformer(*object).scale(param(0), param(1), param(2));

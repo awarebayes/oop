@@ -34,10 +34,10 @@ private:
 public:
 	Vector();
 	Vector(std::initializer_list<float> init);
-	Vector(std::array<float, n> init);
+	explicit Vector(std::array<float, n> init);
 	float& operator()(size_t i);
 	float operator()(size_t i) const;
-	float length() const;
+	[[nodiscard]] float length() const;
 	Vector<n> normalize() const;
 };
 

@@ -4,19 +4,17 @@
 
 #include <iostream>
 #include "object/inc/camera.h"
-#include <glm/mat4x4.hpp>
-#include <glm/trigonometric.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/ext/matrix_clip_space.hpp>
+#include "math/inc/glm_wrapper.h"
+
 
 void FPSCamera::accept(Visitor &v)
 {
 	v.visit(*this);
 }
 
-FPSCamera::FPSCamera(const glm::vec3 &position, const glm::vec3 &up, float yaw, float pitch)
+FPSCamera::FPSCamera(const Vector3 &position, const Vector3 &up, float yaw, float pitch)
 {
-	Front = glm::vec3{0.0f, 0.0f, -1.0f};
+	Front = Vector3{0.0f, 0.0f, -1.0f};
 	Position = position;
 	WorldUp = up;
 	Yaw = yaw;
@@ -26,35 +24,34 @@ FPSCamera::FPSCamera(const glm::vec3 &position, const glm::vec3 &up, float yaw, 
 
 FPSCamera::FPSCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
 {
-	Front = glm::vec3{0.0f, 0.0f, -1.0f};
-	Position = glm::vec3{posX, posY, posZ};
-	WorldUp = glm::vec3{upX, upY, upZ};
+	Front = Vector3{0.0f, 0.0f, -1.0f};
+	Position = Vector3{posX, posY, posZ};
+	WorldUp = Vector3{upX, upY, upZ};
 	Yaw = yaw;
 	Pitch = pitch;
 	updateCameraVectors();
 }
 
-glm::mat4 FPSCamera::get_view_matrix() const
+Matrix4 FPSCamera::get_view_matrix() const
 {
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
 void FPSCamera::updateCameraVectors()
 {
-	glm::vec3 front;
-	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	front.y = sin(glm::radians(Pitch));
-	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Front = glm::normalize(front);
-	Right = glm::normalize(glm::cross(Front, WorldUp));
-	Up    = glm::normalize(glm::cross(Right, Front));
+	Vector3 front;
+	front.x = cos(radians(Yaw)) * cos(radians(Pitch));
+	front.y = sin(radians(Pitch));
+	front.z = sin(radians(Yaw)) * cos(radians(Pitch));
+	Front = normalize(front);
+	Right = normalize(cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Up    = normalize(cross(Right, Front));
 }
 
 void FPSCamera::rotate(float x_offset, float y_offset)
 {
 	Yaw   += x_offset;
 	Pitch += y_offset;
-	std::cout << "Yaw " << Yaw << " Pitch " << Pitch << "\n";
 	if (Pitch > 89.0f)
 		Pitch = 89.0f;
 	if (Pitch < -89.0f)
@@ -62,22 +59,35 @@ void FPSCamera::rotate(float x_offset, float y_offset)
 	updateCameraVectors();
 }
 
-void FPSCamera::move(const glm::vec3 &offset)
+void FPSCamera::move(const Vector3 &offset)
 {
 	Position = Position + offset;
 }
 
-glm::mat4 FPSCamera::get_projection_matrix() const
+Matrix4 FPSCamera::get_projection_matrix() const
 {
-	return glm::perspective(glm::radians(fov), 1.0f, zNear, zFar);
+	return perspective(radians(90.0f), aspect, zNear, zFar);
 }
 
-glm::mat4 Camera::get_view_matrix() const
+Matrix4 TestCamera::get_view_matrix() const
 {
-	return glm::mat4(1.0f);
+	return Matrix4(1.0f);
 }
 
-glm::mat4 Camera::get_projection_matrix() const
+Matrix4 TestCamera::get_projection_matrix() const
 {
-	return glm::mat4(1.0f);
+	return Matrix4(1.0f);
+}
+
+void TestCamera::accept(Visitor &v)
+{
+	v.visit(*this);
+}
+
+std::shared_ptr<ICamera> CameraFactory::create(const CameraType &cam_type)
+{
+	if (cam_type == CameraType::Test)
+		return std::make_shared<TestCamera>();
+	if (cam_type == CameraType::FPS)
+		return std::make_shared<FPSCamera>(Vector3(0, 0, -100));
 }

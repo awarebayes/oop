@@ -17,15 +17,20 @@ void SceneManager::set_scene(const std::shared_ptr<Scene> &scene_)
 	scene = scene_;
 }
 
-void SceneManager::set_camera(const std::shared_ptr<Camera> &camera_)
+int SceneManager::add_object(const std::shared_ptr<ISceneObject> &object)
 {
-	camera = camera_;
+	return scene->add_object(object);
 }
 
-std::shared_ptr<Camera> SceneManager::get_camera() const
+std::shared_ptr<ISceneObject> SceneManager::get_object(int obj_id)
 {
-	return camera;
-};
+	return scene->get_object(obj_id);
+}
+
+bool SceneManager::remove_object(int obj_id)
+{
+	return scene->remove_object(obj_id);
+}
 
 void SceneManagerCreator::create()
 {

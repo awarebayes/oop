@@ -5,6 +5,7 @@
 #ifndef INC_3_DRAW_MANAGER_H
 #define INC_3_DRAW_MANAGER_H
 #include "base_manager.h"
+#include "drawer/inc/base_canvas.h"
 
 class DrawManager : public BaseManager
 {

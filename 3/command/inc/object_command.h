@@ -41,18 +41,6 @@ private:
 	int object_id;
 };
 
-
-class ObjectCloneCommand : public ObjectCommand
-{
-public:
-	explicit ObjectCloneCommand(int object_id);
-	void exec() override;
-	[[nodiscard]] int get_result() const;
-private:
-	int object_id;
-	int result_id;
-};
-
 class ObjectDeleteCommand : public ObjectCommand
 {
 public:

@@ -24,8 +24,8 @@ class Interactor
 private:
 	std::shared_ptr<Logic> logic;
 	std::function<void(const std::string& msg)> update_callback;
-	SelectedObjectType selected_type = SelectedObjectType::Camera;
-	int selected_id = 0;
+	SelectedObjectType selected_type = SelectedObjectType::None;
+	int selected_id = -1;
 	void handle_key_with_vision_object(int key);
 	void handle_key_with_camera_object(int key);
 	void handle_command_select(std::stringstream& command);
