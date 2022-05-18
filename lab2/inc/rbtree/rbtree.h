@@ -30,19 +30,19 @@ protected:
 	NodePtr<T> deleteBST(NodePtr<T> node, const T &value);
 	NodePtr<T> minimum(NodePtr<T> node) const;
 	NodePtr<T> maximum(NodePtr<T> node) const;
-	NodePtr<T> searchTree(T key) const;
+	NodePtr<T> searchTree(const T &key) const;
 	int getBlackHeight(NodePtr<T>);
 	
 public:
 	RBTree();
 	~RBTree() override;
 
-	void insert(T key);
-	void remove(T key);
+	void insert(const T &key);
+	void remove(const T &key);
 	void clear() override;
-	bool contains(T key) const;
+	bool contains(const T &elem) const;
 
-	RBTreeIterator<T> find(T key) const;
+	RBTreeIterator<T> find(const T &elem) const;
 	RBTreeIterator<T> begin() const;
 	RBTreeIterator<T> end() const;
 

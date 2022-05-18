@@ -34,14 +34,14 @@ NodePtr<T> RBTree<T>::maximum(NodePtr<T> node) const
 
 
 template<typename T>
-void RBTree<T>::remove(T key)
+void RBTree<T>::remove(const T &key)
 {
 	NodePtr<T> node = deleteBST(root, key);
 	fixDeleteRBTree(node);
 }
 
 template<typename T>
-bool RBTree<T>::contains(T key) const
+bool RBTree<T>::contains(const T &key) const
 {
 	NodePtr<T> searchResult = searchTree(key);
 	return searchResult != nullptr;
@@ -68,7 +68,7 @@ RBTreeIterator<T> RBTree<T>::end() const
 }
 
 template<typename T>
-RBTreeIterator<T> RBTree<T>::find(T key) const
+RBTreeIterator<T> RBTree<T>::find(const T &key) const
 {
 
 	auto search_result = searchTree(key);
@@ -114,7 +114,7 @@ NodePtr<T> RBTree<T>::insertBST(NodePtr<T> start, NodePtr<T> ptr)
 }
 
 template<typename T>
-void RBTree<T>::insert(T key)
+void RBTree<T>::insert(const T &key)
 {
 	NodePtr<T> node = std::make_shared<Node<T>>(key);
 	root = insertBST(root, node);
@@ -352,7 +352,7 @@ NodePtr<T> RBTree<T>::searchRBT(NodePtr<T> node, const T &value) const
 }
 
 template<typename T>
-NodePtr<T> RBTree<T>::searchTree(T key) const
+NodePtr<T> RBTree<T>::searchTree(const T &key) const
 {
 	return searchRBT(root, key);
 }

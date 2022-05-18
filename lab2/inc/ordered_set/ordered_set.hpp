@@ -170,7 +170,6 @@ template<typename T>
 OrderedSet<T>::OrderedSet(OrderedSet::MyType &&other) noexcept
 {
 	this->set.move(other.set);
-	other.capacity = 0;
 }
 
 template<typename T>
@@ -213,7 +212,7 @@ template<typename T>
 OrderedSet<T> &OrderedSet<T>::operator=(const OrderedSet::MyType &&other)
  noexcept {
 	this->set.move(other.set);
-	other.capacity = 0;
+	// other.capacity = 0;
 }
 
 template<typename T>
@@ -254,30 +253,42 @@ void OrderedSet<T>::operator-=(const OrderedSet::MyType &other)
 }
 
 template<typename T>
-void OrderedSet<T>::operator&(const OrderedSet::MyType &other) const
+OrderedSet<T> OrderedSet<T>::operator&(const OrderedSet::MyType &other) const
 {
 	return this->intersection(other);
 }
 
 template<typename T>
-void OrderedSet<T>::operator|(const OrderedSet::MyType &other) const
+OrderedSet<T> OrderedSet<T>::operator|(const OrderedSet::MyType &other) const
 {
 	return this->union_(other);
 }
 
 template<typename T>
-void OrderedSet<T>::operator^(const OrderedSet::MyType &other) const
+OrderedSet<T> OrderedSet<T>::operator^(const OrderedSet::MyType &other) const
 {
 	return this->sym_difference(other);
 }
 
 template<typename T>
-void OrderedSet<T>::operator-(const OrderedSet::MyType &other) const
+OrderedSet<T> OrderedSet<T>::operator-(const OrderedSet::MyType &other) const
 {
 	return this->difference(other);
 }
 
+template<typename T>
+OrderedSet<T> OrderedSet<T>::operator+(const T &elem) const
+{
+	OrderedSet<T> new_set = OrderedSet(*this);
+	new_set.insert(elem);
+	return new_set;
+}
 
+template<typename T>
+void OrderedSet<T>::operator+=(const T &elem)
+{
+	this->insert(elem);
+}
 
 
 #endif //LAB2_ORDERED_SET_HPP

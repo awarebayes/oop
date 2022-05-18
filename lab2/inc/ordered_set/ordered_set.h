@@ -28,44 +28,47 @@ public:
 	OrderedSet(const MyType &other);
 	OrderedSet(MyType &&other) noexcept;
 
-	void update(const MyType &other);
-
 	[[nodiscard]] virtual bool empty() const;
-
 	[[nodiscard]] virtual size_t size() const;
 
 	virtual bool insert(const T &elem);
+	MyType operator +(const T &elem) const;
+	void operator +=(const T &elem);
+
 	virtual void remove(const T &elem);
 	virtual void discard(const T &elem);
 	virtual bool contains(const T &elem) const;
 
 	void clear();
 
-	virtual OrderedSet union_(const MyType &other) const;
-	virtual OrderedSet intersection(const MyType &other) const;
-	virtual OrderedSet difference(const MyType &other) const ;
-	virtual OrderedSet sym_difference(const MyType &other) const;
-	virtual bool is_subset(const MyType &other) const;
+	MyType intersection(const MyType &other) const;
+	MyType operator &(const MyType &other) const;
+	void operator &=(const MyType &other);
 
-	virtual RBTreeIterator<T> begin() const;
-	virtual RBTreeIterator<T> end() const;
-	virtual RBTreeIterator<T> find(const T &elem) const;
+	MyType union_(const MyType &other) const;
+	MyType operator |(const MyType &other) const;
+	void operator |=(const MyType &other);
+	void update(const MyType &other);
+
+	MyType difference(const MyType &other) const ;
+	MyType operator -(const MyType &other) const;
+	void operator -=(const MyType &other);
+
+	MyType sym_difference(const MyType &other) const;
+	MyType operator ^(const MyType &other) const;
+	void operator ^=(const MyType &other);
+
+	bool is_subset(const MyType &other) const;
+
+	RBTreeIterator<T> begin() const;
+	RBTreeIterator<T> end() const;
+	RBTreeIterator<T> find(const T &elem) const;
 
 	MyType &operator=(const MyType &other); // copy
 	MyType &operator=(const MyType &&other) noexcept; // move
 
 	bool operator ==(const MyType &other) const;
 	bool operator !=(const MyType &other) const;
-
-	void operator &(const MyType &other) const;
-	void operator |(const MyType &other) const;
-	void operator -(const MyType &other) const;
-	void operator ^(const MyType &other) const;
-
-	void operator |=(const MyType &other);
-	void operator &=(const MyType &other);
-	void operator -=(const MyType &other);
-	void operator ^=(const MyType &other);
 
 private:
 	size_t capacity = 0;

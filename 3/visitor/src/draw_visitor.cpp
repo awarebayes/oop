@@ -91,7 +91,7 @@ void DrawVisitor::draw_model(MeshModel &model, const glm::mat4 &model_matrix)
 	const auto& vertices = model.get_vertices();
 	glm::mat4x4 view_matrix = camera->get_view_matrix();
 	glm::mat4x4 projection_matrix = camera->get_projection_matrix();
-	glm::mat4x4 matr = projection_matrix * (view_matrix * model_matrix);
+	glm::mat4x4 matr = (projection_matrix * view_matrix) * model_matrix;
 	for (const auto &line: model.get_lines())
 	{
 		Vertex v1 = matr * vertices[line.first];

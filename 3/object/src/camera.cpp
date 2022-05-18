@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "object/inc/camera.h"
-#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -46,8 +46,7 @@ void FPSCamera::updateCameraVectors()
 	front.y = sin(glm::radians(Pitch));
 	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 	Front = glm::normalize(front);
-	// also re-calculate the Right and Up vector
-	Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Right = glm::normalize(glm::cross(Front, WorldUp));
 	Up    = glm::normalize(glm::cross(Right, Front));
 }
 
@@ -70,7 +69,7 @@ void FPSCamera::move(const glm::vec3 &offset)
 
 glm::mat4 FPSCamera::get_projection_matrix() const
 {
-	return glm::perspective(glm::radians(90.0f), aspect, zNear, zFar);
+	return glm::perspective(glm::radians(fov), 1.0f, zNear, zFar);
 }
 
 glm::mat4 Camera::get_view_matrix() const

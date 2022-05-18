@@ -6,7 +6,7 @@
 
 
 template<typename T>
-T *RBTreeIterator<T>::operator->()
+const T *RBTreeIterator<T>::operator->() const
 {
 	return &(this->current_node.lock()->data);
 }
@@ -55,7 +55,7 @@ const RBTreeIterator<T> RBTreeIterator<T>::next()
 }
 
 template<typename T>
-T &RBTreeIterator<T>::operator*()
+const T &RBTreeIterator<T>::operator*() const
 {
 	return this->current_node.lock()->data;
 }

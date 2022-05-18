@@ -19,18 +19,15 @@ class Camera : public InvisibleObject
 {
 public:
 	Camera() = default;
-	virtual ~Camera() = default;
+	~Camera() override = default;
 
-	virtual glm::mat4 get_view_matrix() const;
-	virtual glm::mat4 get_projection_matrix() const;
+	[[nodiscard]] virtual glm::mat4 get_view_matrix() const;
+	[[nodiscard]] virtual glm::mat4 get_projection_matrix() const;
 	void accept(Visitor& v) override {};
 };
 
 const float YAW         = -90.0f;
 const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.1f;
-const float ZOOM        =  45.0f;
 
 class FPSCamera : public Camera
 {
@@ -60,6 +57,7 @@ private:
 	float aspect = 1.0f;
 	float zNear = 0.1f;
 	float zFar = 100.0f;
+	float fov = 90.0f;
 };
 
 #endif //INC_3_CAMERA_H
