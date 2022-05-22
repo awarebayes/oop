@@ -15,4 +15,11 @@ public:
 	virtual std::optional<Vertex> next_vertex() = 0;
 };
 
+enum class SourceType
+{
+	ObjFile
+};
+
+
+
 #endif //INC_3_MESH_MODEL_SOURCE_H

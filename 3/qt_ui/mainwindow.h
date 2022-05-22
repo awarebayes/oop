@@ -23,7 +23,7 @@ public:
 private:
 	std::unique_ptr<Interactor> interactor;
     Ui::MainWindow *ui;
-	QGraphicsScene *scene;
+	std::shared_ptr<QGraphicsScene> scene;
 	void set_status(const std::string &status);
 
 protected:

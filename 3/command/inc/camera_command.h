@@ -23,10 +23,10 @@ private:
 class CameraMoveCommand : public CameraCommand
 {
 public:
-	CameraMoveCommand(int camera_id, const std::array<float, 3> &offset);
+	CameraMoveCommand(int camera_id, const Vector3 &offset);
 	void exec() override;
 private:
-	std::array<float, 3> offset;
+	Vector3 offset;
 	int camera_id;
 };
 

@@ -33,10 +33,10 @@ void CameraManager::rotate_camera(int cam_id, float x_offset, float y_offset)
 	cam->rotate(x_offset, y_offset);
 }
 
-void CameraManager::offset_camera(int cam_id, const std::array<float, 3> &offset)
+void CameraManager::offset_camera(int cam_id, const Vector3 &offset)
 {
-	auto cam = cams[cam_id];
-	cam->move({offset[0], offset[1], offset[2]});
+	auto transform_manager = ManagerSolution::get_transform_manager();
+	transform_manager->move(cam_id, offset);
 }
 
 std::shared_ptr<ICamera> CameraManager::get_active_camera()

@@ -16,23 +16,24 @@
 class MeshModelBuilder : public ModelBuilder
 {
 private:
-	ObjFileMeshSource source; // accept loader here
+	std::unique_ptr<MeshModelSource> source; // accept loader here
 	std::vector<Line> lines{};
 	std::vector<Vertex> vertices{};
 public:
-	explicit MeshModelBuilder(const std::string &path);
-	std::shared_ptr<Model> collect() override;
-	void read_vertices();
-	void read_lines();
+	explicit MeshModelBuilder(std::unique_ptr<MeshModelSource> source);
+	std::unique_ptr<MeshModelReference> get_result();
+	void read_vertices() override;
+	void read_lines() override;
 };
 
 class MeshModelDirector : public ModelDirector
 {
 private:
-	std::string object_path;
+	std::shared_ptr<MeshModelBuilder> builder{};
 public:
-	explicit MeshModelDirector(std::string path) : object_path(std::move(path)) {};
-	std::shared_ptr<Model> build_model() override;
+	explicit MeshModelDirector() = default;
+	void set_builder(std::shared_ptr<MeshModelBuilder> builder_);
+	void build_model() override;
 };
 
 #endif //INC_3_MESH_MODEL_BUILDER_H

@@ -24,7 +24,7 @@ void DrawVisitor::visit(Scene &scene)
 
 void DrawVisitor::visit(SceneGroup &group)
 {
-	Matrix4 displacement = group.get_transform()->get_matrix();
+	Matrix4 displacement = group.get_transform_matrix();
 	add_transform_context(displacement);
 	for (auto &[_, object]: group)
 	{
@@ -45,8 +45,8 @@ void DrawVisitor::add_transform_context(const Matrix4 &ctx)
 
 void DrawVisitor::visit(MeshModelReference &ref)
 {
-	auto model = ref.get_base();
-	auto model_matrix = ref.get_transform()->get_matrix();
+	const auto model = ref.base;
+	const auto model_matrix = ref.get_transform_matrix();
 	const auto& vertices = model->get_vertices();
 	Matrix4 view_matrix = camera->get_view_matrix();
 	Matrix4 projection_matrix = camera->get_projection_matrix();

@@ -66,3 +66,8 @@ Matrix4 Transformation::get_matrix() const
 	model = scale(model, scl);
 	return model;
 }
+
+Vector3 Transformation::get_pos() const
+{
+	return {translation.x, translation.y, translation.z};
+}

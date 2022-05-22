@@ -17,7 +17,7 @@ public:
 	CameraManager() = default;
 	~CameraManager() override = default;
 	CameraManager(const CameraManager &) = delete;
-	void offset_camera(int cam_id, const std::array<float, 3> &offset);
+	void offset_camera(int cam_id, const Vector3 &offset);
 	void rotate_camera(int cam_id, float x_offset, float y_offset);
 	void set_active_camera(int camera_id);
 	std::shared_ptr<ICamera> get_active_camera();

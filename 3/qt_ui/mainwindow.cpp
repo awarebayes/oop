@@ -12,15 +12,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 	int screen_width = ui->graphicsView->width();
 	int screen_height = ui->graphicsView->height();
-	scene = new QGraphicsScene(0, 0, screen_width - 2, screen_height - 2, parent);
+	scene = std::make_shared<QGraphicsScene>(0, 0, screen_width - 2, screen_height - 2, parent);
 	scene->addRect(scene->sceneRect());
-	ui->graphicsView->setScene(scene);
-	auto scene_ptr = std::shared_ptr<QGraphicsScene>(scene);
-	auto f =  QtCanvasFactory(scene_ptr);
+	ui->graphicsView->setScene(scene.get());
+
+	auto f =  QtCanvasFactory(scene);
+	std::shared_ptr<Canvas> canvas = f.create();
+
 	auto draw_manager = DrawManagerCreator().get();
-	auto canvas = f.create();
 	draw_manager->set_canvas(canvas);
-	interactor = std::make_unique<Interactor>([this](const std::string&status){this->set_status(status);});
+	interactor = std::make_unique<Interactor>([this](const std::string &status){this->set_status(status);});;
 }
 
 MainWindow::~MainWindow()
