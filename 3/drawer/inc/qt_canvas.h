@@ -8,7 +8,7 @@
 #include <QGraphicsScene>
 #include "drawer/inc/base_canvas.h"
 
-class QtCanvas : public Canvas
+class QtCanvas : public ICanvas
 {
 public:
 	QtCanvas() = delete;

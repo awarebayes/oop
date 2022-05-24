@@ -5,11 +5,11 @@
 #ifndef INC_3_BASE_CANVAS_H
 #define INC_3_BASE_CANVAS_H
 
-class Canvas
+class ICanvas
 {
 public:
-	Canvas() = default;
-	virtual ~Canvas() = default;
+	ICanvas() = default;
+	virtual ~ICanvas() = default;
 
 	virtual void clear() = 0;
 	virtual void draw_line(int x1, int y1, int x2, int y2) = 0;

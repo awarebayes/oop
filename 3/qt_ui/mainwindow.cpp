@@ -2,6 +2,7 @@
 #include <QShortcut>
 #include <drawer/inc/qt_canvas_factory.h>
 #include <manager/inc/draw_manager.h>
+#include <drawer/inc/canvas_solution.h>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
@@ -16,8 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 	scene->addRect(scene->sceneRect());
 	ui->graphicsView->setScene(scene.get());
 
-	auto f =  QtCanvasFactory(scene);
-	std::shared_ptr<Canvas> canvas = f.create();
+	std::shared_ptr<ICanvas> canvas =  CanvasSolution::create(CanvasType::QtCanvas, scene);
 
 	auto draw_manager = DrawManagerCreator().get();
 	draw_manager->set_canvas(canvas);

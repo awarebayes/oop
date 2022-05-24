@@ -5,7 +5,7 @@
 #include <visitor/inc/draw_visitor.h>
 #include <utility>
 
-DrawVisitor::DrawVisitor(std::shared_ptr<Canvas> canvas_, std::shared_ptr<ICamera> camera_)
+DrawVisitor::DrawVisitor(std::shared_ptr<ICanvas> canvas_, std::shared_ptr<ICamera> camera_)
 {
 	canvas = std::move(canvas_);
 	camera = std::move(camera_);

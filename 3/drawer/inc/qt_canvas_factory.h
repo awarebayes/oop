@@ -13,8 +13,8 @@
 class QtCanvasFactory : public CanvasFactory
 {
 public:
-	explicit QtCanvasFactory(std::weak_ptr<QGraphicsScene> scene);
-	std::unique_ptr<Canvas> create() override;
+	explicit QtCanvasFactory(std::shared_ptr<QGraphicsScene> scene);
+	std::unique_ptr<ICanvas> create() override;
 private:
 	std::weak_ptr<QGraphicsScene> scene{};
 };
