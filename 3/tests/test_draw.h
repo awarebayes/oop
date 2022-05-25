@@ -16,7 +16,7 @@ TEST(Draw, TestSimpleDraw)
 	auto canv = std::make_shared<TestCanvas>();
 	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
-	auto line = MeshModelLoader().load_model("./tests/res/simple_line.obj");
+	auto line = MeshModelLoader().load_model(SourceType::ObjFile, "./tests/res/simple_line.obj");
 	line->accept(visitor);
 	EXPECT_EQ(canv->lines[0], TestLine(-1, -1, 1, 1));
 }
@@ -26,7 +26,7 @@ TEST(Draw, TestSimpleRotate)
 	auto canv = std::make_shared<TestCanvas>();
 	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
-	auto line = MeshModelLoader().load_model("./tests/res/simple_line.obj");
+	auto line = MeshModelLoader().load_model(SourceType::ObjFile,"./tests/res/simple_line.obj");
 	auto transform_manager = Transformer(*line);
 	transform_manager.rotate(90, 0, 0);
 	line->accept(visitor);
@@ -38,8 +38,8 @@ TEST(Draw, TestDrawScene)
 	auto canv = std::make_shared<TestCanvas>();
 	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
-	auto line1 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
-	auto line2 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
+	auto line1 = MeshModelLoader().load_model(SourceType::ObjFile,"./tests/res/simple_line.obj");
+	auto line2 = MeshModelLoader().load_model(SourceType::ObjFile,"./tests/res/simple_line.obj");
 	auto scene = Scene();
 	auto transform_manager = Transformer(*line2);
 	transform_manager.translate(100, 0, 0);
@@ -58,8 +58,8 @@ TEST(Draw, TestDrawManager)
 	auto canv = std::make_shared<TestCanvas>();
 	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
-	auto line1 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
-	auto line2 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
+	auto line1 = MeshModelLoader().load_model(SourceType::ObjFile,"./tests/res/simple_line.obj");
+	auto line2 = MeshModelLoader().load_model(SourceType::ObjFile,"./tests/res/simple_line.obj");
 	auto scene = Scene();
 	auto transform_manager = Transformer(*line2);
 	transform_manager.translate(100, 0, 0);
@@ -77,7 +77,7 @@ TEST(Draw, TestCloning)
 	auto canv = std::make_shared<TestCanvas>();
 	auto cam = std::make_shared<TestCamera>();
 	auto visitor = DrawVisitor(canv, cam);
-	auto line1 = MeshModelLoader().load_model("./tests/res/simple_line.obj");
+	auto line1 = MeshModelLoader().load_model(SourceType::ObjFile,"./tests/res/simple_line.obj");
 	auto scene = Scene();
 	int l1_id = scene.add_object(line1);
 	// int l2_id = scene.clone_object(l1_id);

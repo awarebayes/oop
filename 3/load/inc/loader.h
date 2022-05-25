@@ -6,12 +6,13 @@
 #define INC_3_LOADER_H
 #include <memory>
 #include "object/inc/drawable_model.h"
+#include "mesh_model_source_factory.h"
 
 
 class ModelLoader
 {
 public:
-	virtual std::shared_ptr<Model> load_model(const std::string &path) = 0;
+	virtual std::shared_ptr<Model> load_model(SourceType type, const std::string &path) = 0;
 };
 
 

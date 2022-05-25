@@ -964,7 +964,7 @@
 											"top": 1658,
 											"width": 175,
 											"height": 13,
-											"text": "+draw(ICanvas)",
+											"text": "+draw(Canvas)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4946,7 +4946,7 @@
 											"top": 567,
 											"width": 126,
 											"height": 13,
-											"text": "ICanvas"
+											"text": "Canvas"
 										},
 										{
 											"_type": "LabelView",
@@ -6557,7 +6557,7 @@
 											"top": 1312,
 											"width": 142,
 											"height": 13,
-											"text": "+draw(ICanvas)",
+											"text": "+draw(Canvas)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -23251,7 +23251,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGAiaoIZ3B60s8="
 									},
-									"name": "ICanvas",
+									"name": "Canvas",
 									"type": ""
 								}
 							]
@@ -26326,7 +26326,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "ICanvas",
+					"name": "Canvas",
 					"ownedElements": [
 						{
 							"_type": "UMLAssociation",
@@ -27088,7 +27088,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGAiW6DW6X1Gxg="
 									},
-									"name": "ICanvas",
+									"name": "Canvas",
 									"type": ""
 								}
 							]
@@ -27986,7 +27986,8 @@
 									"_parent": {
 										"$ref": "AAAAAAGAhXJKht5tR1w="
 									},
-									"name": "MeshModelRef"
+									"name": "MeshModelRef",
+									"type": ""
 								}
 							]
 						}
@@ -29616,7 +29617,8 @@
 									"_parent": {
 										"$ref": "AAAAAAGA6u1+UdeduTY="
 									},
-									"name": "type"
+									"name": "type",
+									"type": ""
 								},
 								{
 									"_type": "UMLParameter",
@@ -29624,7 +29626,8 @@
 									"_parent": {
 										"$ref": "AAAAAAGA6u1+UdeduTY="
 									},
-									"name": "args..."
+									"name": "args...",
+									"type": ""
 								}
 							]
 						}
