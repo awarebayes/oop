@@ -39,7 +39,7 @@ TEST(Load, TestReadLines)
 
 TEST(Load, TestReadObject)
 {
-	MeshModelLoader().load_model("./tests/res/dummy_objfile.obj");
+	MeshModelLoader().load_model(SourceType::ObjFile, "./tests/res/dummy_objfile.obj");
 }
 
 #endif //INC_3_TEST_LOAD_H

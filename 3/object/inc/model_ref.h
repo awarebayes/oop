@@ -15,6 +15,7 @@ class MeshModelReference : public Model
 {
 private:
 	std::shared_ptr<MeshModel> base;
+	friend class DrawVisitor;
 public:
 	explicit MeshModelReference(std::shared_ptr<MeshModel>  ref) : base(std::move(ref)) {};
 	~MeshModelReference() override = default;

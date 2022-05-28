@@ -10,13 +10,14 @@
 class ModelBuilder
 {
 public:
-	virtual std::shared_ptr<Model> collect() = 0;
+	virtual void read_vertices() = 0;
+	virtual void read_lines() = 0;
 };
 
 class ModelDirector
 {
 public:
-	virtual std::shared_ptr<Model> build_model() = 0;
+	virtual void build_model() = 0;
 };
 
 #endif //INC_3_ABSTRACT_H

@@ -12,7 +12,7 @@ int LoadManager::load_mesh_model(const std::string &path)
 {
 	auto scene_manager = ManagerSolution::get_scene_manager();
 	auto scene = scene_manager->get_scene();
-	auto model = MeshModelLoader().load_model(path);
+	auto model = MeshModelLoader().load_model(SourceType::ObjFile, path);
 	return scene->add_object(model);
 }
 

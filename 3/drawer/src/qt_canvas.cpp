@@ -8,10 +8,10 @@
 
 void QtCanvas::draw_line(int x1, int y1, int x2, int y2)
 {
-	scene->addLine(x1, y1, x2, y2);
+	scene.lock()->addLine(x1, y1, x2, y2);
 }
 
 void QtCanvas::clear()
 {
-	scene->clear();
+	scene.lock()->clear();
 }

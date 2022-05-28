@@ -28,7 +28,7 @@ void CameraMoveCommand::exec()
 	c_manager->offset_camera(camera_id, offset);
 }
 
-CameraMoveCommand::CameraMoveCommand(int camera_id_, const std::array<float, 3> &offset_)
+CameraMoveCommand::CameraMoveCommand(int camera_id_, const Vector3 &offset_)
 {
 	offset = offset_;
 	camera_id = camera_id_;

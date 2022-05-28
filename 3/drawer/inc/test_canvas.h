@@ -18,7 +18,7 @@ public:
 bool operator==(const TestLine& lhs, const TestLine& rhs);
 
 
-class TestCanvas : public Canvas
+class TestCanvas : public ICanvas
 {
 public:
 	std::vector<TestLine> lines;

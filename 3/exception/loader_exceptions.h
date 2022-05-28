@@ -13,4 +13,11 @@ public:
 	}
 };
 
+class NoBuilderError : public BaseException {
+public:
+	explicit NoBuilderError(const std::string &file, const int line, const std::string &msg) : BaseException(file, line, msg) {
+		this->error_msg = "Loader called with no builder: " + this->error_msg;
+	}
+};
+
 #endif //INC_3_LOADER_EXCEPTIONS_H

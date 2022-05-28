@@ -10,7 +10,7 @@ class CanvasFactory
 public:
 	CanvasFactory() = default;
 	virtual ~CanvasFactory() = default;
-	virtual std::unique_ptr<Canvas> create() = 0;
+	virtual std::unique_ptr<ICanvas> create() = 0;
 };
 
 #endif //INC_3_CANVAS_FACTORY_H

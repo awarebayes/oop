@@ -10,13 +10,13 @@
 class DrawManager : public BaseManager
 {
 private:
-	std::shared_ptr<Canvas> canvas;
+	std::shared_ptr<ICanvas> canvas;
 public:
 	DrawManager() = default;
 	~DrawManager() override = default;
 	DrawManager(const DrawManager &) = delete;
 	void draw_scene();
-	void set_canvas(std::shared_ptr<Canvas> &canvas_);
+	void set_canvas(std::shared_ptr<ICanvas> &canvas_);
 };
 
 class DrawManagerCreator

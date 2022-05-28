@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <manager/inc/transform_manager.h>
 #include "object/inc/camera.h"
 #include "math/inc/glm_wrapper.h"
 
@@ -14,8 +15,8 @@ void FPSCamera::accept(Visitor &v)
 
 FPSCamera::FPSCamera(const Vector3 &position, const Vector3 &up, float yaw, float pitch)
 {
+	Transformer(*this).translate(position.x, position.y, position.z);
 	Front = Vector3{0.0f, 0.0f, -1.0f};
-	Position = position;
 	WorldUp = up;
 	Yaw = yaw;
 	Pitch = pitch;
@@ -25,7 +26,8 @@ FPSCamera::FPSCamera(const Vector3 &position, const Vector3 &up, float yaw, floa
 FPSCamera::FPSCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
 {
 	Front = Vector3{0.0f, 0.0f, -1.0f};
-	Position = Vector3{posX, posY, posZ};
+	Transformer(*this).translate(posX, posY, posZ);
+	Front = Vector3{0.0f, 0.0f, -1.0f};
 	WorldUp = Vector3{upX, upY, upZ};
 	Yaw = yaw;
 	Pitch = pitch;
@@ -34,6 +36,7 @@ FPSCamera::FPSCamera(float posX, float posY, float posZ, float upX, float upY, f
 
 Matrix4 FPSCamera::get_view_matrix() const
 {
+	auto Position = transform->get_pos();
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
@@ -57,11 +60,6 @@ void FPSCamera::rotate(float x_offset, float y_offset)
 	if (Pitch < -89.0f)
 		Pitch = -89.0f;
 	updateCameraVectors();
-}
-
-void FPSCamera::move(const Vector3 &offset)
-{
-	Position = Position + offset;
 }
 
 Matrix4 FPSCamera::get_projection_matrix() const

@@ -60,6 +60,7 @@ public:
 	Transformation operator +(const Translation &other) const;
 	Transformation operator +(const Rotation &other) const;
 	Transformation operator +(const Transformation &other) const;
+	Vector3 get_pos() const;
 };
 
 

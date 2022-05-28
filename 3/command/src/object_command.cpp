@@ -6,7 +6,7 @@
 #include <manager/inc/manager_solution.h>
 #include "command/inc/object_command.h"
 
-ObjectMoveCommand::ObjectMoveCommand(int object_id_, const Vector<3> &offset_)
+ObjectMoveCommand::ObjectMoveCommand(int object_id_, const Vector3 &offset_)
 {
 	offset = offset_;
 	object_id = object_id_;
@@ -18,7 +18,7 @@ void ObjectMoveCommand::exec()
 	t_manager->move(object_id, offset);
 }
 
-ObjectScaleCommand::ObjectScaleCommand(int object_id_, const Vector<3> &offset_)
+ObjectScaleCommand::ObjectScaleCommand(int object_id_, const Vector3 &offset_)
 {
 	scale = offset_;
 	object_id = object_id_;
@@ -30,7 +30,7 @@ void ObjectScaleCommand::exec()
 	t_manager->scale(object_id, scale);
 }
 
-ObjectRotateCommand::ObjectRotateCommand(int object_id_, const Vector<3> &offset_)
+ObjectRotateCommand::ObjectRotateCommand(int object_id_, const Vector3 &offset_)
 {
 
 	rotation = offset_;

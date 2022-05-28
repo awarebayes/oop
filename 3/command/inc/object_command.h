@@ -7,16 +7,17 @@
 
 #include "base_command.h"
 #include "math/inc/linalg.h"
+#include "math/inc/glm_wrapper.h"
 
 class ObjectCommand : public Command {};
 
 class ObjectMoveCommand : public ObjectCommand
 {
 public:
-	ObjectMoveCommand(int object_id, const Vector<3> &offset);
+	ObjectMoveCommand(int object_id, const Vector3 &offset);
 	void exec() override;
 private:
-	Vector<3> offset;
+	Vector3 offset;
 	int object_id;
 };
 
@@ -24,20 +25,20 @@ private:
 class ObjectScaleCommand : public ObjectCommand
 {
 public:
-	ObjectScaleCommand(int object_id, const Vector<3> &scale);
+	ObjectScaleCommand(int object_id, const Vector3 &scale);
 	void exec() override;
 private:
-	Vector<3> scale;
+	Vector3 scale;
 	int object_id;
 };
 
 class ObjectRotateCommand : public ObjectCommand
 {
 public:
-	ObjectRotateCommand(int object_id, const Vector<3> &rotation);
+	ObjectRotateCommand(int object_id, const Vector3 &rotation);
 	void exec() override;
 private:
-	Vector<3> rotation;
+	Vector3 rotation;
 	int object_id;
 };
 

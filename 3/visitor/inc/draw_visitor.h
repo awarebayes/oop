@@ -17,13 +17,13 @@
 class DrawVisitor : public Visitor
 {
 private:
-	std::shared_ptr<Canvas> canvas;
+	std::shared_ptr<ICanvas> canvas;
 	std::shared_ptr<ICamera> camera;
 	Matrix4 context = Matrix4(1.0f);
 	void clear_transform_context();
 	void add_transform_context(const Matrix4 &ctx);
 public:
-	DrawVisitor(std::shared_ptr<Canvas> canvas, std::shared_ptr<ICamera> camera);
+	DrawVisitor(std::shared_ptr<ICanvas> canvas, std::shared_ptr<ICamera> camera);
 	void visit(ICamera &camera) override;
 	void visit(SceneGroup &group) override;
 	void visit(Scene &scene) override;

@@ -22,7 +22,6 @@ public:
 	[[nodiscard]] virtual Matrix4 get_projection_matrix()  const = 0;
 	void accept(Visitor& v) = 0;
 	virtual void rotate(float x_offset, float y_offset) = 0;
-	virtual void move(const Vector3 &offset) = 0;
 };
 
 const float YAW         = -90.0f;
@@ -31,7 +30,6 @@ const float PITCH       =  0.0f;
 class FPSCamera : public ICamera
 {
 private:
-	Vector3 Position{};
 	Vector3 Front{};
 	Vector3 Up{};
 	Vector3 Right{};
@@ -52,7 +50,6 @@ public:
 	[[nodiscard]] Matrix4 get_view_matrix() const override;
 	[[nodiscard]] Matrix4 get_projection_matrix() const override; // transformation move to
 	void rotate(float x_offset, float y_offset) override;
-	void move(const Vector3 &offset) override;
 };
 
 class TestCamera : public ICamera
@@ -63,7 +60,6 @@ public:
 	[[nodiscard]] Matrix4 get_projection_matrix() const override;
 	void accept(Visitor& v) override;
 	void rotate(float x_offset, float y_offset) override {};
-	void move(const Vector3 &offset) override {};
 };
 
 class CameraFactory

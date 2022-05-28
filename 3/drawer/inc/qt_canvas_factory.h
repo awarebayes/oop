@@ -8,14 +8,15 @@
 #include <QGraphicsScene>
 #include <memory>
 #include "qt_canvas.h"
+#include "canvas_factory.h"
 
-class QtCanvasFactory
+class QtCanvasFactory : public CanvasFactory
 {
 public:
-	explicit QtCanvasFactory(std::shared_ptr<QGraphicsScene> &scene);
-	std::shared_ptr<Canvas> create();
+	explicit QtCanvasFactory(std::shared_ptr<QGraphicsScene> scene);
+	std::unique_ptr<ICanvas> create() override;
 private:
-	std::shared_ptr<QGraphicsScene> scene{};
+	std::weak_ptr<QGraphicsScene> scene{};
 };
 
 

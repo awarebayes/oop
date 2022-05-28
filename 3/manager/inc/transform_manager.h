@@ -29,9 +29,9 @@ public:
 	~TransformManager() override = default;
 	TransformManager(const TransformManager &) = delete;
 	TransformManager &operator=(const TransformManager &) = delete;
-	void move(int object_id, const Vector<3> &param) const;
-	void rotate(int object_id, const Vector<3> &param) const;
-	void scale(int object_id, const Vector<3> &param) const;
+	void move(int object_id, const Vector3 &param) const;
+	void rotate(int object_id, const Vector3 &param) const;
+	void scale(int object_id, const Vector3 &param) const;
 };
 
 class TransformManagerCreator

@@ -45,7 +45,7 @@ std::string Logic::print_objects()
 
 void Logic::move_object(int object_id, float dx, float dy, float dz)
 {
-	auto offset = Vector<3>{dx, dy, dz};
+	auto offset = Vector3{dx, dy, dz};
 	auto com = std::make_shared<ObjectMoveCommand>(object_id, offset);
 	facade.exec(com);
 	draw();
@@ -53,7 +53,7 @@ void Logic::move_object(int object_id, float dx, float dy, float dz)
 
 void Logic::rotate_object(int object_id, float dx, float dy, float dz)
 {
-	auto offset = Vector<3>{dx, dy, dz};
+	auto offset = Vector3{dx, dy, dz};
 	auto com = std::make_shared<ObjectRotateCommand>(object_id, offset);
 	facade.exec(com);
 	draw();
@@ -78,7 +78,7 @@ void Logic::set_active_camera(int camera_id)
 
 void Logic::move_camera(int camera_id, float dx, float dy, float dz)
 {
-	auto offset = std::array<float, 3>{dx, dy, dz};
+	auto offset = Vector3{dx, dy, dz};
 	auto com = std::make_shared<CameraMoveCommand>(camera_id, offset);
 	facade.exec(com);
 	draw();

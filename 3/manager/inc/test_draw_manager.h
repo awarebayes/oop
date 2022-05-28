@@ -14,11 +14,11 @@
 class TestDrawManager : public BaseManager
 {
 public:
-	explicit TestDrawManager(std::shared_ptr<Canvas> canvas_) : canvas(std::move(canvas_)) {};
+	explicit TestDrawManager(std::shared_ptr<ICanvas> canvas_) : canvas(std::move(canvas_)) {};
 	~TestDrawManager() override = default;
 	TestDrawManager(const TestDrawManager &) = delete;
 	void draw_scene();
-	std::shared_ptr<Canvas> canvas;
+	std::shared_ptr<ICanvas> canvas;
 };
 
 class TestDrawManagerCreator

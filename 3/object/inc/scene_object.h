@@ -19,21 +19,21 @@ using ConstIterator = ObjectMap::const_iterator;
 
 class ISceneObject : public Visitable
 {
-private:
+protected:
 	std::shared_ptr<Transformation> transform = std::make_shared<Transformation>();
+	friend class Transformer;
 public:
 	ISceneObject() = default;
 	virtual ~ISceneObject() = default;
 
 	virtual bool is_visible() { return false; };
-	virtual bool is_grouped() {return false;};
+	virtual bool is_grouped() { return false; };
 
 	// visitor
 	void accept(Visitor& v) override = 0;
 
 	// transform
-	virtual std::shared_ptr<Transformation> get_transform() {return transform;};
-	virtual void set_transform(std::shared_ptr<Transformation> transform_) {transform = std::move(transform_);};
+	[[nodiscard]] Matrix4 get_transform_matrix() const { return transform->get_matrix(); };
 
 	// composite
 	virtual int add_object(const std::shared_ptr<ISceneObject>& object) { return false; };

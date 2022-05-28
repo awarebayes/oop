@@ -133,7 +133,9 @@ void Interactor::help()
 {
 	update_callback("help - show help\n"
 					"select [object, camera] <id>\n"
-					"print - displays list of VisibleObject in scene\n");
+					"print - displays list of VisibleObject in scene\n"
+					"load object <path>\n"
+					"create camera\n");
 }
 
 void Interactor::handle_command_create(std::stringstream &command)

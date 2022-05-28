@@ -21,7 +21,7 @@ void DrawManager::draw_scene()
 	visitor.visit(*scene);
 }
 
-void DrawManager::set_canvas(std::shared_ptr<Canvas> &canvas_)
+void DrawManager::set_canvas(std::shared_ptr<ICanvas> &canvas_)
 {
 	canvas = canvas_;
 }
