@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QVector>
 
+#include <cabin/cabin.h>
 #include <constants.h>
 
 class Controller : public QObject {
@@ -20,12 +21,20 @@ signals:
 
     void targetsFound(int floor);
 
+    void tellCabinToOpen();
+
+    void tellCabinToGoOn();
+
 
 public slots:
 
     void targetSetting(int new_floor);
 
     void targetUpdating();
+
+    void callbackStopped();
+
+    void callbackAfterFloorPassed();
 
 private:
     int curr_floor;

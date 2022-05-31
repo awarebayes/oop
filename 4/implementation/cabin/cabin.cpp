@@ -5,87 +5,57 @@
 #include <QDebug>
 
 
-Cabin::Cabin(QObject *parent) : QObject(parent), curr_floor(START_FLOOR), target_floor(NO_TARGET),
-                                state(UNLOCKED), direction(STAY) {
+Cabin::Cabin(QObject *parent) : QObject(parent),
+                                state(Cabin::State::UNLOCKED) {
 
     pass_floor_timer.setSingleShot(true);
 
-    QObject::connect(this, SIGNAL(arrived(int)), this, SLOT(cabinStopping()));
-
-    QObject::connect(this, SIGNAL(stopped(int)), this, SLOT(cabinLocking()));
-
-    QObject::connect(this, SIGNAL(locked()), &this->doors, SLOT(doorsOpening()));
-
+    QObject::connect(this, SIGNAL(tellDoorsToOpen()), &this->doors, SLOT(doorsOpening()));
     QObject::connect(&this->doors, SIGNAL(closed()), this, SLOT(cabinUnlocking()));
-
-    QObject::connect(&this->pass_floor_timer, SIGNAL(timeout()), this, SLOT(cabinMoving()));
-
-    QObject::connect(this, SIGNAL(prepared()), this, SLOT(cabinMoving()));
 }
 
 void Cabin::cabinMoving() {
-    if (this->state != PREPARING && this->state != MOVING) return;
+    if (this->state != State::PREPARING && this->state != State::MOVING) return;
 
-    if (this->state == PREPARING)
-    {
-        this->state = MOVING;
-    }
-    else if (this->state == MOVING)
-    {
-        this->state = MOVING;
-        this->curr_floor += this->direction;
+    if (this->state == State::PREPARING)
+        this->state = State::MOVING;
 
-        qDebug() << "Лифт движется | Этаж №" << this->curr_floor;
-        emit floorPassed(this->curr_floor);
-    }
-
-
-    if (this->curr_floor == this->target_floor)
-    {
-        emit arrived(this->curr_floor);
-    }
-    else
-    {
-        this->pass_floor_timer.start(ONE_FLOOR_PASS_TIME);
-    }
+    this->pass_floor_timer.start(ONE_FLOOR_PASS_TIME);
 }
 
 void Cabin::cabinStopping() {
-    if (this->state != MOVING) return;
+    if (this->state != State::MOVING) return;
 
-    this->state = STOPPED;
+    this->state = State::STOPPED;
+    qDebug() << "Кабина остановилась";
 
-    QDebug debug = qDebug(); debug.noquote();
-    debug << "Лифт остановился | Этаж №" << QString::number(this->curr_floor);
-
-    emit stopped(this->curr_floor);
+    emit cabinLocking();
 }
 
-void Cabin::cabinPreparing(int floor, Direction dir) {
-    if (this->state != UNLOCKED) return;
+void Cabin::cabinPreparing() {
+    if (this->state != State::UNLOCKED) return;
 
-    this->state = PREPARING;
+    this->state = State::PREPARING;
 
-    this->target_floor = floor;
-    this->direction = dir;
+    qDebug() << "Кабина готовится двигаться";
 
-    emit prepared();
+    emit cabinMoving();
 }
 
 void Cabin::cabinLocking() {
-    if (this->state != STOPPED) return;
+    if (this->state != State::STOPPED) return;
 
-    this->state = LOCKED;
+    this->state = State::LOCKED;
     qDebug() << "Движение кабины заблокировано";
 
-    emit locked();
+    emit tellDoorsToOpen();
 }
 
 void Cabin::cabinUnlocking() {
-    if (this->state != LOCKED) return;
+    if (this->state != State::LOCKED) return;
 
-    this->state = UNLOCKED;
+    this->state = State::UNLOCKED;
     qDebug() << "Движение кабины разблокировано";
 
-    emit unlocked();
+    emit tellControllerIAmUnlocked();
 }

@@ -57,6 +57,11 @@ void Controller::targetSetting(const int new_floor) {
     }
 }
 
+
+void Controller::callbackStopped() {
+
+}
+
 int Controller::findMainTarget() {
     int target = NO_TARGET;
 
@@ -107,4 +112,17 @@ int Controller::findNextTarget() {
 
 void Controller::updateDirection() {
     this->direction = main_target < curr_floor ? DOWN : UP;
+}
+void Controller::callbackAfterFloorPassed() {
+
+  this->curr_floor += this->direction;
+  qDebug() << "Этаж №" << this->curr_floor << "| Лифт приехал";
+
+  if (this->curr_floor != this->main_target)
+    emit tellCabinToGoOn();
+  else
+  {
+    qDebug() << "Этаж №" << this->curr_floor << "| Лифт остановился";
+    emit tellCabinToOpen();
+  }
 }
