@@ -1,119 +1,50 @@
 #include <controller/controller.h>
-
 #include <QDebug>
 
 Controller::Controller(QObject *parent) : QObject(parent), curr_floor(START_FLOOR), main_target(NO_TARGET),
                                           need_visit(NUM_OF_FLOORS, false), state(FREE),
                                           direction(STAY) {
-    QObject::connect(this, SIGNAL(targetsFound(int)), this, SLOT(targetSetting(int)));
 }
 
-void Controller::setTarget(const int floor) {
-    if (this->need_visit[floor - 1]) return; // уже на этом этаже
+int Controller::findNearestMainTarget() {
+	bool is_updated = false;
+	int min_distance = 9999;
+	int potential_next_floor = -1;
 
-    this->state = BUSY;
 
-    this->need_visit[floor - 1] = true;
-    if (this->updateMainTarget(floor)) this->updateDirection();
+	for (int i = 0; i < this->need_visit.size(); i++)
+	{
+		if (need_visit[i])
+		{
+			int distance = abs(i - curr_floor);
+			if (distance < min_distance)
+			{
+				is_updated = true;
+				min_distance = distance;
+				potential_next_floor = i + 1;
+			}
+		}
+	}
 
-    emit targetIsSet(this->findNextTarget(), this->direction);
+	if (is_updated)
+		return potential_next_floor;
+	return -1;
 }
 
-
-void Controller::targetUpdating() {
-    if (this->state != BUSY) return;
-
-    this->state = FREE;
-    this->need_visit[this->curr_floor - 1] = false;
-
-    auto new_target = this->findMainTarget();
-    if (this->curr_floor == this->main_target && new_target == NO_TARGET)
-    {
-        this->direction = STAY;
-        this->main_target = NO_TARGET;
-    }
-    else
-    {
-        emit targetsFound(new_target);
-    }
+void Controller::handleNewTarget(const int floor)
+{
+	if (this->need_visit[floor - 1]) return;
+	this->need_visit[floor - 1] = true;
+	if (state != REACHED_TARGET_FLOOR)
+		emit updatingTarget(); // сам вызывается после того, как пассажиры зашли!!!
 }
 
-void Controller::targetSetting(const int new_floor) {
-    if (this->state == FREE)
-    {
-        this->state = BUSY;
+// ___________________________________________
 
-        if (this->curr_floor == this->main_target && new_floor != NO_TARGET)
-        {
-            this->main_target = new_floor;
-            this->updateDirection();
-        }
-        emit targetIsSet(this->findNextTarget(), this->direction);
-    }
-    else
-    {
-        this->state = BUSY;
-        this->curr_floor = new_floor;
-    }
-}
-
-
-void Controller::callbackStopped() {
-
-}
-
-int Controller::findMainTarget() {
-    int target = NO_TARGET;
-
-    if (this->direction == UP)
-    {
-        for (int i = 1; i <= this->curr_floor && target == NO_TARGET; ++i)
-            if (this->need_visit[i - 1]) target = i;
-    }
-    else
-    {
-        for (int i = NUM_OF_FLOORS; i >= this->curr_floor && target == NO_TARGET; --i)
-            if (this->need_visit[i - 1]) target = i;
-    }
-
-    return target;
-}
-
-bool Controller::updateMainTarget(const int floor) {
-    bool is_updated = false;
-
-    if ((this->main_target == NO_TARGET) ||
-        (this->direction == UP && floor > this->main_target) ||
-        (this->direction == DOWN && floor < this->main_target))
-    {
-        is_updated = true;
-        this->main_target = floor;
-    }
-
-    return is_updated;
-}
-
-int Controller::findNextTarget() {
-    int target = NO_TARGET;
-
-    if (this->main_target > this->curr_floor)
-    {
-        for (int i = this->curr_floor; i <= this->main_target && target == NO_TARGET; ++i)
-            if (this->need_visit[i - 1]) target = i;
-    }
-    else
-    {
-        for (int i = this->curr_floor; i >= this->main_target && target == NO_TARGET; --i)
-            if (this->need_visit[i - 1]) target = i;
-    }
-
-    return target;
-}
-
-void Controller::updateDirection() {
-    this->direction = main_target < curr_floor ? DOWN : UP;
-}
-void Controller::callbackAfterFloorPassed() {
+void Controller::handleMoving()
+{
+  if (state != UPDATING_TARGET and state != MOVING) return;
+  state = MOVING;
 
   this->curr_floor += this->direction;
   qDebug() << "Этаж №" << this->curr_floor << "| Лифт приехал";
@@ -121,8 +52,38 @@ void Controller::callbackAfterFloorPassed() {
   if (this->curr_floor != this->main_target)
     emit tellCabinToGoOn();
   else
-  {
-    qDebug() << "Этаж №" << this->curr_floor << "| Лифт остановился";
-    emit tellCabinToOpen();
-  }
+    emit reachedTargetFloor();
 }
+
+void Controller::handleFree()
+{
+	if (state != UPDATING_TARGET) return;
+	this->state = FREE;
+}
+
+void Controller::reachedTargetFloor()
+{
+	if (state != MOVING) return;
+	this->state = REACHED_TARGET_FLOOR;
+	need_visit[curr_floor - 1] = false;
+	qDebug() << "Этаж №" << this->curr_floor << "| Лифт остановился";
+	emit tellCabinToOpen();
+}
+
+void Controller::updatingTarget()
+{
+	if (state != FREE and state != REACHED_TARGET_FLOOR) return;
+	state = UPDATING_TARGET;
+
+	int next_floor = findNearestMainTarget();
+	if (next_floor != -1)
+	{
+		main_target = next_floor;
+		direction = main_target < curr_floor ? DOWN : UP;
+		emit tellCabinToPrepare();
+	}
+	else
+		emit handleFree();
+}
+
+

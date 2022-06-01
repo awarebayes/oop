@@ -8,47 +8,39 @@
 
 class Controller : public QObject {
 Q_OBJECT
-    enum PanelState { FREE, BUSY };
+    enum PanelState { FREE, MOVING, REACHED_TARGET_FLOOR, UPDATING_TARGET };
 
 public:
     explicit Controller(QObject *parent = nullptr);
 
-    void setTarget(int floor);
+	void handleNewTarget(int floor);
 
 signals:
 
-    void targetIsSet(int floor, Direction dir);
-
-    void targetsFound(int floor);
-
     void tellCabinToOpen();
 
-    void tellCabinToGoOn();
+	void tellCabinToPrepare();
+
+	void tellCabinToGoOn();
 
 
 public slots:
 
-    void targetSetting(int new_floor);
+	void updatingTarget();
 
-    void targetUpdating();
+    void handleMoving();
 
-    void callbackStopped();
+	void handleFree();
 
-    void callbackAfterFloorPassed();
+	void reachedTargetFloor();
 
 private:
     int curr_floor;
     int main_target;
 
-    QVector<bool> need_visit;
+    std::vector<bool> need_visit;
     PanelState state;
     Direction direction;
 
-    int findNextTarget();
-
-    int findMainTarget();
-
-    bool updateMainTarget(int floor);
-
-    void updateDirection();
+	int findNearestMainTarget();
 };
