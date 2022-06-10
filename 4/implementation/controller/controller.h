@@ -17,7 +17,9 @@ public:
 
 signals:
 
-    void tellCabinToOpen();
+    void tellCabinToStop();
+
+	void tellCabinDoorsToOpen();
 
 	void tellCabinToPrepare();
 
@@ -35,12 +37,13 @@ public slots:
 	void reachedTargetFloor();
 
 private:
-    int curr_floor;
-    int main_target;
+    int curr_floor = 1;
+    int main_target = -1;
 
     std::vector<bool> need_visit;
     PanelState state;
     Direction direction;
 
 	int findNearestMainTarget();
+	Direction findDirection() const;
 };

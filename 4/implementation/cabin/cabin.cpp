@@ -46,7 +46,7 @@ void Cabin::cabinLocking() {
     if (this->state != State::STOPPED) return;
 
     this->state = State::LOCKED;
-    qDebug() << "Движение кабины заблокировано";
+    qDebug() << "Кабина заблокировала движение";
 
     emit tellDoorsToOpen();
 }
@@ -55,7 +55,7 @@ void Cabin::cabinUnlocking() {
     if (this->state != State::LOCKED) return;
 
     this->state = State::UNLOCKED;
-    qDebug() << "Движение кабины разблокировано";
+    qDebug() << "Кабина разблокирована движение";
 
     emit tellControllerIAmUnlocked();
 }

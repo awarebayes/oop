@@ -5,7 +5,8 @@ Elevator::Elevator() {
 	QObject::connect(&cabin, SIGNAL(tellControllerIAmUnlocked()), &controller, SLOT(updatingTarget()));
 	QObject::connect(&controller, SIGNAL(tellCabinToGoOn()), &cabin, SLOT(cabinMoving()));
     QObject::connect(&controller, SIGNAL(tellCabinToPrepare()), &cabin, SLOT(cabinPreparing()));
-    QObject::connect(&controller, SIGNAL(tellCabinToOpen()), &cabin, SLOT(cabinStopping()));
+    QObject::connect(&controller, SIGNAL(tellCabinToStop()), &cabin, SLOT(cabinStopping()));
+	QObject::connect(&controller, SIGNAL(tellCabinDoorsToOpen()), &cabin, SIGNAL(tellDoorsToOpen()));
 }
 
 void Elevator::click_btn(const int btn_number) {
